@@ -18,7 +18,6 @@ const limiter = rateLimit({
 
 app.use("/api/", limiter);
 
-// MySQL connection pool
 const db = mysql.createPool({
   host: process.env.MYSQLHOST,
   port: process.env.MYSQLPORT,
@@ -30,26 +29,79 @@ const db = mysql.createPool({
   queueLimit: 0
 });
 
-// Test database connection
-app.get("/api/db-test", async (req, res) => {
+// Create database tables
+async function createTables() {
   try {
     const connection = await db.getConnection();
-    await connection.ping();
+
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        email VARCHAR(150) UNIQUE NOT NULL,
+        phone VARCHAR(30) UNIQUE,
+        password VARCHAR(255) NOT NULL,
+        role ENUM('user', 'admin') DEFAULT 'user',
+        referral_code VARCHAR(50) UNIQUE,
+        referred_by INT NULL,
+        wallet_balance DECIMAL(12,2) DEFAULT 0.00,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS packages (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        price DECIMAL(12,2) NOT NULL,
+        description TEXT,
+        status ENUM('active', 'inactive') DEFAULT 'active',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS transactions (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        type ENUM('deposit', 'withdraw', 'purchase', 'commission') NOT NULL,
+        amount DECIMAL(12,2) NOT NULL,
+        method VARCHAR(50),
+        transaction_id VARCHAR(100),
+        status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS user_packages (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        package_id INT NOT NULL,
+        purchased_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS binary_tree (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        parent_id INT NULL,
+        position ENUM('left', 'right') NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE KEY unique_position (parent_id, position)
+      )
+    `);
+
     connection.release();
 
-    res.json({
-      success: true,
-      message: "MySQL database connected successfully"
-    });
+    console.log("Database tables are ready");
   } catch (error) {
-    console.error("Database connection error:", error.message);
-
-    res.status(500).json({
-      success: false,
-      message: "Database connection failed"
-    });
+    console.error("Table creation error:", error.message);
   }
-});
+}
+
+createTables();
 
 app.get("/", (req, res) => {
   res.json({
@@ -63,6 +115,24 @@ app.get("/api/health", (req, res) => {
     success: true,
     status: "OK"
   });
+});
+
+app.get("/api/db-test", async (req, res) => {
+  try {
+    const connection = await db.getConnection();
+    await connection.ping();
+    connection.release();
+
+    res.json({
+      success: true,
+      message: "MySQL database connected successfully"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Database connection failed"
+    });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
