@@ -17,6 +17,7 @@ const limiter = rateLimit({
 
 app.use("/api/", limiter);
 
+// Home route
 app.get("/", (req, res) => {
   res.json({
     success: true,
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
   });
 });
 
+// Health check
 app.get("/api/health", (req, res) => {
   res.json({
     success: true,
@@ -31,8 +33,11 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+// Railway port
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+// Start server
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
+});  console.log(`Server running on port ${PORT}`);
 });
