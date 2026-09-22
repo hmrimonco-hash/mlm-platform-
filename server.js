@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
+const mysql = require("mysql2/promise");
 require("dotenv").config();
 
 const app = express();
@@ -16,6 +17,39 @@ const limiter = rateLimit({
 });
 
 app.use("/api/", limiter);
+
+// MySQL connection pool
+const db = mysql.createPool({
+  host: process.env.MYSQLHOST,
+  port: process.env.MYSQLPORT,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+});
+
+// Test database connection
+app.get("/api/db-test", async (req, res) => {
+  try {
+    const connection = await db.getConnection();
+    await connection.ping();
+    connection.release();
+
+    res.json({
+      success: true,
+      message: "MySQL database connected successfully"
+    });
+  } catch (error) {
+    console.error("Database connection error:", error.message);
+
+    res.status(500).json({
+      success: false,
+      message: "Database connection failed"
+    });
+  }
+});
 
 app.get("/", (req, res) => {
   res.json({
