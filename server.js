@@ -20,6 +20,10 @@ const limiter = rateLimit({
 
 app.use("/api/", limiter);
 
+// ===============================
+// DATABASE
+// ===============================
+
 const db = mysql.createPool({
   host: process.env.MYSQLHOST,
   port: process.env.MYSQLPORT,
@@ -31,15 +35,60 @@ const db = mysql.createPool({
   queueLimit: 0
 });
 
-const JWT_SECRET = process.env.JWT_SECRET || "change-this-secret";
+const JWT_SECRET =
+  process.env.JWT_SECRET || "change-this-secret";
+
+// ===============================
+// AUTH MIDDLEWARE
+// ===============================
+
+function authenticateToken(req, res, next) {
+
+  const authHeader = req.headers.authorization;
+
+  if (
+    !authHeader ||
+    !authHeader.startsWith("Bearer ")
+  ) {
+    return res.status(401).json({
+      success: false,
+      message: "Authentication required"
+    });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  try {
+
+    const decoded = jwt.verify(
+      token,
+      JWT_SECRET
+    );
+
+    req.user = decoded;
+
+    next();
+
+  } catch (error) {
+
+    return res.status(401).json({
+      success: false,
+      message: "Invalid or expired token"
+    });
+
+  }
+}
 
 // ===============================
 // CREATE DATABASE TABLES
 // ===============================
 
 async function createTables() {
+
   try {
-    const connection = await db.getConnection();
+
+    const connection =
+      await db.getConnection();
 
     await connection.query(`
       CREATE TABLE IF NOT EXISTS users (
@@ -102,9 +151,17 @@ async function createTables() {
 
     connection.release();
 
-    console.log("Database tables are ready");
+    console.log(
+      "Database tables are ready"
+    );
+
   } catch (error) {
-    console.error("Table creation error:", error.message);
+
+    console.error(
+      "Table creation error:",
+      error.message
+    );
+
   }
 }
 
@@ -112,226 +169,469 @@ async function createTables() {
 // REGISTER
 // ===============================
 
-app.post("/api/auth/register", async (req, res) => {
-  try {
-    const { name, email, phone, password, referral_code } = req.body;
+app.post(
+  "/api/auth/register",
+  async (req, res) => {
 
-    if (!name || !email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: "Name, email and password are required"
+    try {
+
+      const {
+        name,
+        email,
+        phone,
+        password,
+        referral_code
+      } = req.body;
+
+      if (
+        !name ||
+        !email ||
+        !password
+      ) {
+
+        return res.status(400).json({
+          success: false,
+          message:
+            "Name, email and password are required"
+        });
+
+      }
+
+      if (password.length < 6) {
+
+        return res.status(400).json({
+          success: false,
+          message:
+            "Password must be at least 6 characters"
+        });
+
+      }
+
+      const [existingUser] =
+        await db.query(
+          "SELECT id FROM users WHERE email = ?",
+          [email]
+        );
+
+      if (existingUser.length > 0) {
+
+        return res.status(409).json({
+          success: false,
+          message:
+            "Email already registered"
+        });
+
+      }
+
+      let referredBy = null;
+
+      if (referral_code) {
+
+        const [referrer] =
+          await db.query(
+            "SELECT id FROM users WHERE referral_code = ?",
+            [referral_code]
+          );
+
+        if (referrer.length > 0) {
+
+          referredBy =
+            referrer[0].id;
+
+        }
+
+      }
+
+      const hashedPassword =
+        await bcrypt.hash(
+          password,
+          10
+        );
+
+      const newReferralCode =
+        "REF" +
+        Math.random()
+          .toString(36)
+          .substring(2, 10)
+          .toUpperCase();
+
+      const [result] =
+        await db.query(
+          `
+          INSERT INTO users
+          (
+            name,
+            email,
+            phone,
+            password,
+            referral_code,
+            referred_by
+          )
+          VALUES (?, ?, ?, ?, ?, ?)
+          `,
+          [
+            name,
+            email,
+            phone || null,
+            hashedPassword,
+            newReferralCode,
+            referredBy
+          ]
+        );
+
+      res.status(201).json({
+
+        success: true,
+
+        message:
+          "Registration successful",
+
+        user: {
+          id: result.insertId,
+          name,
+          email,
+          referral_code:
+            newReferralCode
+        }
+
       });
-    }
 
-    if (password.length < 6) {
-      return res.status(400).json({
-        success: false,
-        message: "Password must be at least 6 characters"
-      });
-    }
+    } catch (error) {
 
-    const [existingUser] = await db.query(
-      "SELECT id FROM users WHERE email = ?",
-      [email]
-    );
-
-    if (existingUser.length > 0) {
-      return res.status(409).json({
-        success: false,
-        message: "Email already registered"
-      });
-    }
-
-    let referredBy = null;
-
-    if (referral_code) {
-      const [referrer] = await db.query(
-        "SELECT id FROM users WHERE referral_code = ?",
-        [referral_code]
+      console.error(
+        "Register error:",
+        error.message
       );
 
-      if (referrer.length > 0) {
-        referredBy = referrer[0].id;
-      }
+      res.status(500).json({
+
+        success: false,
+
+        message:
+          "Registration failed"
+
+      });
+
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newReferralCode =
-      "REF" + Math.random().toString(36).substring(2, 10).toUpperCase();
-
-    const [result] = await db.query(
-      `
-      INSERT INTO users
-      (name, email, phone, password, referral_code, referred_by)
-      VALUES (?, ?, ?, ?, ?, ?)
-      `,
-      [
-        name,
-        email,
-        phone || null,
-        hashedPassword,
-        newReferralCode,
-        referredBy
-      ]
-    );
-
-    res.status(201).json({
-      success: true,
-      message: "Registration successful",
-      user: {
-        id: result.insertId,
-        name,
-        email,
-        referral_code: newReferralCode
-      }
-    });
-
-  } catch (error) {
-    console.error("Register error:", error.message);
-
-    res.status(500).json({
-      success: false,
-      message: "Registration failed"
-    });
   }
-});
+);
 
 // ===============================
 // LOGIN
 // ===============================
 
-app.post("/api/auth/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
+app.post(
+  "/api/auth/login",
+  async (req, res) => {
 
-    if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: "Email and password are required"
-      });
-    }
+    try {
 
-    const [users] = await db.query(
-      `
-      SELECT id, name, email, phone, password, role,
-             referral_code, wallet_balance
-      FROM users
-      WHERE email = ?
-      `,
-      [email]
-    );
+      const {
+        email,
+        password
+      } = req.body;
 
-    if (users.length === 0) {
-      return res.status(401).json({
-        success: false,
-        message: "Invalid email or password"
-      });
-    }
+      if (
+        !email ||
+        !password
+      ) {
 
-    const user = users[0];
+        return res.status(400).json({
 
-    const passwordMatch = await bcrypt.compare(
-      password,
-      user.password
-    );
+          success: false,
 
-    if (!passwordMatch) {
-      return res.status(401).json({
-        success: false,
-        message: "Invalid email or password"
-      });
-    }
+          message:
+            "Email and password are required"
 
-    const token = jwt.sign(
-      {
-        id: user.id,
-        role: user.role
-      },
-      JWT_SECRET,
-      {
-        expiresIn: "7d"
+        });
+
       }
-    );
 
-    delete user.password;
+      const [users] =
+        await db.query(
+          `
+          SELECT
+            id,
+            name,
+            email,
+            phone,
+            password,
+            role,
+            referral_code,
+            wallet_balance
+          FROM users
+          WHERE email = ?
+          `,
+          [email]
+        );
 
-    res.json({
-      success: true,
-      message: "Login successful",
-      token,
-      user
-    });
+      if (users.length === 0) {
 
-  } catch (error) {
-    console.error("Login error:", error.message);
+        return res.status(401).json({
 
-    res.status(500).json({
-      success: false,
-      message: "Login failed"
-    });
+          success: false,
+
+          message:
+            "Invalid email or password"
+
+        });
+
+      }
+
+      const user = users[0];
+
+      const passwordMatch =
+        await bcrypt.compare(
+          password,
+          user.password
+        );
+
+      if (!passwordMatch) {
+
+        return res.status(401).json({
+
+          success: false,
+
+          message:
+            "Invalid email or password"
+
+        });
+
+      }
+
+      const token =
+        jwt.sign(
+          {
+            id: user.id,
+            role: user.role
+          },
+          JWT_SECRET,
+          {
+            expiresIn: "7d"
+          }
+        );
+
+      delete user.password;
+
+      res.json({
+
+        success: true,
+
+        message:
+          "Login successful",
+
+        token,
+
+        user
+
+      });
+
+    } catch (error) {
+
+      console.error(
+        "Login error:",
+        error.message
+      );
+
+      res.status(500).json({
+
+        success: false,
+
+        message:
+          "Login failed"
+
+      });
+
+    }
+
   }
-});
+);
+
+// ===============================
+// CURRENT USER
+// ===============================
+
+app.get(
+  "/api/auth/me",
+  authenticateToken,
+  async (req, res) => {
+
+    try {
+
+      const [users] =
+        await db.query(
+          `
+          SELECT
+            id,
+            name,
+            email,
+            phone,
+            role,
+            referral_code,
+            wallet_balance,
+            created_at
+          FROM users
+          WHERE id = ?
+          `,
+          [req.user.id]
+        );
+
+      if (users.length === 0) {
+
+        return res.status(404).json({
+
+          success: false,
+
+          message:
+            "User not found"
+
+        });
+
+      }
+
+      const user = users[0];
+
+      res.json({
+
+        success: true,
+
+        user
+
+      });
+
+    } catch (error) {
+
+      console.error(
+        "Get user error:",
+        error.message
+      );
+
+      res.status(500).json({
+
+        success: false,
+
+        message:
+          "Failed to load user information"
+
+      });
+
+    }
+
+  }
+);
 
 // ===============================
 // DATABASE TEST
 // ===============================
 
-app.get("/api/db-test", async (req, res) => {
-  try {
-    const connection = await db.getConnection();
+app.get(
+  "/api/db-test",
+  async (req, res) => {
 
-    await connection.ping();
+    try {
 
-    connection.release();
+      const connection =
+        await db.getConnection();
 
-    res.json({
-      success: true,
-      message: "MySQL database connected successfully"
-    });
+      await connection.ping();
 
-  } catch (error) {
-    console.error("Database error:", error.message);
+      connection.release();
 
-    res.status(500).json({
-      success: false,
-      message: "Database connection failed"
-    });
+      res.json({
+
+        success: true,
+
+        message:
+          "MySQL database connected successfully"
+
+      });
+
+    } catch (error) {
+
+      console.error(
+        "Database error:",
+        error.message
+      );
+
+      res.status(500).json({
+
+        success: false,
+
+        message:
+          "Database connection failed"
+
+      });
+
+    }
+
   }
-});
+);
 
 // ===============================
 // HEALTH CHECK
 // ===============================
 
-app.get("/api/health", (req, res) => {
-  res.json({
-    success: true,
-    status: "OK"
-  });
-});
+app.get(
+  "/api/health",
+  (req, res) => {
+
+    res.json({
+
+      success: true,
+
+      status: "OK"
+
+    });
+
+  }
+);
 
 // ===============================
 // HOME
 // ===============================
 
-app.get("/", (req, res) => {
-  res.json({
-    success: true,
-    company: "Proyjon Marketing LTD",
-    slogan: "আপনার প্রয়োজন আমাদের আয়োজন",
-    message: "Proyjon Marketing LTD API is running"
-  });
-});
+app.get(
+  "/",
+  (req, res) => {
+
+    res.json({
+
+      success: true,
+
+      company:
+        "Proyjon Marketing LTD",
+
+      slogan:
+        "আপনার প্রয়োজন আমাদের আয়োজন",
+
+      message:
+        "Proyjon Marketing LTD API is running"
+
+    });
+
+  }
+);
 
 // ===============================
 // START SERVER
 // ===============================
 
-const PORT = process.env.PORT || 3000;
+const PORT =
+  process.env.PORT || 3000;
 
 createTables().then(() => {
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on port ${PORT}`);
-  });
+
+  app.listen(
+    PORT,
+    "0.0.0.0",
+    () => {
+
+      console.log(
+        `Server running on port ${PORT}`
+      );
+
+    }
+  );
+
 });
