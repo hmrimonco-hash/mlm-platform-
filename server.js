@@ -3,6 +3,8 @@ const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const mysql = require("mysql2/promise");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const app = express();
@@ -29,7 +31,12 @@ const db = mysql.createPool({
   queueLimit: 0
 });
 
-// Create database tables
+const JWT_SECRET = process.env.JWT_SECRET || "change-this-secret";
+
+// ===============================
+// CREATE DATABASE TABLES
+// ===============================
+
 async function createTables() {
   try {
     const connection = await db.getConnection();
@@ -101,42 +108,152 @@ async function createTables() {
   }
 }
 
-createTables();
+// ===============================
+// REGISTER
+// ===============================
 
-app.get("/", (req, res) => {
-  res.json({
-    success: true,
-    message: "MLM Platform API is running"
-  });
-});
-
-app.get("/api/health", (req, res) => {
-  res.json({
-    success: true,
-    status: "OK"
-  });
-});
-
-app.get("/api/db-test", async (req, res) => {
+app.post("/api/auth/register", async (req, res) => {
   try {
-    const connection = await db.getConnection();
-    await connection.ping();
-    connection.release();
+    const { name, email, phone, password, referral_code } = req.body;
 
-    res.json({
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Name, email and password are required"
+      });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 6 characters"
+      });
+    }
+
+    const [existingUser] = await db.query(
+      "SELECT id FROM users WHERE email = ?",
+      [email]
+    );
+
+    if (existingUser.length > 0) {
+      return res.status(409).json({
+        success: false,
+        message: "Email already registered"
+      });
+    }
+
+    let referredBy = null;
+
+    if (referral_code) {
+      const [referrer] = await db.query(
+        "SELECT id FROM users WHERE referral_code = ?",
+        [referral_code]
+      );
+
+      if (referrer.length > 0) {
+        referredBy = referrer[0].id;
+      }
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newReferralCode =
+      "REF" + Math.random().toString(36).substring(2, 10).toUpperCase();
+
+    const [result] = await db.query(
+      `
+      INSERT INTO users
+      (name, email, phone, password, referral_code, referred_by)
+      VALUES (?, ?, ?, ?, ?, ?)
+      `,
+      [
+        name,
+        email,
+        phone || null,
+        hashedPassword,
+        newReferralCode,
+        referredBy
+      ]
+    );
+
+    res.status(201).json({
       success: true,
-      message: "MySQL database connected successfully"
+      message: "Registration successful",
+      user: {
+        id: result.insertId,
+        name,
+        email,
+        referral_code: newReferralCode
+      }
     });
+
   } catch (error) {
+    console.error("Register error:", error.message);
+
     res.status(500).json({
       success: false,
-      message: "Database connection failed"
+      message: "Registration failed"
     });
   }
 });
 
-const PORT = process.env.PORT || 3000;
+// ===============================
+// LOGIN
+// ===============================
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.post("/api/auth/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and password are required"
+      });
+    }
+
+    const [users] = await db.query(
+      `
+      SELECT id, name, email, phone, password, role,
+             referral_code, wallet_balance
+      FROM users
+      WHERE email = ?
+      `,
+      [email]
+    );
+
+    if (users.length === 0) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password"
+      });
+    }
+
+    const user = users[0];
+
+    const passwordMatch = await bcrypt.compare(
+      password,
+      user.password
+    );
+
+    if (!passwordMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password"
+      });
+    }
+
+    const token = jwt.sign(
+      {
+        id: user.id,
+        role: user.role
+      },
+      JWT_SECRET,
+      {
+        expiresIn: "7d"
+      }
+    );
+
+    delete user.password;
+
+   
