@@ -256,4 +256,82 @@ app.post("/api/auth/login", async (req, res) => {
 
     delete user.password;
 
-   
+    res.json({
+      success: true,
+      message: "Login successful",
+      token,
+      user
+    });
+
+  } catch (error) {
+    console.error("Login error:", error.message);
+
+    res.status(500).json({
+      success: false,
+      message: "Login failed"
+    });
+  }
+});
+
+// ===============================
+// DATABASE TEST
+// ===============================
+
+app.get("/api/db-test", async (req, res) => {
+  try {
+    const connection = await db.getConnection();
+
+    await connection.ping();
+
+    connection.release();
+
+    res.json({
+      success: true,
+      message: "MySQL database connected successfully"
+    });
+
+  } catch (error) {
+    console.error("Database error:", error.message);
+
+    res.status(500).json({
+      success: false,
+      message: "Database connection failed"
+    });
+  }
+});
+
+// ===============================
+// HEALTH CHECK
+// ===============================
+
+app.get("/api/health", (req, res) => {
+  res.json({
+    success: true,
+    status: "OK"
+  });
+});
+
+// ===============================
+// HOME
+// ===============================
+
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    company: "Proyjon Marketing LTD",
+    slogan: "আপনার প্রয়োজন আমাদের আয়োজন",
+    message: "Proyjon Marketing LTD API is running"
+  });
+});
+
+// ===============================
+// START SERVER
+// ===============================
+
+const PORT = process.env.PORT || 3000;
+
+createTables().then(() => {
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+});
