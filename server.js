@@ -234,6 +234,22 @@ function authenticateToken(req, res, next) {
     return res.status(401).json({ success: false, message: "Authentication required" });
   }
 
+  const token = authHeader.split(" "); // সঠিক টোকেন এক্সট্র্যাক্ট করা হলো
+
+  if (!token) {
+    return res.status(401).json({ success: false, message: "Invalid token format" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    console.error("JWT error:", error.message);
+    return res.status(401).json({ success: false, message: "Invalid or expired token" });
+  }
+}
+
   const token = authHeader.split(" ");
 
   try {
