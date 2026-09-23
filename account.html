@@ -3,265 +3,961 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Account - Proyjon Marketing LTD</title>
+
+  <title>Dashboard — Proyjon Marketing LTD</title>
+
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: Arial, sans-serif; background: radial-gradient(circle at top left, #172554 0%, transparent 35%), radial-gradient(circle at bottom right, #312e81 0%, transparent 35%), #050816; color: #fff; min-height: 100vh; padding-bottom: 90px; }
-    .container { width: 100%; max-width: 520px; margin: auto; padding: 18px; }
-    .header { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
-    .back-btn { width: 42px; height: 42px; border-radius: 13px; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.06); color: white; font-size: 20px; cursor: pointer; }
-    .header-title { font-size: 21px; font-weight: 700; }
-    .header-sub { color: #94a3b8; font-size: 12px; margin-top: 3px; }
-    .profile-card { background: rgba(15, 23, 42, .82); border: 1px solid rgba(255,255,255,.08); border-radius: 24px; padding: 25px 20px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.25); margin-bottom: 16px; }
-    .profile-image-wrap { position: relative; width: 94px; height: 94px; margin: auto; }
-    .profile-image { width: 94px; height: 94px; border-radius: 50%; object-fit: cover; background: linear-gradient(135deg, #2563eb, #7c3aed); border: 3px solid rgba(255,255,255,.15); }
-    .photo-btn { position: absolute; right: -2px; bottom: -2px; width: 34px; height: 34px; border-radius: 50%; border: 3px solid #0f172a; background: #2563eb; color: white; cursor: pointer; font-size: 15px; }
-    #photoInput { display: none; }
-    .profile-name { margin-top: 14px; font-size: 20px; font-weight: 700; }
-    .profile-email { color: #94a3b8; font-size: 13px; margin-top: 5px; }
-    .info-card { background: rgba(15, 23, 42, .82); border: 1px solid rgba(255,255,255,.08); border-radius: 22px; padding: 18px; }
-    .section-title { font-size: 16px; font-weight: 700; margin-bottom: 15px; }
-    .info-item { padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,.06); }
-    .info-item:last-child { border-bottom: none; }
-    .label { color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 5px; }
-    .value { color: #f8fafc; font-size: 14px; word-break: break-word; }
-    .edit-btn { width: 100%; margin-top: 17px; padding: 14px; border: none; border-radius: 14px; background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; font-size: 15px; font-weight: 700; cursor: pointer; }
-    .modal { position: fixed; inset: 0; background: rgba(0,0,0,.72); display: none; align-items: flex-end; justify-content: center; z-index: 1000; }
-    .modal.active { display: flex; }
-    .modal-box { width: 100%; max-width: 520px; max-height: 92vh; overflow-y: auto; background: #0f172a; border-radius: 26px 26px 0 0; padding: 22px; border: 1px solid rgba(255,255,255,.08); }
-    .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-    .modal-title { font-size: 19px; font-weight: 700; }
-    .close-btn { width: 36px; height: 36px; border-radius: 11px; border: none; background: rgba(255,255,255,.07); color: white; font-size: 20px; cursor: pointer; }
-    .input-group { margin-bottom: 14px; }
-    .input-group label { display: block; color: #cbd5e1; font-size: 12px; margin-bottom: 7px; }
-    .input-group input, .input-group textarea { width: 100%; padding: 13px 14px; border-radius: 13px; border: 1px solid #263449; background: #080f1f; color: white; outline: none; font-size: 14px; }
-    .input-group textarea { min-height: 80px; resize: vertical; }
-    .nominee-title { margin: 22px 0 13px; font-size: 14px; font-weight: 700; color: #93c5fd; }
-    .save-btn { width: 100%; padding: 14px; border: none; border-radius: 14px; background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; font-weight: 700; font-size: 15px; cursor: pointer; margin-top: 8px; }
-    .message { display: none; padding: 12px; border-radius: 12px; margin-bottom: 14px; font-size: 13px; text-align: center; }
-    .message.success { display: block; background: rgba(34,197,94,.12); color: #86efac; border: 1px solid rgba(34,197,94,.2); }
-    .message.error { display: block; background: rgba(239,68,68,.12); color: #fca5a5; border: 1px solid rgba(239,68,68,.2); }
-    .bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; height: 70px; background: rgba(5, 8, 22, .94); backdrop-filter: blur(18px); border-top: 1px solid rgba(255,255,255,.08); display: flex; justify-content: center; z-index: 900; }
-    .nav-inner { width: 100%; max-width: 520px; display: flex; justify-content: space-around; align-items: center; }
-    .nav-item { color: #64748b; text-decoration: none; text-align: center; font-size: 11px; background: none; border: none; cursor: pointer; }
-    .nav-item span { display: block; font-size: 20px; margin-bottom: 3px; }
-    .nav-item.active { color: #60a5fa; }
-    @media (min-width: 600px) { .modal { align-items: center; } .modal-box { border-radius: 26px; max-height: 90vh; } }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at top left, #263b55 0%, transparent 35%),
+        radial-gradient(circle at bottom right, #172238 0%, transparent 40%),
+        #07101d;
+      color: #fff;
+      min-height: 100vh;
+      padding-bottom: 85px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      margin: auto;
+      padding: 18px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #ffffff, #aab8ca);
+      color: #07101d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 18px;
+    }
+
+    .brand-text h3 {
+      font-size: 15px;
+    }
+
+    .brand-text p {
+      color: #91a0b5;
+      font-size: 11px;
+      margin-top: 3px;
+    }
+
+    .profile-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid #314158;
+      background: #111d2e;
+      color: white;
+      font-size: 17px;
+    }
+
+    .welcome {
+      margin-bottom: 18px;
+    }
+
+    .welcome h2 {
+      font-size: 25px;
+      margin-bottom: 6px;
+    }
+
+    .welcome p {
+      color: #91a0b5;
+      font-size: 13px;
+      word-break: break-word;
+    }
+
+    .wallet {
+      background:
+        linear-gradient(145deg, rgba(38,57,82,.95), rgba(13,25,41,.98));
+      border: 1px solid #30435d;
+      border-radius: 24px;
+      padding: 22px;
+      margin-bottom: 16px;
+      box-shadow: 0 15px 40px rgba(0,0,0,.25);
+    }
+
+    .wallet-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .wallet-label {
+      color: #9caabd;
+      font-size: 12px;
+    }
+
+    .wallet-balance {
+      font-size: 32px;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+
+    .wallet-id {
+      color: #8190a5;
+      font-size: 11px;
+      margin-top: 6px;
+    }
+
+    .wallet-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .action-btn {
+      border: none;
+      border-radius: 14px;
+      padding: 13px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .add-btn {
+      background: white;
+      color: #08111e;
+    }
+
+    .withdraw-btn {
+      background: #18263a;
+      color: white;
+      border: 1px solid #34465f;
+    }
+
+    .promo {
+      background: linear-gradient(135deg, #15283f, #0c1728);
+      border: 1px solid #263b55;
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    .promo small {
+      color: #7f91a8;
+      font-size: 11px;
+    }
+
+    .promo h3 {
+      margin-top: 7px;
+      font-size: 18px;
+    }
+
+    .promo p {
+      color: #98a6b8;
+      font-size: 12px;
+      margin-top: 7px;
+      line-height: 1.5;
+    }
+
+    .section-title {
+      font-size: 15px;
+      margin: 20px 0 12px;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .quick-card {
+      background: #101c2c;
+      border: 1px solid #25374e;
+      border-radius: 17px;
+      padding: 17px;
+      min-height: 92px;
+      color: white;
+      text-align: left;
+    }
+
+    .quick-icon {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    .quick-card strong {
+      font-size: 13px;
+      display: block;
+    }
+
+    .quick-card span {
+      display: block;
+      color: #7f90a6;
+      font-size: 10px;
+      margin-top: 4px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .stat-card {
+      background: #101c2c;
+      border: 1px solid #25374e;
+      border-radius: 17px;
+      padding: 17px;
+    }
+
+    .stat-label {
+      color: #8190a4;
+      font-size: 11px;
+    }
+
+    .stat-value {
+      font-size: 23px;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+
+    .referral {
+      background: #101c2c;
+      border: 1px solid #25374e;
+      border-radius: 18px;
+      padding: 17px;
+      margin-top: 16px;
+    }
+
+    .referral-title {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .referral-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .referral-row input {
+      min-width: 0;
+      flex: 1;
+      background: #0a1422;
+      border: 1px solid #2b3d55;
+      color: #cbd5e1;
+      border-radius: 11px;
+      padding: 11px;
+      font-size: 11px;
+    }
+
+    .copy-btn {
+      border: none;
+      background: white;
+      color: #07101d;
+      border-radius: 11px;
+      padding: 0 13px;
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    .transactions {
+      background: #101c2c;
+      border: 1px solid #25374e;
+      border-radius: 18px;
+      padding: 17px;
+      margin-top: 16px;
+    }
+
+    .transaction-empty {
+      text-align: center;
+      padding: 25px 10px;
+      color: #74849a;
+      font-size: 12px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 72px;
+      background: rgba(7,16,29,.96);
+      backdrop-filter: blur(15px);
+      border-top: 1px solid #25374e;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .nav-item {
+      background: transparent;
+      border: none;
+      color: #718197;
+      font-size: 10px;
+      text-align: center;
+    }
+
+    .nav-item.active {
+      color: white;
+    }
+
+    .nav-icon {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.65);
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 200;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 520px;
+      background: #101c2c;
+      border: 1px solid #30435d;
+      border-radius: 25px 25px 0 0;
+      padding: 22px;
+    }
+
+    .modal-box h3 {
+      margin-bottom: 10px;
+    }
+
+    .modal-box p {
+      color: #8998ac;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .close-btn {
+      width: 100%;
+      margin-top: 18px;
+      padding: 13px;
+      border: none;
+      border-radius: 13px;
+      background: white;
+      color: #07101d;
+      font-weight: 700;
+    }
+
+    .error-box {
+      display: none;
+      background: #35151a;
+      border: 1px solid #693039;
+      color: #ffb8c0;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 15px;
+      font-size: 12px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    @media (max-width: 360px) {
+      .container {
+        padding: 14px;
+      }
+
+      .wallet-balance {
+        font-size: 28px;
+      }
+    }
   </style>
 </head>
+
 <body>
-<div class="container">
-  <div class="header">
-    <button class="back-btn" onclick="goBack()">‹</button>
-    <div>
-      <div class="header-title">My Account</div>
-      <div class="header-sub">Manage your personal information</div>
+
+  <div class="container">
+
+    <div class="topbar">
+
+      <div class="brand">
+        <div class="brand-icon">P</div>
+
+        <div class="brand-text">
+          <h3>Proyjon Marketing LTD</h3>
+          <p>আপনার প্রয়োজন আমাদের আয়োজন</p>
+        </div>
+      </div>
+
+      <button class="profile-btn" onclick="goAccount()">👤</button>
+
     </div>
-  </div>
-  <div class="profile-card">
-    <div class="profile-image-wrap">
-      <img id="profileImage" class="profile-image" src="https://ui-avatars.com/api/?name=User&background=2563eb&color=fff&size=200" alt="Profile">
-      <button class="photo-btn" onclick="document.getElementById('photoInput').click()">✎</button>
-      <input type="file" id="photoInput" accept="image/*" onchange="changePhoto(event)">
+
+
+    <div id="errorBox" class="error-box"></div>
+
+
+    <div class="welcome">
+      <h2 id="userName">Welcome 👋</h2>
+      <p id="userEmail">Loading account...</p>
     </div>
-    <div class="profile-name" id="profileName">Loading...</div>
-    <div class="profile-email" id="profileEmail">Loading...</div>
-  </div>
-  <div class="info-card">
-    <div class="section-title">Personal Information</div>
-    <div class="info-item"><div class="label">Full Name</div><div class="value" id="name">—</div></div>
-    <div class="info-item"><div class="label">Father's Name</div><div class="value" id="fatherName">Not added</div></div>
-    <div class="info-item"><div class="label">Mobile Number</div><div class="value" id="phone">—</div></div>
-    <div class="info-item"><div class="label">Email</div><div class="value" id="email">—</div></div>
-    <div class="info-item"><div class="label">NID</div><div class="value" id="nid">Not added</div></div>
-    <div class="info-item"><div class="label">Address</div><div class="value" id="address">Not added</div></div>
-    <div class="section-title" style="margin-top:22px;">Nominee Information</div>
-    <div class="info-item"><div class="label">Nominee Name</div><div class="value" id="nomineeName">Not added</div></div>
-    <div class="info-item"><div class="label">Nominee Number</div><div class="value" id="nomineeNumber">Not added</div></div>
-    <div class="info-item"><div class="label">Nominee NID</div><div class="value" id="nomineeNid">Not added</div></div>
-    <button class="edit-btn" onclick="openEditModal()">✎ Edit Information</button>
-  </div>
-</div>
 
-<div class="modal" id="editModal">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div class="modal-title">Edit Information</div>
-      <button class="close-btn" onclick="closeEditModal()">×</button>
+
+    <div class="wallet">
+
+      <div class="wallet-top">
+        <div>
+          <div class="wallet-label">Wallet Balance</div>
+
+          <div class="wallet-balance" id="walletBalance">
+            ৳ 0.00
+          </div>
+
+          <div class="wallet-id" id="walletId">
+            Account ID: —
+          </div>
+        </div>
+
+        <div style="font-size:28px;">💳</div>
+      </div>
+
+
+      <div class="wallet-actions">
+
+        <button
+          class="action-btn add-btn"
+          onclick="openModal('Add Money')">
+          + Add Money
+        </button>
+
+        <button
+          class="action-btn withdraw-btn"
+          onclick="openModal('Withdraw')">
+          Withdraw
+        </button>
+
+      </div>
+
     </div>
-    <div id="message" class="message"></div>
-    <div class="input-group"><label>Full Name</label><input type="text" id="editName"></div>
-    <div class="input-group"><label>Father's Name</label><input type="text" id="editFatherName"></div>
-    <div class="input-group"><label>Mobile Number</label><input type="tel" id="editPhone"></div>
-    <div class="input-group"><label>Email</label><input type="email" id="editEmail"></div>
-    <div class="input-group"><label>NID</label><input type="text" id="editNid"></div>
-    <div class="input-group"><label>Address</label><textarea id="editAddress"></textarea></div>
-    <div class="nominee-title">Nominee Information</div>
-    <div class="input-group"><label>Nominee Name</label><input type="text" id="editNomineeName"></div>
-    <div class="input-group"><label>Nominee Number</label><input type="tel" id="editNomineeNumber"></div>
-    <div class="input-group"><label>Nominee NID</label><input type="text" id="editNomineeNid"></div>
-    <button class="save-btn" onclick="updateProfile()">Save Changes</button>
+
+
+    <div class="promo">
+
+      <small>PROYJON MARKETING LTD</small>
+
+      <h3>Build your network 🚀</h3>
+
+      <p>
+        Manage your account, packages, team and transactions
+        from one place.
+      </p>
+
+    </div>
+
+
+    <h3 class="section-title">Quick Actions</h3>
+
+    <div class="quick-grid">
+
+      <button class="quick-card" onclick="openModal('Packages')">
+        <div class="quick-icon">📦</div>
+        <strong>Packages</strong>
+        <span>View packages</span>
+      </button>
+
+
+      <button class="quick-card" onclick="openModal('Buy Share')">
+        <div class="quick-icon">🛒</div>
+        <strong>Buy Share</strong>
+        <span>Purchase share</span>
+      </button>
+
+
+      <button class="quick-card" onclick="openModal('Tree View')">
+        <div class="quick-icon">🌳</div>
+        <strong>Tree View</strong>
+        <span>Binary structure</span>
+      </button>
+
+
+      <button class="quick-card" onclick="openModal('Team')">
+        <div class="quick-icon">👥</div>
+        <strong>Team</strong>
+        <span>Your network</span>
+      </button>
+
+
+      <button class="quick-card" onclick="openModal('Transactions')">
+        <div class="quick-icon">📊</div>
+        <strong>Transactions</strong>
+        <span>Account history</span>
+      </button>
+
+
+      <button class="quick-card" onclick="openModal('Deposits')">
+        <div class="quick-icon">💰</div>
+        <strong>Deposits</strong>
+        <span>Deposit requests</span>
+      </button>
+
+
+      <button class="quick-card" onclick="openModal('Withdrawals')">
+        <div class="quick-icon">💸</div>
+        <strong>Withdrawals</strong>
+        <span>Withdrawal requests</span>
+      </button>
+
+
+      <button class="quick-card" onclick="goAccount()">
+        <div class="quick-icon">⚙️</div>
+        <strong>Account</strong>
+        <span>Profile settings</span>
+      </button>
+
+    </div>
+
+
+    <h3 class="section-title">Overview</h3>
+
+    <div class="stats">
+
+      <div class="stat-card">
+        <div class="stat-label">Total Team</div>
+        <div class="stat-value">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Active Packages</div>
+        <div class="stat-value">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Left Team</div>
+        <div class="stat-value">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Right Team</div>
+        <div class="stat-value">0</div>
+      </div>
+
+    </div>
+
+
+    <div class="referral">
+
+      <div class="referral-title">
+        🔗 Your Referral Link
+      </div>
+
+      <div class="referral-row">
+
+        <input
+          id="referralLink"
+          type="text"
+          value="Loading..."
+          readonly
+        >
+
+        <button
+          class="copy-btn"
+          onclick="copyReferral()">
+          Copy
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="transactions">
+
+      <div class="referral-title">
+        Recent Transactions
+      </div>
+
+      <div class="transaction-empty">
+        No transactions yet.
+      </div>
+
+    </div>
+
   </div>
-</div>
 
-<div class="bottom-nav">
-  <div class="nav-inner">
-    <a href="dashboard.html" class="nav-item"><span>⌂</span>Home</a>
-    <button class="nav-item" onclick="alert('Packages module')"><span>▣</span>Packages</button>
-    <button class="nav-item" onclick="alert('Buy Share module')"><span>◆</span>Buy Share</button>
-    <button class="nav-item" onclick="alert('Team module')"><span>♟</span>Team</button>
-    <a href="account.html" class="nav-item active"><span>●</span>Account</a>
-    <button class="nav-item" onclick="logoutUser()" style="color: #fca5a5;"><span>🚪</span>Logout</button>
+
+  <!-- Bottom Navigation (Updated with Logout) -->
+
+  <div class="bottom-nav">
+
+    <button class="nav-item active" onclick="location.reload()">
+      <span class="nav-icon">⌂</span>
+      Home
+    </button>
+
+    <button class="nav-item" onclick="openModal('Packages')">
+      <span class="nav-icon">📦</span>
+      Packages
+    </button>
+
+    <button class="nav-item" onclick="openModal('Buy Share')">
+      <span class="nav-icon">🛒</span>
+      Buy Share
+    </button>
+
+    <button class="nav-item" onclick="openModal('Team')">
+      <span class="nav-icon">👥</span>
+      Team
+    </button>
+
+    <button class="nav-item" onclick="goAccount()">
+      <span class="nav-icon">👤</span>
+      Account
+    </button>
+
+    <button class="nav-item" onclick="logoutUser()" style="color: #fca5a5;">
+      <span class="nav-icon">🚪</span>
+      Logout
+    </button>
+
   </div>
-</div>
 
-<script>
-const API_URL = "https://mlm-platform-production.up.railway.app";
-let currentUser = null;
-const token = localStorage.getItem("token");
-if (!token) { window.location.href = "login.html"; }
 
-async function checkPendingStatus() {
-  try {
-    const response = await fetch(API_URL + "/api/auth/profile-status", {
-      headers: { "Authorization": "Bearer " + token }
-    });
-    const data = await response.json();
-    const editBtn = document.querySelector(".edit-btn");
-    if (data.isPending) {
-      editBtn.textContent = "⏳ Pending Approval";
-      editBtn.style.background = "#475569";
-      editBtn.disabled = true;
-    } else {
-      editBtn.textContent = "✎ Edit Information";
-      editBtn.style.background = "";
-      editBtn.disabled = false;
+  <!-- Modal -->
+
+  <div id="modal" class="modal">
+
+    <div class="modal-box">
+
+      <h3 id="modalTitle">Feature</h3>
+
+      <p>
+        This feature will be connected in the next step.
+      </p>
+
+      <button
+        class="close-btn"
+        onclick="closeModal()">
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    const API_URL =
+      "https://mlm-platform-production.up.railway.app";
+
+
+    function showError(message) {
+
+      const box =
+        document.getElementById("errorBox");
+
+      box.textContent = message;
+
+      box.style.display = "block";
     }
-  } catch (e) { console.error(e); }
-}
 
-async function loadProfile() {
-  try {
-    const response = await fetch(API_URL + "/api/auth/me", {
-      method: "GET",
-      headers: { "Authorization": "Bearer " + token }
-    });
-    const data = await response.json();
-    if (!response.ok || !data.success) {
+
+    async function loadUserData() {
+
+      const token =
+        localStorage.getItem("token");
+
+      if (!token) {
+
+        showError(
+          "Login session পাওয়া যায়নি। আবার Login করুন।"
+        );
+
+        setTimeout(function() {
+
+          window.location.href =
+            "login.html";
+
+        }, 1500);
+
+        return;
+      }
+
+
+      try {
+
+        const response =
+          await fetch(
+            API_URL + "/api/auth/me",
+            {
+              method: "GET",
+
+              headers: {
+                "Authorization":
+                  "Bearer " + token,
+
+                "Accept":
+                  "application/json"
+              }
+            }
+          );
+
+
+        let data = null;
+
+
+        try {
+
+          data =
+            await response.json();
+
+        } catch (e) {
+
+          data = null;
+
+        }
+
+
+        if (
+          !response.ok ||
+          !data ||
+          !data.success
+        ) {
+
+          showError(
+            data && data.message
+              ? data.message
+              : "Account information load করা যাচ্ছে না।"
+          );
+
+          return;
+        }
+
+
+        const user =
+          data.user;
+
+
+        if (!user) {
+
+          showError(
+            "User information পাওয়া যায়নি।"
+          );
+
+          return;
+        }
+
+
+        document.getElementById(
+          "userName"
+        ).textContent =
+          (user.name || "User") +
+          " 👋";
+
+
+        document.getElementById(
+          "userEmail"
+        ).textContent =
+          user.email ||
+          "No email";
+
+
+        document.getElementById(
+          "walletId"
+        ).textContent =
+          "Account ID: " +
+          (user.id || "—");
+
+
+        const balance =
+          Number(
+            user.wallet_balance || 0
+          );
+
+
+        document.getElementById(
+          "walletBalance"
+        ).textContent =
+          "৳ " +
+          balance.toFixed(2);
+
+
+        if (user.referral_code) {
+
+          const referralURL =
+            window.location.origin +
+            "/register.html?ref=" +
+            encodeURIComponent(
+              user.referral_code
+            );
+
+
+          document.getElementById(
+            "referralLink"
+          ).value =
+            referralURL;
+
+        } else {
+
+          document.getElementById(
+            "referralLink"
+          ).value =
+            "No referral code";
+
+        }
+
+
+        localStorage.setItem(
+          "user",
+          JSON.stringify(user)
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Dashboard connection error:",
+          error
+        );
+
+
+        showError(
+          "Server-এর সাথে connection করা যাচ্ছে না।"
+        );
+
+      }
+
+    }
+
+
+    function copyReferral() {
+
+      const input =
+        document.getElementById(
+          "referralLink"
+        );
+
+
+      if (
+        !input.value ||
+        input.value === "Loading..." ||
+        input.value === "No referral code"
+      ) {
+
+        return;
+
+      }
+
+
+      navigator.clipboard
+        .writeText(input.value)
+        .then(function() {
+
+          alert(
+            "Referral link copied! ✅"
+          );
+
+        })
+        .catch(function() {
+
+          input.select();
+
+          document.execCommand(
+            "copy"
+          );
+
+          alert(
+            "Referral link copied! ✅"
+          );
+
+        });
+
+    }
+
+
+    function openModal(title) {
+
+      document.getElementById(
+        "modalTitle"
+      ).textContent =
+        title;
+
+
+      document.getElementById(
+        "modal"
+      ).style.display =
+        "flex";
+
+    }
+
+
+    function closeModal() {
+
+      document.getElementById(
+        "modal"
+      ).style.display =
+        "none";
+
+    }
+
+
+    function goAccount() {
+
+      window.location.href =
+        "account.html";
+
+    }
+
+
+    function logoutUser() {
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
       window.location.href = "login.html";
-      return;
     }
-    currentUser = data.user;
-    displayProfile(currentUser);
-    checkPendingStatus();
-  } catch (error) {
-    console.error(error);
-    showMessage("Profile load failed.", "error");
-  }
-}
 
-function displayProfile(user) {
-  document.getElementById("profileName").textContent = user.name || "User";
-  document.getElementById("profileEmail").textContent = user.email || "";
-  document.getElementById("name").textContent = user.name || "—";
-  document.getElementById("fatherName").textContent = user.father_name || "Not added";
-  document.getElementById("phone").textContent = user.phone || "—";
-  document.getElementById("email").textContent = user.email || "—";
-  document.getElementById("nid").textContent = user.nid || "Not added";
-  document.getElementById("address").textContent = user.address || "Not added";
-  document.getElementById("nomineeName").textContent = user.nominee_name || "Not added";
-  document.getElementById("nomineeNumber").textContent = user.nominee_number || "Not added";
-  document.getElementById("nomineeNid").textContent = user.nominee_nid || "Not added";
-  if (user.profile_pic) {
-    document.getElementById("profileImage").src = user.profile_pic;
-  } else {
-    document.getElementById("profileImage").src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(user.name || "User") + "&background=2563eb&color=fff&size=200";
-  }
-}
 
-function openEditModal() {
-  document.getElementById("editName").value = currentUser?.name || "";
-  document.getElementById("editFatherName").value = currentUser?.father_name || "";
-  document.getElementById("editPhone").value = currentUser?.phone || "";
-  document.getElementById("editEmail").value = currentUser?.email || "";
-  document.getElementById("editNid").value = currentUser?.nid || "";
-  document.getElementById("editAddress").value = currentUser?.address || "";
-  document.getElementById("editNomineeName").value = currentUser?.nominee_name || "";
-  document.getElementById("editNomineeNumber").value = currentUser?.nominee_number || "";
-  document.getElementById("editNomineeNid").value = currentUser?.nominee_nid || "";
-  document.getElementById("editModal").classList.add("active");
-}
+    document.getElementById(
+      "modal"
+    ).addEventListener(
+      "click",
+      function(event) {
 
-function closeEditModal() {
-  document.getElementById("editModal").classList.remove("active");
-  document.getElementById("message").className = "message";
-}
+        if (
+          event.target === this
+        ) {
 
-async function updateProfile() {
-  const updatedData = {
-    name: document.getElementById("editName").value.trim(),
-    father_name: document.getElementById("editFatherName").value.trim(),
-    phone: document.getElementById("editPhone").value.trim(),
-    email: document.getElementById("editEmail").value.trim(),
-    nid: document.getElementById("editNid").value.trim(),
-    address: document.getElementById("editAddress").value.trim(),
-    nominee_name: document.getElementById("editNomineeName").value.trim(),
-    nominee_number: document.getElementById("editNomineeNumber").value.trim(),
-    nominee_nid: document.getElementById("editNomineeNid").value.trim()
-  };
-  const btn = document.querySelector(".save-btn");
-  btn.textContent = "Sending Request...";
-  btn.disabled = true;
-  try {
-    const response = await fetch(API_URL + "/api/auth/profile", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
-      body: JSON.stringify(updatedData)
-    });
-    const data = await response.json();
-    if (!response.ok || !data.success) {
-      showMessage(data.message || "Update failed.", "error");
-      btn.textContent = "Save Changes";
-      btn.disabled = false;
-      return;
-    }
-    showMessage("Request sent to admin for approval.", "success");
-    checkPendingStatus();
-    setTimeout(() => { closeEditModal(); btn.textContent = "Save Changes"; btn.disabled = false; }, 1200);
-  } catch (error) {
-    showMessage("Server error.", "error");
-    btn.textContent = "Save Changes";
-    btn.disabled = false;
-  }
-}
+          closeModal();
 
-async function changePhoto(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = async function(e) {
-    const imageData = e.target.result;
-    document.getElementById("profileImage").src = imageData;
-    await fetch(API_URL + "/api/auth/profile-photo", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
-      body: JSON.stringify({ profile_pic: imageData })
-    });
-  };
-  reader.readAsDataURL(file);
-}
+        }
 
-function showMessage(text, type) {
-  const box = document.getElementById("message");
-  box.textContent = text;
-  box.className = "message " + type;
-}
+      }
+    );
 
-function goBack() { window.location.href = "dashboard.html"; }
-function logoutUser() { localStorage.removeItem("token"); localStorage.removeItem("user"); window.location.href = "login.html"; }
 
-loadProfile();
-</script>
+    loadUserData();
+
+  </script>
+
 </body>
 </html>
