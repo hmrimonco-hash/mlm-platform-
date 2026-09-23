@@ -3,170 +3,1080 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Account — Proyjon Marketing LTD</title>
+
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-    body { background: #07101d; color: #fff; min-height: 100vh; padding: 20px; padding-bottom: 90px; }
-    .container { max-width: 520px; margin: auto; }
-    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; }
-    .back-btn, .edit-btn { background: #18263a; border: 1px solid #34465f; color: white; padding: 10px 16px; border-radius: 12px; font-weight: bold; cursor: pointer; }
-    .profile-card { background: #101c2c; border: 1px solid #25374e; border-radius: 20px; padding: 20px; margin-bottom: 20px; }
-    .info-group { margin-bottom: 14px; }
-    .info-label { color: #8190a4; font-size: 11px; margin-bottom: 4px; }
-    .info-value { font-size: 14px; font-weight: bold; color: #fff; }
-    .input { width: 100%; padding: 12px; background: #0a1422; border: 1px solid #2b3d55; color: #cbd5e1; border-radius: 11px; font-size: 13px; }
-    .save-btn { width: 100%; background: #22c55e; border: none; color: #07101d; padding: 14px; border-radius: 13px; font-weight: bold; margin-top: 15px; cursor: pointer; display: none; }
-    .error-box { display: none; background: #35151a; border: 1px solid #693039; color: #ffb8c0; border-radius: 14px; padding: 12px; margin-bottom: 15px; font-size: 12px; }
-    .success-box { display: none; background: #143525; border: 1px solid #256943; color: #b8ffda; border-radius: 14px; padding: 12px; margin-bottom: 15px; font-size: 12px; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #07101d;
+      color: #fff;
+      min-height: 100vh;
+      padding: 20px;
+      padding-bottom: 40px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      margin: auto;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .header h2 {
+      font-size: 20px;
+      white-space: nowrap;
+    }
+
+    .back-btn,
+    .edit-btn {
+      background: #18263a;
+      border: 1px solid #34465f;
+      color: white;
+      padding: 10px 13px;
+      border-radius: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .back-btn:hover,
+    .edit-btn:hover {
+      background: #22344d;
+    }
+
+    .edit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .profile-card {
+      background: #101c2c;
+      border: 1px solid #25374e;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .info-group {
+      margin-bottom: 15px;
+    }
+
+    .info-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .info-label {
+      display: block;
+      color: #8190a4;
+      font-size: 11px;
+      margin-bottom: 5px;
+    }
+
+    .info-value {
+      font-size: 14px;
+      font-weight: bold;
+      color: #fff;
+      word-break: break-word;
+    }
+
+    .input {
+      width: 100%;
+      padding: 12px;
+      background: #0a1422;
+      border: 1px solid #2b3d55;
+      color: #fff;
+      border-radius: 11px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .input:focus {
+      border-color: #22c55e;
+    }
+
+    .save-btn {
+      width: 100%;
+      background: #22c55e;
+      border: none;
+      color: #07101d;
+      padding: 14px;
+      border-radius: 13px;
+      font-weight: bold;
+      margin-top: 10px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .save-btn:hover {
+      background: #16a34a;
+    }
+
+    .save-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .error-box,
+    .success-box,
+    .pending-box {
+      display: none;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 15px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .error-box {
+      background: #35151a;
+      border: 1px solid #693039;
+      color: #ffb8c0;
+    }
+
+    .success-box {
+      background: #143525;
+      border: 1px solid #256943;
+      color: #b8ffda;
+    }
+
+    .pending-box {
+      background: #302713;
+      border: 1px solid #66521f;
+      color: #ffe5a3;
+    }
+
+    .loading {
+      text-align: center;
+      color: #8190a4;
+      padding: 30px 0;
+      font-size: 13px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 15px;
+      }
+
+      .header {
+        align-items: center;
+      }
+
+      .header h2 {
+        font-size: 17px;
+      }
+
+      .back-btn,
+      .edit-btn {
+        padding: 9px 10px;
+        font-size: 11px;
+      }
+
+      .profile-card {
+        padding: 17px;
+      }
+    }
   </style>
 </head>
+
 <body>
 
   <div class="container">
+
+    <!-- HEADER -->
     <div class="header">
-      <button class="back-btn" onclick="history.back()">← Back</button>
+      <button class="back-btn" onclick="goBack()">← Back</button>
+
       <h2>My Account</h2>
-      <button class="edit-btn" id="editToggleBtn" onclick="toggleEdit()">✎ Edit Information</button>
+
+      <button
+        class="edit-btn"
+        id="editToggleBtn"
+        onclick="toggleEdit()"
+        disabled
+      >
+        ✎ Edit Information
+      </button>
     </div>
+
+
+    <!-- MESSAGES -->
 
     <div id="errorBox" class="error-box"></div>
+
     <div id="successBox" class="success-box"></div>
 
-    <div class="profile-card" id="profileView">
-      <div class="info-group"><div class="info-label">Name</div><div class="info-value" id="viewName">-</div></div>
-      <div class="info-group"><div class="info-label">Father's Name</div><div class="info-value" id="viewFather">-</div></div>
-      <div class="info-group"><div class="info-label">Phone</div><div class="info-value" id="viewPhone">-</div></div>
-      <div class="info-group"><div class="info-label">Email</div><div class="info-value" id="viewEmail">-</div></div>
-      <div class="info-group"><div class="info-label">NID</div><div class="info-value" id="viewNid">-</div></div>
-      <div class="info-group"><div class="info-label">Address</div><div class="info-value" id="viewAddress">-</div></div>
-      <div class="info-group"><div class="info-label">Nominee Name</div><div class="info-value" id="viewNomineeName">-</div></div>
-      <div class="info-group"><div class="info-label">Nominee Number</div><div class="info-value" id="viewNomineeNum">-</div></div>
-      <div class="info-group"><div class="info-label">Nominee NID</div><div class="info-value" id="viewNomineeNid">-</div></div>
+    <div id="pendingBox" class="pending-box">
+      ⏳ Your profile update is currently waiting for admin approval.
+      You cannot submit another update until the current request is reviewed.
     </div>
 
-    <form class="profile-card" id="profileForm" style="display:none;" onsubmit="handleUpdate(event)">
-      <div class="info-group"><label class="info-label">Name</label><input type="text" id="inpName" class="input" required></div>
-      <div class="info-group"><label class="info-label">Father's Name</label><input type="text" id="inpFather" class="input"></div>
-      <div class="info-group"><label class="info-label">Phone</label><input type="text" id="inpPhone" class="input"></div>
-      <div class="info-group"><label class="info-label">Email</label><input type="email" id="inpEmail" class="input" required></div>
-      <div class="info-group"><label class="info-label">NID</label><input type="text" id="inpNid" class="input"></div>
-      <div class="info-group"><label class="info-label">Address</label><input type="text" id="inpAddress" class="input"></div>
-      <div class="info-group"><label class="info-label">Nominee Name</label><input type="text" id="inpNomineeName" class="input"></div>
-      <div class="info-group"><label class="info-label">Nominee Number</label><input type="text" id="inpNomineeNum" class="input"></div>
-      <div class="info-group"><label class="info-label">Nominee NID</label><input type="text" id="inpNomineeNid" class="input"></div>
-      <button type="submit" class="save-btn" id="saveBtn" style="display:block;">Submit for Approval</button>
+
+    <!-- LOADING -->
+
+    <div id="loadingBox" class="loading">
+      Loading account information...
+    </div>
+
+
+    <!-- PROFILE VIEW -->
+
+    <div
+      class="profile-card hidden"
+      id="profileView"
+    >
+
+      <div class="info-group">
+        <div class="info-label">Name</div>
+        <div class="info-value" id="viewName">-</div>
+      </div>
+
+      <div class="info-group">
+        <div class="info-label">Father's Name</div>
+        <div class="info-value" id="viewFather">-</div>
+      </div>
+
+      <div class="info-group">
+        <div class="info-label">Phone</div>
+        <div class="info-value" id="viewPhone">-</div>
+      </div>
+
+      <div class="info-group">
+        <div class="info-label">Email</div>
+        <div class="info-value" id="viewEmail">-</div>
+      </div>
+
+      <div class="info-group">
+        <div class="info-label">NID</div>
+        <div class="info-value" id="viewNid">-</div>
+      </div>
+
+      <div class="info-group">
+        <div class="info-label">Address</div>
+        <div class="info-value" id="viewAddress">-</div>
+      </div>
+
+      <div class="info-group">
+        <div class="info-label">Nominee Name</div>
+        <div class="info-value" id="viewNomineeName">-</div>
+      </div>
+
+      <div class="info-group">
+        <div class="info-label">Nominee Number</div>
+        <div class="info-value" id="viewNomineeNum">-</div>
+      </div>
+
+      <div class="info-group">
+        <div class="info-label">Nominee NID</div>
+        <div class="info-value" id="viewNomineeNid">-</div>
+      </div>
+
+    </div>
+
+
+    <!-- EDIT FORM -->
+
+    <form
+      class="profile-card hidden"
+      id="profileForm"
+      onsubmit="handleUpdate(event)"
+    >
+
+      <div class="info-group">
+        <label class="info-label">Name</label>
+
+        <input
+          type="text"
+          id="inpName"
+          class="input"
+          required
+        >
+      </div>
+
+
+      <div class="info-group">
+        <label class="info-label">Father's Name</label>
+
+        <input
+          type="text"
+          id="inpFather"
+          class="input"
+        >
+      </div>
+
+
+      <div class="info-group">
+        <label class="info-label">Phone</label>
+
+        <input
+          type="text"
+          id="inpPhone"
+          class="input"
+        >
+      </div>
+
+
+      <div class="info-group">
+        <label class="info-label">Email</label>
+
+        <input
+          type="email"
+          id="inpEmail"
+          class="input"
+          required
+        >
+      </div>
+
+
+      <div class="info-group">
+        <label class="info-label">NID</label>
+
+        <input
+          type="text"
+          id="inpNid"
+          class="input"
+        >
+      </div>
+
+
+      <div class="info-group">
+        <label class="info-label">Address</label>
+
+        <input
+          type="text"
+          id="inpAddress"
+          class="input"
+        >
+      </div>
+
+
+      <div class="info-group">
+        <label class="info-label">Nominee Name</label>
+
+        <input
+          type="text"
+          id="inpNomineeName"
+          class="input"
+        >
+      </div>
+
+
+      <div class="info-group">
+        <label class="info-label">Nominee Number</label>
+
+        <input
+          type="text"
+          id="inpNomineeNum"
+          class="input"
+        >
+      </div>
+
+
+      <div class="info-group">
+        <label class="info-label">Nominee NID</label>
+
+        <input
+          type="text"
+          id="inpNomineeNid"
+          class="input"
+        >
+      </div>
+
+
+      <button
+        type="submit"
+        class="save-btn"
+        id="saveBtn"
+      >
+        Submit for Approval
+      </button>
+
     </form>
+
   </div>
 
-  <script>
-    const API_URL = "https://mlm-platform-production.up.railway.app";
-    const token = localStorage.getItem("token");
-    let isEditing = false;
 
-    if (!token) window.location.href = "login.html";
+  <script>
+
+    /* =========================================
+       CONFIG
+    ========================================= */
+
+    const API_URL =
+      "https://mlm-platform-production.up.railway.app";
+
+
+    /* =========================================
+       SESSION
+    ========================================= */
+
+    const token =
+      localStorage.getItem("token");
+
+
+    let isEditing = false;
+    let profileLoaded = false;
+    let profilePending = false;
+
+
+    /* =========================================
+       AUTH CHECK
+    ========================================= */
+
+    if (!token) {
+
+      window.location.href = "login.html";
+
+    }
+
+
+    /* =========================================
+       HELPERS
+    ========================================= */
+
+    function showError(message) {
+
+      const box =
+        document.getElementById("errorBox");
+
+      box.textContent =
+        message || "Something went wrong.";
+
+      box.style.display = "block";
+
+      document.getElementById("successBox")
+        .style.display = "none";
+
+    }
+
+
+    function showSuccess(message) {
+
+      const box =
+        document.getElementById("successBox");
+
+      box.textContent =
+        message || "Successful.";
+
+      box.style.display = "block";
+
+      document.getElementById("errorBox")
+        .style.display = "none";
+
+    }
+
+
+    function hideMessages() {
+
+      document.getElementById("errorBox")
+        .style.display = "none";
+
+      document.getElementById("successBox")
+        .style.display = "none";
+
+    }
+
+
+    function goBack() {
+
+      if (document.referrer) {
+
+        history.back();
+
+      } else {
+
+        window.location.href = "dashboard.html";
+
+      }
+
+    }
+
+
+    /* =========================================
+       HANDLE AUTH ERROR
+    ========================================= */
+
+    function handleUnauthorized() {
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+
+      alert("Your session has expired. Please login again.");
+
+      window.location.href = "login.html";
+
+    }
+
+
+    /* =========================================
+       LOAD PROFILE
+    ========================================= */
 
     async function loadProfile() {
+
+      if (!token) return;
+
+
       try {
-        const res = await fetch(API_URL + "/api/auth/me", {
-          headers: { "Authorization": "Bearer " + token }
-        });
-        const data = await res.json();
-        if (data.success && data.user) {
-          const u = data.user;
-          document.getElementById("viewName").textContent = u.name || '-';
-          document.getElementById("viewFather").textContent = u.father_name || '-';
-          document.getElementById("viewPhone").textContent = u.phone || '-';
-          document.getElementById("viewEmail").textContent = u.email || '-';
-          document.getElementById("viewNid").textContent = u.nid || '-';
-          document.getElementById("viewAddress").textContent = u.address || '-';
-          document.getElementById("viewNomineeName").textContent = u.nominee_name || '-';
-          document.getElementById("viewNomineeNum").textContent = u.nominee_number || '-';
-          document.getElementById("viewNomineeNid").textContent = u.nominee_nid || '-';
 
-          document.getElementById("inpName").value = u.name || '';
-          document.getElementById("inpFather").value = u.father_name || '';
-          document.getElementById("inpPhone").value = u.phone || '';
-          document.getElementById("inpEmail").value = u.email || '';
-          document.getElementById("inpNid").value = u.nid || '';
-          document.getElementById("inpAddress").value = u.address || '';
-          document.getElementById("inpNomineeName").value = u.nominee_name || '';
-          document.getElementById("inpNomineeNum").value = u.nominee_number || '';
-          document.getElementById("inpNomineeNid").value = u.nominee_nid || '';
+        const res = await fetch(
+          API_URL + "/api/auth/me",
+          {
+            method: "GET",
 
-          checkPendingStatus();
+            headers: {
+              "Accept": "application/json",
+              "Authorization": "Bearer " + token
+            }
+          }
+        );
+
+
+        if (res.status === 401) {
+
+          handleUnauthorized();
+          return;
+
         }
-      } catch (err) {
-        console.error(err);
+
+
+        const data =
+          await res.json();
+
+
+        if (!res.ok || !data.success || !data.user) {
+
+          showError(
+            data.message ||
+            "Unable to load account information."
+          );
+
+          return;
+
+        }
+
+
+        const u =
+          data.user;
+
+
+        /* =====================================
+           DISPLAY PROFILE
+        ===================================== */
+
+        document.getElementById("viewName")
+          .textContent = u.name || "-";
+
+        document.getElementById("viewFather")
+          .textContent = u.father_name || "-";
+
+        document.getElementById("viewPhone")
+          .textContent = u.phone || "-";
+
+        document.getElementById("viewEmail")
+          .textContent = u.email || "-";
+
+        document.getElementById("viewNid")
+          .textContent = u.nid || "-";
+
+        document.getElementById("viewAddress")
+          .textContent = u.address || "-";
+
+        document.getElementById("viewNomineeName")
+          .textContent = u.nominee_name || "-";
+
+        document.getElementById("viewNomineeNum")
+          .textContent = u.nominee_number || "-";
+
+        document.getElementById("viewNomineeNid")
+          .textContent = u.nominee_nid || "-";
+
+
+        /* =====================================
+           FILL EDIT FORM
+        ===================================== */
+
+        document.getElementById("inpName")
+          .value = u.name || "";
+
+        document.getElementById("inpFather")
+          .value = u.father_name || "";
+
+        document.getElementById("inpPhone")
+          .value = u.phone || "";
+
+        document.getElementById("inpEmail")
+          .value = u.email || "";
+
+        document.getElementById("inpNid")
+          .value = u.nid || "";
+
+        document.getElementById("inpAddress")
+          .value = u.address || "";
+
+        document.getElementById("inpNomineeName")
+          .value = u.nominee_name || "";
+
+        document.getElementById("inpNomineeNum")
+          .value = u.nominee_number || "";
+
+        document.getElementById("inpNomineeNid")
+          .value = u.nominee_nid || "";
+
+
+        /* =====================================
+           SAVE LOCAL USER
+        ===================================== */
+
+        localStorage.setItem(
+          "user",
+          JSON.stringify(u)
+        );
+
+
+        profileLoaded = true;
+
+
+        document.getElementById("loadingBox")
+          .classList.add("hidden");
+
+        document.getElementById("profileView")
+          .classList.remove("hidden");
+
+
+        await checkPendingStatus();
+
+
+      } catch (error) {
+
+        console.error(
+          "Profile loading error:",
+          error
+        );
+
+        showError(
+          "Unable to connect to server."
+        );
+
+        document.getElementById("loadingBox")
+          .textContent =
+          "Failed to load account information.";
+
       }
+
     }
+
+
+    /* =========================================
+       CHECK PROFILE PENDING STATUS
+    ========================================= */
 
     async function checkPendingStatus() {
+
       try {
-        const res = await fetch(API_URL + "/api/auth/profile-status", {
-          headers: { "Authorization": "Bearer " + token }
-        });
-        const data = await res.json();
-        const editBtn = document.getElementById("editToggleBtn");
-        if (data.isPending) {
-          editBtn.textContent = "⏳ Pending Approval";
-          editBtn.style.background = "#475569";
-          editBtn.disabled = true;
-        } else {
-          editBtn.textContent = "✎ Edit Information";
-          editBtn.style.background = "";
-          editBtn.disabled = false;
+
+        const res = await fetch(
+          API_URL + "/api/auth/profile-status",
+          {
+            method: "GET",
+
+            headers: {
+              "Accept": "application/json",
+              "Authorization": "Bearer " + token
+            }
+          }
+        );
+
+
+        if (res.status === 401) {
+
+          handleUnauthorized();
+          return;
+
         }
-      } catch (e) { console.error(e); }
+
+
+        const data =
+          await res.json();
+
+
+        const editBtn =
+          document.getElementById("editToggleBtn");
+
+
+        if (data.success === false) {
+
+          console.warn(
+            "Profile status response:",
+            data.message
+          );
+
+          editBtn.disabled = false;
+
+          return;
+
+        }
+
+
+        profilePending =
+          data.isPending === true;
+
+
+        if (profilePending) {
+
+          editBtn.textContent =
+            "⏳ Pending Approval";
+
+          editBtn.style.background =
+            "#475569";
+
+          editBtn.disabled = true;
+
+          document.getElementById("pendingBox")
+            .style.display = "block";
+
+        } else {
+
+          editBtn.textContent =
+            "✎ Edit Information";
+
+          editBtn.style.background =
+            "";
+
+          editBtn.disabled = false;
+
+          document.getElementById("pendingBox")
+            .style.display = "none";
+
+        }
+
+
+      } catch (error) {
+
+        console.error(
+          "Pending status error:",
+          error
+        );
+
+        document.getElementById("editToggleBtn")
+          .disabled = false;
+
+      }
+
     }
+
+
+    /* =========================================
+       TOGGLE EDIT
+    ========================================= */
 
     function toggleEdit() {
-      isEditing = !isEditing;
-      document.getElementById("profileView").style.display = isEditing ? "none" : "block";
-      document.getElementById("profileForm").style.display = isEditing ? "block" : "none";
-      document.getElementById("editToggleBtn").textContent = isEditing ? "Cancel" : "✎ Edit Information";
+
+      if (!profileLoaded) return;
+
+
+      if (profilePending) {
+
+        return;
+
+      }
+
+
+      isEditing =
+        !isEditing;
+
+
+      const view =
+        document.getElementById("profileView");
+
+      const form =
+        document.getElementById("profileForm");
+
+      const button =
+        document.getElementById("editToggleBtn");
+
+
+      if (isEditing) {
+
+        view.classList.add("hidden");
+
+        form.classList.remove("hidden");
+
+        button.textContent =
+          "✕ Cancel";
+
+      } else {
+
+        view.classList.remove("hidden");
+
+        form.classList.add("hidden");
+
+        button.textContent =
+          "✎ Edit Information";
+
+        hideMessages();
+
+      }
+
     }
+
+
+    /* =========================================
+       UPDATE PROFILE
+    ========================================= */
 
     async function handleUpdate(e) {
+
       e.preventDefault();
+
+
+      if (!token) {
+
+        handleUnauthorized();
+        return;
+
+      }
+
+
+      if (profilePending) {
+
+        showError(
+          "You already have a profile update waiting for admin approval."
+        );
+
+        return;
+
+      }
+
+
+      const saveBtn =
+        document.getElementById("saveBtn");
+
+
+      /* =====================================
+         COLLECT FORM DATA
+      ===================================== */
+
       const body = {
-        name: document.getElementById("inpName").value,
-        father_name: document.getElementById("inpFather").value,
-        phone: document.getElementById("inpPhone").value,
-        email: document.getElementById("inpEmail").value,
-        nid: document.getElementById("inpNid").value,
-        address: document.getElementById("inpAddress").value,
-        nominee_name: document.getElementById("inpNomineeName").value,
-        nominee_number: document.getElementById("inpNomineeNum").value,
-        nominee_nid: document.getElementById("inpNomineeNid").value
+
+        name:
+          document.getElementById("inpName")
+            .value.trim(),
+
+        father_name:
+          document.getElementById("inpFather")
+            .value.trim(),
+
+        phone:
+          document.getElementById("inpPhone")
+            .value.trim(),
+
+        email:
+          document.getElementById("inpEmail")
+            .value.trim(),
+
+        nid:
+          document.getElementById("inpNid")
+            .value.trim(),
+
+        address:
+          document.getElementById("inpAddress")
+            .value.trim(),
+
+        nominee_name:
+          document.getElementById("inpNomineeName")
+            .value.trim(),
+
+        nominee_number:
+          document.getElementById("inpNomineeNum")
+            .value.trim(),
+
+        nominee_nid:
+          document.getElementById("inpNomineeNid")
+            .value.trim()
+
       };
 
-      try {
-        const res = await fetch(API_URL + "/api/auth/profile", {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
-          },
-          body: JSON.stringify(body)
-        });
-        const data = await res.json();
-        if (data.success) {
-          document.getElementById("successBox").textContent = data.message;
-          document.getElementById("successBox").style.display = "block";
-          document.getElementById("errorBox").style.display = "none";
-          toggleEdit();
-          checkPendingStatus();
-        } else {
-          document.getElementById("errorBox").textContent = data.message;
-          document.getElementById("errorBox").style.display = "block";
-        }
-      } catch (err) {
-        document.getElementById("errorBox").textContent = "Request failed!";
-        document.getElementById("errorBox").style.display = "block";
+
+      /* =====================================
+         BASIC VALIDATION
+      ===================================== */
+
+      if (!body.name) {
+
+        showError(
+          "Name is required."
+        );
+
+        return;
+
       }
+
+
+      if (!body.email) {
+
+        showError(
+          "Email is required."
+        );
+
+        return;
+
+      }
+
+
+      /* =====================================
+         BUTTON LOADING
+      ===================================== */
+
+      saveBtn.disabled = true;
+
+      saveBtn.textContent =
+        "Submitting...";
+
+      hideMessages();
+
+
+      try {
+
+        const res = await fetch(
+          API_URL + "/api/auth/profile",
+          {
+            method: "PUT",
+
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+              "Authorization": "Bearer " + token
+            },
+
+            body: JSON.stringify(body)
+
+          }
+        );
+
+
+        if (res.status === 401) {
+
+          handleUnauthorized();
+          return;
+
+        }
+
+
+        const data =
+          await res.json();
+
+
+        if (!res.ok || !data.success) {
+
+          showError(
+            data.message ||
+            "Profile update failed."
+          );
+
+          return;
+
+        }
+
+
+        /* =====================================
+           SUCCESS
+        ===================================== */
+
+        showSuccess(
+          data.message ||
+          "Profile update submitted for admin approval."
+        );
+
+
+        /* =====================================
+           RETURN TO VIEW MODE
+        ===================================== */
+
+        isEditing = false;
+
+
+        document.getElementById("profileForm")
+          .classList.add("hidden");
+
+        document.getElementById("profileView")
+          .classList.remove("hidden");
+
+
+        document.getElementById("editToggleBtn")
+          .textContent =
+          "⏳ Pending Approval";
+
+        document.getElementById("editToggleBtn")
+          .style.background =
+          "#475569";
+
+        document.getElementById("editToggleBtn")
+          .disabled = true;
+
+
+        document.getElementById("pendingBox")
+          .style.display = "block";
+
+
+        profilePending = true;
+
+
+        /*
+          Reload profile so the page
+          shows the latest server data.
+        */
+
+        await loadProfile();
+
+
+      } catch (error) {
+
+        console.error(
+          "Profile update error:",
+          error
+        );
+
+        showError(
+          "Request failed. Please check your internet connection."
+        );
+
+      } finally {
+
+        saveBtn.disabled = false;
+
+        saveBtn.textContent =
+          "Submit for Approval";
+
+      }
+
     }
 
+
+    /* =========================================
+       INITIAL LOAD
+    ========================================= */
+
     loadProfile();
+
   </script>
+
 </body>
 </html>
