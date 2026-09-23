@@ -1807,6 +1807,40 @@ app.put(
   }
 );
 
+/* =========================
+   SETUP ADMIN (Temporary)
+========================= */
+app.get("/api/setup-admin", async (req, res) => {
+  try {
+    const adminEmail = "admin@proyjon.com";
+    const adminPassword = "admin12345"; 
+    
+    // চেক করুন এই ইমেইলে আগে থেকেই একাউন্ট আছে কি না
+    const [existing] = await db.query("SELECT id FROM users WHERE email = ?", [adminEmail]);
+    if (existing.length > 0) {
+      return res.json({ message: "Admin account already exists! Login with admin@proyjon.com and your password." });
+    }
+
+    // পাসওয়ার্ড হ্যাশ করে ডাটাবেজে সেভ করা
+    const hashedPassword = await bcrypt.hash(adminPassword, 10);
+    const generatedReferral = "ADMIN" + Date.now().toString().slice(-6);
+
+    await db.query(`
+      INSERT INTO users (name, email, password, role, referral_code)
+      VALUES (?, ?, ?, 'admin', ?)
+    `, ["Super Admin", adminEmail, hashedPassword, generatedReferral]);
+
+    res.json({ 
+      success: true, 
+      message: "Admin account created successfully!", 
+      email: adminEmail, 
+      password: adminPassword 
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 /* =========================
    ERROR HANDLER
@@ -1871,3 +1905,4 @@ createTables()
     process.exit(1);
 
   });
+
