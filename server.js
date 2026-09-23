@@ -61,46 +61,23 @@ async function createTables() {
 
     await db.query(`
       CREATE TABLE IF NOT EXISTS users (
-
         id INT AUTO_INCREMENT PRIMARY KEY,
-
         name VARCHAR(100) NOT NULL,
-
         email VARCHAR(150) NOT NULL UNIQUE,
-
         phone VARCHAR(30),
-
         password VARCHAR(255) NOT NULL,
-
-        role ENUM('user','admin')
-          DEFAULT 'user',
-
+        role ENUM('user','admin') DEFAULT 'user',
         referral_code VARCHAR(50) UNIQUE,
-
-        wallet_balance DECIMAL(12,2)
-          DEFAULT 0.00,
-
+        wallet_balance DECIMAL(12,2) DEFAULT 0.00,
         father_name VARCHAR(100),
-
         nid VARCHAR(50),
-
         address TEXT,
-
         nominee_name VARCHAR(100),
-
         nominee_number VARCHAR(30),
-
         nominee_nid VARCHAR(50),
-
         profile_pic LONGTEXT,
-
-        created_at TIMESTAMP
-          DEFAULT CURRENT_TIMESTAMP,
-
-        updated_at TIMESTAMP
-          DEFAULT CURRENT_TIMESTAMP
-          ON UPDATE CURRENT_TIMESTAMP
-
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       )
     `);
 
@@ -111,21 +88,12 @@ async function createTables() {
 
     await db.query(`
       CREATE TABLE IF NOT EXISTS packages (
-
         id INT AUTO_INCREMENT PRIMARY KEY,
-
         name VARCHAR(100) NOT NULL,
-
         price DECIMAL(12,2) NOT NULL,
-
         description TEXT,
-
-        status ENUM('active','inactive')
-          DEFAULT 'active',
-
-        created_at TIMESTAMP
-          DEFAULT CURRENT_TIMESTAMP
-
+        status ENUM('active','inactive') DEFAULT 'active',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
 
@@ -136,40 +104,16 @@ async function createTables() {
 
     await db.query(`
       CREATE TABLE IF NOT EXISTS transactions (
-
         id INT AUTO_INCREMENT PRIMARY KEY,
-
         user_id INT NOT NULL,
-
-        type ENUM(
-          'deposit',
-          'withdraw',
-          'package',
-          'share'
-        ) NOT NULL,
-
+        type ENUM('deposit','withdraw','package','share') NOT NULL,
         amount DECIMAL(12,2) NOT NULL,
-
         method VARCHAR(50),
-
         sender_number VARCHAR(30),
-
         transaction_id VARCHAR(100),
-
-        status ENUM(
-          'pending',
-          'approved',
-          'rejected'
-        )
-        DEFAULT 'pending',
-
-        created_at TIMESTAMP
-          DEFAULT CURRENT_TIMESTAMP,
-
-        FOREIGN KEY (user_id)
-          REFERENCES users(id)
-          ON DELETE CASCADE
-
+        status ENUM('pending','approved','rejected') DEFAULT 'pending',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `);
 
@@ -180,24 +124,12 @@ async function createTables() {
 
     await db.query(`
       CREATE TABLE IF NOT EXISTS user_packages (
-
         id INT AUTO_INCREMENT PRIMARY KEY,
-
         user_id INT NOT NULL,
-
         package_id INT NOT NULL,
-
-        purchased_at TIMESTAMP
-          DEFAULT CURRENT_TIMESTAMP,
-
-        FOREIGN KEY (user_id)
-          REFERENCES users(id)
-          ON DELETE CASCADE,
-
-        FOREIGN KEY (package_id)
-          REFERENCES packages(id)
-          ON DELETE CASCADE
-
+        purchased_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (package_id) REFERENCES packages(id) ON DELETE CASCADE
       )
     `);
 
@@ -208,22 +140,12 @@ async function createTables() {
 
     await db.query(`
       CREATE TABLE IF NOT EXISTS binary_tree (
-
         id INT AUTO_INCREMENT PRIMARY KEY,
-
         user_id INT NOT NULL UNIQUE,
-
         parent_id INT NULL,
-
         position ENUM('left','right') NULL,
-
-        created_at TIMESTAMP
-          DEFAULT CURRENT_TIMESTAMP,
-
-        FOREIGN KEY (user_id)
-          REFERENCES users(id)
-          ON DELETE CASCADE
-
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `);
 
@@ -234,30 +156,29 @@ async function createTables() {
 
     await db.query(`
       CREATE TABLE IF NOT EXISTS admin_alerts (
-
         id INT AUTO_INCREMENT PRIMARY KEY,
-
         user_id INT NOT NULL,
-
         type VARCHAR(50) NOT NULL,
-
         title VARCHAR(200) NOT NULL,
-
         message TEXT,
+        status ENUM('unread','read') DEFAULT 'unread',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      )
+    `);
+    
+    /* =========================
+       PROFILE REQUESTS
+    ========================= */
 
-        status ENUM(
-          'unread',
-          'read'
-        )
-        DEFAULT 'unread',
-
-        created_at TIMESTAMP
-          DEFAULT CURRENT_TIMESTAMP,
-
-        FOREIGN KEY (user_id)
-          REFERENCES users(id)
-          ON DELETE CASCADE
-
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS profile_requests (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        requested_data JSON NOT NULL,
+        status ENUM('pending','approved','rejected') DEFAULT 'pending',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `);
 
@@ -266,49 +187,15 @@ async function createTables() {
        OLD DATABASE COMPATIBILITY
     ========================= */
 
-    async function addColumnIfMissing(
-      table,
-      column,
-      definition
-    ) {
-
-      const [columns] =
-        await db.query(
-          `
-          SELECT COLUMN_NAME
-
-          FROM INFORMATION_SCHEMA.COLUMNS
-
-          WHERE TABLE_SCHEMA = ?
-
-          AND TABLE_NAME = ?
-
-          AND COLUMN_NAME = ?
-          `,
-          [
-            process.env.MYSQLDATABASE,
-            table,
-            column
-          ]
+    async function addColumnIfMissing(table, column, definition) {
+      const [columns] = await db.query(
+          `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND COLUMN_NAME = ?`,
+          [process.env.MYSQLDATABASE, table, column]
         );
-
-
       if (columns.length === 0) {
-
-        await db.query(
-          `
-          ALTER TABLE ${table}
-          ADD COLUMN ${column} ${definition}
-          `
-        );
-
-
-        console.log(
-          `Added column ${column} to ${table}`
-        );
-
+        await db.query(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+        console.log(`Added column ${column} to ${table}`);
       }
-
     }
 
 
@@ -316,79 +203,23 @@ async function createTables() {
        USERS OLD COLUMNS
     ========================= */
 
-    await addColumnIfMissing(
-      "users",
-      "father_name",
-      "VARCHAR(100)"
-    );
-
-
-    await addColumnIfMissing(
-      "users",
-      "nid",
-      "VARCHAR(50)"
-    );
-
-
-    await addColumnIfMissing(
-      "users",
-      "address",
-      "TEXT"
-    );
-
-
-    await addColumnIfMissing(
-      "users",
-      "nominee_name",
-      "VARCHAR(100)"
-    );
-
-
-    await addColumnIfMissing(
-      "users",
-      "nominee_number",
-      "VARCHAR(30)"
-    );
-
-
-    await addColumnIfMissing(
-      "users",
-      "nominee_nid",
-      "VARCHAR(50)"
-    );
-
-
-    await addColumnIfMissing(
-      "users",
-      "profile_pic",
-      "LONGTEXT"
-    );
-
+    await addColumnIfMissing("users", "father_name", "VARCHAR(100)");
+    await addColumnIfMissing("users", "nid", "VARCHAR(50)");
+    await addColumnIfMissing("users", "address", "TEXT");
+    await addColumnIfMissing("users", "nominee_name", "VARCHAR(100)");
+    await addColumnIfMissing("users", "nominee_number", "VARCHAR(30)");
+    await addColumnIfMissing("users", "nominee_nid", "VARCHAR(50)");
+    await addColumnIfMissing("users", "profile_pic", "LONGTEXT");
 
     /* IMPORTANT FIX */
+    await addColumnIfMissing("users", "updated_at", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
 
-    await addColumnIfMissing(
-      "users",
-      "updated_at",
-      "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-    );
-
-
-    console.log(
-      "Database tables are ready."
-    );
+    console.log("Database tables are ready.");
 
   } catch (error) {
-
-    console.error(
-      "Database table error:",
-      error.message
-    );
-
+    console.error("Database table error:", error.message);
     throw error;
-
   }
-
 }
 
 
@@ -396,71 +227,22 @@ async function createTables() {
    AUTH MIDDLEWARE
 ========================= */
 
-function authenticateToken(
-  req,
-  res,
-  next
-) {
-
-  const authHeader =
-    req.headers.authorization;
-
-
-  if (
-    !authHeader ||
-    !authHeader.startsWith("Bearer ")
-  ) {
-
-    return res.status(401).json({
-
-      success: false,
-
-      message:
-        "Authentication required"
-
-    });
-
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ success: false, message: "Authentication required" });
   }
 
-
-  const token =
-    authHeader.split(" ")[1];
-
+  const token = authHeader.split(" ")[1];
 
   try {
-
-    const decoded =
-      jwt.verify(
-        token,
-        JWT_SECRET
-      );
-
-
-    req.user =
-      decoded;
-
-
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded;
     next();
-
   } catch (error) {
-
-    console.error(
-      "JWT error:",
-      error.message
-    );
-
-
-    return res.status(401).json({
-
-      success: false,
-
-      message:
-        "Invalid or expired token"
-
-    });
-
+    console.error("JWT error:", error.message);
+    return res.status(401).json({ success: false, message: "Invalid or expired token" });
   }
-
 }
 
 
@@ -468,31 +250,11 @@ function authenticateToken(
    ADMIN MIDDLEWARE
 ========================= */
 
-function requireAdmin(
-  req,
-  res,
-  next
-) {
-
-  if (
-    !req.user ||
-    req.user.role !== "admin"
-  ) {
-
-    return res.status(403).json({
-
-      success: false,
-
-      message:
-        "Admin access required"
-
-    });
-
+function requireAdmin(req, res, next) {
+  if (!req.user || req.user.role !== "admin") {
+    return res.status(403).json({ success: false, message: "Admin access required" });
   }
-
-
   next();
-
 }
 
 
@@ -500,1328 +262,376 @@ function requireAdmin(
    HOME
 ========================= */
 
-app.get(
-  "/",
-  (req, res) => {
-
-    res.json({
-
-      success: true,
-
-      company:
-        "Proyjon Marketing LTD",
-
-      slogan:
-        "আপনার প্রয়োজন আমাদের আয়োজন",
-
-      message:
-        "Proyjon Marketing LTD API is running"
-
-    });
-
-  }
-);
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    company: "Proyjon Marketing LTD",
+    slogan: "আপনার প্রয়োজন আমাদের আয়োজন",
+    message: "Proyjon Marketing LTD API is running"
+  });
+});
 
 
 /* =========================
    HEALTH
 ========================= */
 
-app.get(
-  "/api/health",
-  (req, res) => {
-
-    res.json({
-
-      success: true,
-
-      status:
-        "OK"
-
-    });
-
-  }
-);
+app.get("/api/health", (req, res) => {
+  res.json({ success: true, status: "OK" });
+});
 
 
 /* =========================
    DB TEST
 ========================= */
 
-app.get(
-  "/api/db-test",
-  async (req, res) => {
-
-    try {
-
-      const [rows] =
-        await db.query(
-          "SELECT 1 AS test"
-        );
-
-
-      res.json({
-
-        success: true,
-
-        database:
-          "connected",
-
-        result:
-          rows
-
-      });
-
-    } catch (error) {
-
-      console.error(
-        "DB test error:",
-        error.message
-      );
-
-
-      res.status(500).json({
-
-        success: false,
-
-        message:
-          "Database connection failed"
-
-      });
-
-    }
-
+app.get("/api/db-test", async (req, res) => {
+  try {
+    const [rows] = await db.query("SELECT 1 AS test");
+    res.json({ success: true, database: "connected", result: rows });
+  } catch (error) {
+    console.error("DB test error:", error.message);
+    res.status(500).json({ success: false, message: "Database connection failed" });
   }
-);
+});
 
 
 /* =========================
    REGISTER
 ========================= */
 
-app.post(
-  "/api/auth/register",
-  async (req, res) => {
+app.post("/api/auth/register", async (req, res) => {
+  try {
+    const { name, email, phone, password, referral_code } = req.body;
 
-    try {
-
-      const {
-        name,
-        email,
-        phone,
-        password,
-        referral_code
-      } = req.body;
-
-
-      if (
-        !name ||
-        !email ||
-        !password
-      ) {
-
-        return res.status(400).json({
-
-          success: false,
-
-          message:
-            "Name, email and password are required"
-
-        });
-
-      }
-
-
-      const [existing] =
-        await db.query(
-          `
-          SELECT id
-          FROM users
-          WHERE email = ?
-          `,
-          [email]
-        );
-
-
-      if (existing.length > 0) {
-
-        return res.status(409).json({
-
-          success: false,
-
-          message:
-            "Email already registered"
-
-        });
-
-      }
-
-
-      const hashedPassword =
-        await bcrypt.hash(
-          password,
-          10
-        );
-
-
-      const generatedReferral =
-        "PM" +
-        Date.now()
-          .toString()
-          .slice(-8);
-
-
-      const [result] =
-        await db.query(
-          `
-          INSERT INTO users
-          (
-            name,
-            email,
-            phone,
-            password,
-            referral_code
-          )
-
-          VALUES (?, ?, ?, ?, ?)
-          `,
-          [
-            name,
-            email,
-            phone || null,
-            hashedPassword,
-            generatedReferral
-          ]
-        );
-
-
-      res.status(201).json({
-
-        success: true,
-
-        message:
-          "Registration successful",
-
-        user: {
-
-          id:
-            result.insertId,
-
-          name,
-
-          email,
-
-          phone:
-            phone || null,
-
-          referral_code:
-            generatedReferral
-
-        }
-
-      });
-
-    } catch (error) {
-
-      console.error(
-        "Register error:",
-        error.message
-      );
-
-
-      res.status(500).json({
-
-        success: false,
-
-        message:
-          "Registration failed"
-
-      });
-
+    if (!name || !email || !password) {
+      return res.status(400).json({ success: false, message: "Name, email and password are required" });
     }
 
+    const [existing] = await db.query("SELECT id FROM users WHERE email = ?", [email]);
+    if (existing.length > 0) {
+      return res.status(409).json({ success: false, message: "Email already registered" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const generatedReferral = "PM" + Date.now().toString().slice(-8);
+
+    const [result] = await db.query(
+      `INSERT INTO users (name, email, phone, password, referral_code) VALUES (?, ?, ?, ?, ?)`,
+      [name, email, phone || null, hashedPassword, generatedReferral]
+    );
+
+    res.status(201).json({
+      success: true,
+      message: "Registration successful",
+      user: {
+        id: result.insertId,
+        name,
+        email,
+        phone: phone || null,
+        referral_code: generatedReferral
+      }
+    });
+
+  } catch (error) {
+    console.error("Register error:", error.message);
+    res.status(500).json({ success: false, message: "Registration failed" });
   }
-);
+});
 
 
 /* =========================
    LOGIN
 ========================= */
 
-app.post(
-  "/api/auth/login",
-  async (req, res) => {
+app.post("/api/auth/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-    try {
-
-      const {
-        email,
-        password
-      } = req.body;
-
-
-      if (
-        !email ||
-        !password
-      ) {
-
-        return res.status(400).json({
-
-          success: false,
-
-          message:
-            "Email and password are required"
-
-        });
-
-      }
-
-
-      const [users] =
-        await db.query(
-          `
-          SELECT *
-          FROM users
-          WHERE email = ?
-          LIMIT 1
-          `,
-          [email]
-        );
-
-
-      if (users.length === 0) {
-
-        return res.status(401).json({
-
-          success: false,
-
-          message:
-            "Invalid email or password"
-
-        });
-
-      }
-
-
-      const user =
-        users[0];
-
-
-      const passwordMatch =
-        await bcrypt.compare(
-          password,
-          user.password
-        );
-
-
-      if (!passwordMatch) {
-
-        return res.status(401).json({
-
-          success: false,
-
-          message:
-            "Invalid email or password"
-
-        });
-
-      }
-
-
-      const token =
-        jwt.sign(
-          {
-            id:
-              user.id,
-
-            role:
-              user.role
-          },
-
-          JWT_SECRET,
-
-          {
-            expiresIn:
-              "7d"
-          }
-        );
-
-
-      delete user.password;
-
-
-      res.json({
-
-        success: true,
-
-        message:
-          "Login successful",
-
-        token,
-
-        user
-
-      });
-
-    } catch (error) {
-
-      console.error(
-        "Login error:",
-        error.message
-      );
-
-
-      res.status(500).json({
-
-        success: false,
-
-        message:
-          "Login failed"
-
-      });
-
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: "Email and password are required" });
     }
 
+    const [users] = await db.query("SELECT * FROM users WHERE email = ? LIMIT 1", [email]);
+    if (users.length === 0) {
+      return res.status(401).json({ success: false, message: "Invalid email or password" });
+    }
+
+    const user = users[0];
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      return res.status(401).json({ success: false, message: "Invalid email or password" });
+    }
+
+    const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: "7d" });
+    delete user.password;
+
+    res.json({ success: true, message: "Login successful", token, user });
+
+  } catch (error) {
+    console.error("Login error:", error.message);
+    res.status(500).json({ success: false, message: "Login failed" });
   }
-);
+});
 
 
 /* =========================
    CURRENT USER
 ========================= */
 
-app.get(
-  "/api/auth/me",
-  authenticateToken,
-  async (req, res) => {
+app.get("/api/auth/me", authenticateToken, async (req, res) => {
+  try {
+    const [users] = await db.query(
+      `SELECT id, name, email, phone, role, referral_code, wallet_balance, father_name, nid, address, nominee_name, nominee_number, nominee_nid, profile_pic, created_at, updated_at FROM users WHERE id = ?`,
+      [req.user.id]
+    );
 
-    try {
-
-      const [users] =
-        await db.query(
-          `
-          SELECT
-
-            id,
-
-            name,
-
-            email,
-
-            phone,
-
-            role,
-
-            referral_code,
-
-            wallet_balance,
-
-            father_name,
-
-            nid,
-
-            address,
-
-            nominee_name,
-
-            nominee_number,
-
-            nominee_nid,
-
-            profile_pic,
-
-            created_at,
-
-            updated_at
-
-          FROM users
-
-          WHERE id = ?
-          `,
-          [
-            req.user.id
-          ]
-        );
-
-
-      if (users.length === 0) {
-
-        return res.status(404).json({
-
-          success: false,
-
-          message:
-            "User not found"
-
-        });
-
-      }
-
-
-      res.json({
-
-        success: true,
-
-        user:
-          users[0]
-
-      });
-
-    } catch (error) {
-
-      console.error(
-        "Get user error:",
-        error
-      );
-
-
-      res.status(500).json({
-
-        success: false,
-
-        message:
-          "Failed to load user information",
-
-        error:
-          error.message
-
-      });
-
+    if (users.length === 0) {
+      return res.status(404).json({ success: false, message: "User not found" });
     }
 
+    res.json({ success: true, user: users[0] });
+
+  } catch (error) {
+    console.error("Get user error:", error);
+    res.status(500).json({ success: false, message: "Failed to load user information", error: error.message });
   }
-);
+});
 
 
 /* =========================
-   UPDATE PROFILE
+   UPDATE PROFILE (PENDING SYSTEM)
 ========================= */
 
-app.put(
-  "/api/auth/profile",
-  authenticateToken,
-  async (req, res) => {
-
-    try {
-
-      const userId =
-        req.user.id;
-
-
-      const {
-        name,
-        father_name,
-        phone,
-        email,
-        nid,
-        address,
-        nominee_name,
-        nominee_number,
-        nominee_nid
-      } = req.body;
-
-
-      if (
-        !name ||
-        !email
-      ) {
-
-        return res.status(400).json({
-
-          success: false,
-
-          message:
-            "Name and email are required"
-
-        });
-
-      }
-
-
-      const [emailUsers] =
-        await db.query(
-          `
-          SELECT id
-
-          FROM users
-
-          WHERE email = ?
-
-          AND id != ?
-          `,
-          [
-            email,
-            userId
-          ]
-        );
-
-
-      if (
-        emailUsers.length > 0
-      ) {
-
-        return res.status(409).json({
-
-          success: false,
-
-          message:
-            "This email is already used by another account"
-
-        });
-
-      }
-
-
-      const [oldUsers] =
-        await db.query(
-          `
-          SELECT
-
-            name,
-
-            email,
-
-            phone,
-
-            father_name,
-
-            nid,
-
-            address,
-
-            nominee_name,
-
-            nominee_number,
-
-            nominee_nid
-
-          FROM users
-
-          WHERE id = ?
-          `,
-          [
-            userId
-          ]
-        );
-
-
-      if (
-        oldUsers.length === 0
-      ) {
-
-        return res.status(404).json({
-
-          success: false,
-
-          message:
-            "User not found"
-
-        });
-
-      }
-
-
-      const oldUser =
-        oldUsers[0];
-
-
-      const changedFields = [];
-
-
-      if (
-        oldUser.name !== name
-      ) {
-
-        changedFields.push(
-          "Name"
-        );
-
-      }
-
-
-      if (
-        oldUser.email !== email
-      ) {
-
-        changedFields.push(
-          "Email"
-        );
-
-      }
-
-
-      if (
-        (oldUser.phone || "") !==
-        (phone || "")
-      ) {
-
-        changedFields.push(
-          "Mobile Number"
-        );
-
-      }
-
-
-      if (
-        (oldUser.father_name || "") !==
-        (father_name || "")
-      ) {
-
-        changedFields.push(
-          "Father's Name"
-        );
-
-      }
-
-
-      if (
-        (oldUser.nid || "") !==
-        (nid || "")
-      ) {
-
-        changedFields.push(
-          "NID"
-        );
-
-      }
-
-
-      if (
-        (oldUser.address || "") !==
-        (address || "")
-      ) {
-
-        changedFields.push(
-          "Address"
-        );
-
-      }
-
-
-      if (
-        (oldUser.nominee_name || "") !==
-        (nominee_name || "")
-      ) {
-
-        changedFields.push(
-          "Nominee Name"
-        );
-
-      }
-
-
-      if (
-        (oldUser.nominee_number || "") !==
-        (nominee_number || "")
-      ) {
-
-        changedFields.push(
-          "Nominee Number"
-        );
-
-      }
-
-
-      if (
-        (oldUser.nominee_nid || "") !==
-        (nominee_nid || "")
-      ) {
-
-        changedFields.push(
-          "Nominee NID"
-        );
-
-      }
-
-
-      await db.query(
-        `
-        UPDATE users
-
-        SET
-
-          name = ?,
-
-          email = ?,
-
-          phone = ?,
-
-          father_name = ?,
-
-          nid = ?,
-
-          address = ?,
-
-          nominee_name = ?,
-
-          nominee_number = ?,
-
-          nominee_nid = ?
-
-        WHERE id = ?
-        `,
-        [
-
-          name,
-
-          email,
-
-          phone || null,
-
-          father_name || null,
-
-          nid || null,
-
-          address || null,
-
-          nominee_name || null,
-
-          nominee_number || null,
-
-          nominee_nid || null,
-
-          userId
-
-        ]
-      );
-
-
-      /* ADMIN ALERT */
-
-      if (
-        changedFields.length > 0
-      ) {
-
-        const [userInfo] =
-          await db.query(
-            `
-            SELECT
-              name,
-              email
-
-            FROM users
-
-            WHERE id = ?
-            `,
-            [
-              userId
-            ]
-          );
-
-
-        const displayName =
-          userInfo[0]?.name ||
-          "User";
-
-
-        const message =
-          `${displayName} updated profile information. ` +
-          `Changed fields: ` +
-          changedFields.join(", ") +
-          ".";
-
-
-        await db.query(
-          `
-          INSERT INTO admin_alerts
-          (
-            user_id,
-            type,
-            title,
-            message
-          )
-
-          VALUES (?, ?, ?, ?)
-          `,
-          [
-
-            userId,
-
-            "profile_update",
-
-            "Profile Update",
-
-            message
-
-          ]
-        );
-
-      }
-
-
-      const [updatedUsers] =
-        await db.query(
-          `
-          SELECT
-
-            id,
-
-            name,
-
-            email,
-
-            phone,
-
-            role,
-
-            referral_code,
-
-            wallet_balance,
-
-            father_name,
-
-            nid,
-
-            address,
-
-            nominee_name,
-
-            nominee_number,
-
-            nominee_nid,
-
-            profile_pic,
-
-            created_at,
-
-            updated_at
-
-          FROM users
-
-          WHERE id = ?
-          `,
-          [
-            userId
-          ]
-        );
-
-
-      res.json({
-
-        success: true,
-
-        message:
-          "Profile updated successfully",
-
-        user:
-          updatedUsers[0],
-
-        changedFields
-
-      });
-
-    } catch (error) {
-
-      console.error(
-        "Profile update error:",
-        error
-      );
-
-
-      res.status(500).json({
-
-        success: false,
-
-        message:
-          "Profile update failed",
-
-        error:
-          error.message
-
-      });
-
+app.put("/api/auth/profile", authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const requestedData = req.body;
+    const { email } = requestedData;
+
+    if (!email) {
+      return res.status(400).json({ success: false, message: "Email is required" });
     }
 
+    // Email duplicate check
+    const [emailUsers] = await db.query("SELECT id FROM users WHERE email = ? AND id != ?", [email, userId]);
+    if (emailUsers.length > 0) {
+      return res.status(409).json({ success: false, message: "This email is already used by another account" });
+    }
+
+    // Check if there is already a pending request
+    const [existing] = await db.query(
+      "SELECT id FROM profile_requests WHERE user_id = ? AND status = 'pending'",
+      [userId]
+    );
+
+    if (existing.length > 0) {
+      return res.status(400).json({ success: false, message: "আপনার একটি রিকোয়েস্ট আগেই Pending আছে। অ্যাডমিন অ্যাপ্রুভ করা পর্যন্ত অপেক্ষা করুন।" });
+    }
+
+    // Create a new pending request
+    await db.query(
+      "INSERT INTO profile_requests (user_id, requested_data) VALUES (?, ?)",
+      [userId, JSON.stringify(requestedData)]
+    );
+
+    res.json({ success: true, message: "Profile update request sent to admin for approval." });
+
+  } catch (error) {
+    console.error("Profile request error:", error);
+    res.status(500).json({ success: false, message: "Request failed", error: error.message });
   }
-);
+});
+
+
+/* =========================
+   CHECK PENDING PROFILE STATUS
+========================= */
+
+app.get("/api/auth/profile-status", authenticateToken, async (req, res) => {
+  try {
+    const [pending] = await db.query(
+      "SELECT id FROM profile_requests WHERE user_id = ? AND status = 'pending'",
+      [req.user.id]
+    );
+    res.json({ success: true, isPending: pending.length > 0 });
+  } catch (error) {
+    res.json({ success: false, isPending: false });
+  }
+});
+
+
+/* =========================
+   ADMIN: GET PROFILE REQUESTS
+========================= */
+
+app.get("/api/admin/profile-requests", authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const [requests] = await db.query(`
+      SELECT p.id, p.user_id, p.requested_data, p.created_at, 
+             u.name as current_name, u.phone as current_phone 
+      FROM profile_requests p
+      JOIN users u ON p.user_id = u.id
+      WHERE p.status = 'pending'
+      ORDER BY p.created_at DESC
+    `);
+    res.json({ success: true, requests });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to load requests" });
+  }
+});
+
+
+/* =========================
+   ADMIN: APPROVE/REJECT PROFILE
+========================= */
+
+app.put("/api/admin/profile-requests/:id", authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const { action } = req.body; // 'approve' or 'reject'
+    const requestId = req.params.id;
+
+    const [requests] = await db.query("SELECT * FROM profile_requests WHERE id = ?", [requestId]);
+    if (requests.length === 0) return res.status(404).json({ success: false, message: "Request not found" });
+
+    const reqData = requests[0];
+
+    if (action === 'approve') {
+      const newData = typeof reqData.requested_data === 'string' ? JSON.parse(reqData.requested_data) : reqData.requested_data;
+
+      // Update the main users table
+      await db.query(`
+        UPDATE users SET 
+          name = ?, father_name = ?, phone = ?, email = ?, nid = ?, address = ?, 
+          nominee_name = ?, nominee_number = ?, nominee_nid = ?
+        WHERE id = ?
+      `, [
+        newData.name, newData.father_name || null, newData.phone || null, newData.email, newData.nid || null,
+        newData.address || null, newData.nominee_name || null, newData.nominee_number || null, newData.nominee_nid || null,
+        reqData.user_id
+      ]);
+
+      await db.query("UPDATE profile_requests SET status = 'approved' WHERE id = ?", [requestId]);
+      
+      // Add Admin Alert
+      await db.query(
+        "INSERT INTO admin_alerts (user_id, type, title, message) VALUES (?, ?, ?, ?)",
+        [reqData.user_id, "profile_approved", "Profile Approved", "Admin approved a profile update."]
+      );
+
+      res.json({ success: true, message: "Profile approved successfully!" });
+    } else {
+      await db.query("UPDATE profile_requests SET status = 'rejected' WHERE id = ?", [requestId]);
+      res.json({ success: true, message: "Profile request rejected." });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Action failed", error: error.message });
+  }
+});
 
 
 /* =========================
    UPDATE PROFILE PHOTO
 ========================= */
 
-app.put(
-  "/api/auth/profile-photo",
-  authenticateToken,
-  async (req, res) => {
-
-    try {
-
-      const userId =
-        req.user.id;
-
-
-      const {
-        profile_pic
-      } = req.body;
-
-
-      if (!profile_pic) {
-
-        return res.status(400).json({
-
-          success: false,
-
-          message:
-            "Profile photo is required"
-
-        });
-
-      }
-
-
-      await db.query(
-        `
-        UPDATE users
-
-        SET profile_pic = ?
-
-        WHERE id = ?
-        `,
-        [
-          profile_pic,
-          userId
-        ]
-      );
-
-
-      const [users] =
-        await db.query(
-          `
-          SELECT name
-
-          FROM users
-
-          WHERE id = ?
-          `,
-          [
-            userId
-          ]
-        );
-
-
-      const userName =
-        users[0]?.name ||
-        "User";
-
-
-      await db.query(
-        `
-        INSERT INTO admin_alerts
-        (
-          user_id,
-          type,
-          title,
-          message
-        )
-
-        VALUES (?, ?, ?, ?)
-        `,
-        [
-
-          userId,
-
-          "profile_photo_update",
-
-          "Profile Photo Updated",
-
-          `${userName} updated their profile photo.`
-
-        ]
-      );
-
-
-      const [updatedUsers] =
-        await db.query(
-          `
-          SELECT
-
-            id,
-
-            name,
-
-            email,
-
-            phone,
-
-            role,
-
-            referral_code,
-
-            wallet_balance,
-
-            father_name,
-
-            nid,
-
-            address,
-
-            nominee_name,
-
-            nominee_number,
-
-            nominee_nid,
-
-            profile_pic,
-
-            created_at,
-
-            updated_at
-
-          FROM users
-
-          WHERE id = ?
-          `,
-          [
-            userId
-          ]
-        );
-
-
-      res.json({
-
-        success: true,
-
-        message:
-          "Profile photo updated successfully",
-
-        user:
-          updatedUsers[0]
-
-      });
-
-    } catch (error) {
-
-      console.error(
-        "Profile photo error:",
-        error
-      );
-
-
-      res.status(500).json({
-
-        success: false,
-
-        message:
-          "Profile photo update failed",
-
-        error:
-          error.message
-
-      });
-
+app.put("/api/auth/profile-photo", authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { profile_pic } = req.body;
+
+    if (!profile_pic) {
+      return res.status(400).json({ success: false, message: "Profile photo is required" });
     }
 
+    await db.query("UPDATE users SET profile_pic = ? WHERE id = ?", [profile_pic, userId]);
+
+    const [users] = await db.query("SELECT name FROM users WHERE id = ?", [userId]);
+    const userName = users[0]?.name || "User";
+
+    await db.query(
+      `INSERT INTO admin_alerts (user_id, type, title, message) VALUES (?, ?, ?, ?)`,
+      [userId, "profile_photo_update", "Profile Photo Updated", `${userName} updated their profile photo.`]
+    );
+
+    const [updatedUsers] = await db.query(
+      `SELECT id, name, email, phone, role, referral_code, wallet_balance, father_name, nid, address, nominee_name, nominee_number, nominee_nid, profile_pic, created_at, updated_at FROM users WHERE id = ?`,
+      [userId]
+    );
+
+    res.json({ success: true, message: "Profile photo updated successfully", user: updatedUsers[0] });
+
+  } catch (error) {
+    console.error("Profile photo error:", error);
+    res.status(500).json({ success: false, message: "Profile photo update failed", error: error.message });
   }
-);
+});
 
 
 /* =========================
    ADMIN ALERTS
 ========================= */
 
-app.get(
-  "/api/admin/alerts",
-  authenticateToken,
-  requireAdmin,
-  async (req, res) => {
-
-    try {
-
-      const [alerts] =
-        await db.query(
-          `
-          SELECT
-
-            a.id,
-
-            a.type,
-
-            a.title,
-
-            a.message,
-
-            a.status,
-
-            a.created_at,
-
-            u.id AS user_id,
-
-            u.name AS user_name,
-
-            u.email AS user_email
-
-          FROM admin_alerts a
-
-          JOIN users u
-            ON a.user_id = u.id
-
-          ORDER BY
-            a.created_at DESC
-          `
-        );
-
-
-      res.json({
-
-        success: true,
-
-        alerts
-
-      });
-
-    } catch (error) {
-
-      console.error(
-        "Admin alerts error:",
-        error
-      );
-
-
-      res.status(500).json({
-
-        success: false,
-
-        message:
-          "Failed to load admin alerts"
-
-      });
-
-    }
-
+app.get("/api/admin/alerts", authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const [alerts] = await db.query(`
+      SELECT a.id, a.type, a.title, a.message, a.status, a.created_at, u.id AS user_id, u.name AS user_name, u.email AS user_email
+      FROM admin_alerts a
+      JOIN users u ON a.user_id = u.id
+      ORDER BY a.created_at DESC
+    `);
+    res.json({ success: true, alerts });
+  } catch (error) {
+    console.error("Admin alerts error:", error);
+    res.status(500).json({ success: false, message: "Failed to load admin alerts" });
   }
-);
+});
 
 
 /* =========================
    ADMIN UNREAD ALERT COUNT
 ========================= */
 
-app.get(
-  "/api/admin/alerts/unread-count",
-  authenticateToken,
-  requireAdmin,
-  async (req, res) => {
-
-    try {
-
-      const [rows] =
-        await db.query(
-          `
-          SELECT
-            COUNT(*) AS count
-
-          FROM admin_alerts
-
-          WHERE status = 'unread'
-          `
-        );
-
-
-      res.json({
-
-        success: true,
-
-        count:
-          rows[0].count
-
-      });
-
-    } catch (error) {
-
-      console.error(
-        "Unread alert error:",
-        error
-      );
-
-
-      res.status(500).json({
-
-        success: false,
-
-        message:
-          "Failed to load alert count"
-
-      });
-
-    }
-
+app.get("/api/admin/alerts/unread-count", authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const [rows] = await db.query("SELECT COUNT(*) AS count FROM admin_alerts WHERE status = 'unread'");
+    res.json({ success: true, count: rows[0].count });
+  } catch (error) {
+    console.error("Unread alert error:", error);
+    res.status(500).json({ success: false, message: "Failed to load alert count" });
   }
-);
+});
 
 
 /* =========================
    MARK ALERT AS READ
 ========================= */
 
-app.put(
-  "/api/admin/alerts/:id/read",
-  authenticateToken,
-  requireAdmin,
-  async (req, res) => {
-
-    try {
-
-      await db.query(
-        `
-        UPDATE admin_alerts
-
-        SET status = 'read'
-
-        WHERE id = ?
-        `,
-        [
-          req.params.id
-        ]
-      );
-
-
-      res.json({
-
-        success: true,
-
-        message:
-          "Alert marked as read"
-
-      });
-
-    } catch (error) {
-
-      console.error(
-        "Mark alert error:",
-        error
-      );
-
-
-      res.status(500).json({
-
-        success: false,
-
-        message:
-          "Failed to update alert"
-
-      });
-
-    }
-
+app.put("/api/admin/alerts/:id/read", authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    await db.query("UPDATE admin_alerts SET status = 'read' WHERE id = ?", [req.params.id]);
+    res.json({ success: true, message: "Alert marked as read" });
+  } catch (error) {
+    console.error("Mark alert error:", error);
+    res.status(500).json({ success: false, message: "Failed to update alert" });
   }
-);
+});
+
 
 /* =========================
    SETUP ADMIN (Temporary)
 ========================= */
+
 app.get("/api/setup-admin", async (req, res) => {
   try {
     const adminEmail = "admin@proyjon.com";
     const adminPassword = "admin12345"; 
     
-    // চেক করুন এই ইমেইলে আগে থেকেই একাউন্ট আছে কি না
     const [existing] = await db.query("SELECT id FROM users WHERE email = ?", [adminEmail]);
     if (existing.length > 0) {
       return res.json({ message: "Admin account already exists! Login with admin@proyjon.com and your password." });
     }
 
-    // পাসওয়ার্ড হ্যাশ করে ডাটাবেজে সেভ করা
     const hashedPassword = await bcrypt.hash(adminPassword, 10);
     const generatedReferral = "ADMIN" + Date.now().toString().slice(-6);
 
@@ -1846,63 +656,21 @@ app.get("/api/setup-admin", async (req, res) => {
    ERROR HANDLER
 ========================= */
 
-app.use(
-  (
-    err,
-    req,
-    res,
-    next
-  ) => {
-
-    console.error(
-      "Server error:",
-      err
-    );
-
-
-    res.status(500).json({
-
-      success: false,
-
-      message:
-        "Internal server error"
-
-    });
-
-  }
-);
+app.use((err, req, res, next) => {
+  console.error("Server error:", err);
+  res.status(500).json({ success: false, message: "Internal server error" });
+});
 
 
 /* =========================
    START SERVER
 ========================= */
 
-createTables()
-
-  .then(() => {
-
-    app.listen(
-      PORT,
-      "0.0.0.0",
-      () => {
-
-        console.log(
-          `Server running on port ${PORT}`
-        );
-
-      }
-    );
-
-  })
-
-  .catch((error) => {
-
-    console.error(
-      "Server startup failed:",
-      error.message
-    );
-
-    process.exit(1);
-
+createTables().then(() => {
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server running on port ${PORT}`);
   });
-
+}).catch((error) => {
+  console.error("Server startup failed:", error.message);
+  process.exit(1);
+});
