@@ -637,20 +637,27 @@ app.put("/api/admin/alerts/:id/read", authenticateToken, requireAdmin, async (re
 
 
 /* =========================
-   SETUP ADMIN (Temporary)
+   SETUP ADMIN (Password: 123456)
 ========================= */
 
 app.get("/api/setup-admin", async (req, res) => {
   try {
     const adminEmail = "admin@proyjon.com";
-    const adminPassword = "admin12345"; 
+    const adminPassword = "123456"; 
     
+    const hashedPassword = await bcrypt.hash(adminPassword, 10);
     const [existing] = await db.query("SELECT id FROM users WHERE email = ?", [adminEmail]);
+    
     if (existing.length > 0) {
-      return res.json({ message: "Admin account already exists! Login with admin@proyjon.com and your password." });
+      await db.query("UPDATE users SET password = ?, role = 'admin' WHERE email = ?", [hashedPassword, adminEmail]);
+      return res.json({ 
+        success: true, 
+        message: "Admin password updated to 123456!", 
+        email: adminEmail, 
+        password: adminPassword 
+      });
     }
 
-    const hashedPassword = await bcrypt.hash(adminPassword, 10);
     const generatedReferral = "ADMIN" + Date.now().toString().slice(-6);
 
     await db.query(`
@@ -660,7 +667,7 @@ app.get("/api/setup-admin", async (req, res) => {
 
     res.json({ 
       success: true, 
-      message: "Admin account created successfully!", 
+      message: "Admin account created successfully with password 123456!", 
       email: adminEmail, 
       password: adminPassword 
     });
