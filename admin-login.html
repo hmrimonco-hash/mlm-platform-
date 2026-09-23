@@ -3,11 +3,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Admin Dashboard</title><style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+*{box-sizing:border-box;margin:0;padding:0}
 
 body{
   background:#070b12;
@@ -17,9 +13,7 @@ body{
   padding-bottom:80px;
 }
 
-button,input{
-  font:inherit;
-}
+button,input{font:inherit}
 
 .header{
   height:70px;
@@ -49,10 +43,7 @@ button,input{
   font-size:20px;
 }
 
-.name{
-  font-size:14px;
-  font-weight:800;
-}
+.name{font-size:14px;font-weight:800}
 
 .sub{
   color:#8994a5;
@@ -114,9 +105,7 @@ button,input{
   transition:.15s;
 }
 
-.card:active{
-  transform:scale(.97);
-}
+.card:active{transform:scale(.97)}
 
 .icon{
   font-size:22px;
@@ -145,9 +134,7 @@ button,input{
   background:rgba(0,0,0,.75);
 }
 
-.overlay.show{
-  display:flex;
-}
+.overlay.show{display:flex}
 
 .modal{
   width:100%;
@@ -158,18 +145,6 @@ button,input{
   border:1px solid #263044;
   border-radius:24px 24px 0 0;
   padding:20px;
-  animation:up .2s ease;
-}
-
-@keyframes up{
-  from{
-    transform:translateY(40px);
-    opacity:0;
-  }
-  to{
-    transform:translateY(0);
-    opacity:1;
-  }
 }
 
 .modal-head{
@@ -196,9 +171,7 @@ button,input{
   font-size:20px;
 }
 
-.modal-title h2{
-  font-size:17px;
-}
+.modal-title h2{font-size:17px}
 
 .modal-title p{
   color:#7f8a9c;
@@ -233,9 +206,7 @@ button,input{
   cursor:pointer;
 }
 
-.action:active{
-  transform:scale(.98);
-}
+.action:active{transform:scale(.98)}
 
 .action-icon{
   font-size:20px;
@@ -254,13 +225,8 @@ button,input{
   margin-top:4px;
 }
 
-.form{
-  display:none;
-}
-
-.form.show{
-  display:block;
-}
+.form{display:none}
+.form.show{display:block}
 
 .form-title{
   font-size:15px;
@@ -268,9 +234,7 @@ button,input{
   margin-bottom:14px;
 }
 
-.input-group{
-  margin-bottom:11px;
-}
+.input-group{margin-bottom:11px}
 
 .input-group label{
   display:block;
@@ -289,9 +253,7 @@ button,input{
   color:white;
 }
 
-.input:focus{
-  border-color:#6c63ff;
-}
+.input:focus{border-color:#6c63ff}
 
 .primary{
   width:100%;
@@ -316,6 +278,11 @@ button,input{
   margin-top:9px;
 }
 
+.primary:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+
 .info-box{
   background:#101725;
   border:1px solid #273143;
@@ -334,6 +301,11 @@ button,input{
   color:#fff;
   font-weight:bold;
   word-break:break-word;
+}
+
+.error-box{
+  color:#fca5a5;
+  line-height:1.6;
 }
 
 .logout{
@@ -371,13 +343,8 @@ button,input{
   transform:translate(-50%,0);
 }
 
-.toast.success{
-  border-color:#245c43;
-}
-
-.toast.error{
-  border-color:#713b3b;
-}
+.toast.success{border-color:#245c43}
+.toast.error{border-color:#713b3b}
 
 .bottom{
   position:fixed;
@@ -406,33 +373,21 @@ button,input{
   margin-bottom:3px;
 }
 
-.nav.active{
-  color:#a5a0ff;
-}
+.nav.active{color:#a5a0ff}
 
 @media(max-width:380px){
-
-  .grid{
-    grid-template-columns:1fr;
-  }
-
-  .actions{
-    grid-template-columns:1fr;
-  }
-
+  .grid,.actions{grid-template-columns:1fr}
 }
-</style></head><body><header class="header">  <div class="brand"><div class="logo">P</div>
-
-<div>
+</style></head><body><header class="header">  <div class="brand">
+    <div class="logo">P</div><div>
   <div class="name">Proyjon Marketing LTD</div>
   <div class="sub">আপনার প্রয়োজন আমাদের আয়োজন</div>
 </div>
 
-  </div>  <button class="bell" onclick="showComing('Notifications')">
-    🔔
-  </button></header><main class="container">  <section class="welcome"><h1>Admin Dashboard 👋</h1>
+  </div><button class="bell" onclick="showComing('Notifications')">🔔</button>
 
-<p>
+</header><main class="container">  <section class="welcome">
+    <h1>Admin Dashboard 👋</h1><p>
   Manage users, requests, packages, deposits,
   withdrawals and system settings.
 </p>
@@ -485,13 +440,11 @@ button,input{
   <div class="desc">Approve profile changes.</div>
 </button>
 
-
 <button class="card" onclick="openAdmin()">
   <div class="icon">🔐</div>
   <div class="title">Admin Account</div>
   <div class="desc">Profile, password and security.</div>
 </button>
-
 
 <button class="card" onclick="showComing('Notifications')">
   <div class="icon">🔔</div>
@@ -499,7 +452,7 @@ button,input{
   <div class="desc">View system notifications.</div>
 </button>
 
-  </section></main><!-- ADMIN MODAL --><div id="adminOverlay"
+  </section></main><div id="adminOverlay"
      class="overlay"
      onclick="closeOutside(event)">  <div class="modal"><div class="modal-head">
 
@@ -519,69 +472,43 @@ button,input{
 </div>
 
 
-<!-- MAIN ACCOUNT MENU -->
-
 <div id="accountMenu">
 
   <div class="actions">
 
     <button class="action" onclick="loadAdminProfile()">
-
       <div class="action-icon">👤</div>
-
-      <div class="action-title">
-        Admin Profile
-      </div>
-
+      <div class="action-title">Admin Profile</div>
       <div class="action-desc">
         View admin account information.
       </div>
-
     </button>
 
 
     <button class="action" onclick="openChangePassword()">
-
       <div class="action-icon">🔑</div>
-
-      <div class="action-title">
-        Change Password
-      </div>
-
+      <div class="action-title">Change Password</div>
       <div class="action-desc">
         Change your current password.
       </div>
-
     </button>
 
 
     <button class="action" onclick="openAdminReset()">
-
       <div class="action-icon">🔐</div>
-
-      <div class="action-title">
-        Admin Password Reset
-      </div>
-
+      <div class="action-title">Admin Password Reset</div>
       <div class="action-desc">
         Reset your administrator password.
       </div>
-
     </button>
 
 
     <button class="action" onclick="openUserReset()">
-
       <div class="action-icon">👤</div>
-
-      <div class="action-title">
-        Reset User Password
-      </div>
-
+      <div class="action-title">Reset User Password</div>
       <div class="action-desc">
         Reset password for a selected user.
       </div>
-
     </button>
 
   </div>
@@ -594,13 +521,9 @@ button,input{
 </div>
 
 
-<!-- ADMIN PROFILE -->
-
 <div id="profileForm" class="form">
 
-  <div class="form-title">
-    👤 Admin Profile
-  </div>
+  <div class="form-title">👤 Admin Profile</div>
 
   <div id="profileInfo" class="info-box">
     Loading...
@@ -613,45 +536,40 @@ button,input{
 </div>
 
 
-<!-- CHANGE PASSWORD -->
-
 <div id="changePasswordForm" class="form">
 
-  <div class="form-title">
-    🔑 Change Password
-  </div>
+  <div class="form-title">🔑 Change Password</div>
 
   <div class="input-group">
     <label>Current Password</label>
-    <input
-      id="currentPassword"
-      class="input"
-      type="password"
-      autocomplete="current-password"
-      placeholder="Enter current password">
+    <input id="currentPassword"
+           class="input"
+           type="password"
+           autocomplete="current-password"
+           placeholder="Enter current password">
   </div>
 
   <div class="input-group">
     <label>New Password</label>
-    <input
-      id="newPassword"
-      class="input"
-      type="password"
-      autocomplete="new-password"
-      placeholder="Minimum 6 characters">
+    <input id="newPassword"
+           class="input"
+           type="password"
+           autocomplete="new-password"
+           placeholder="Minimum 6 characters">
   </div>
 
   <div class="input-group">
     <label>Confirm New Password</label>
-    <input
-      id="confirmPassword"
-      class="input"
-      type="password"
-      autocomplete="new-password"
-      placeholder="Confirm new password">
+    <input id="confirmPassword"
+           class="input"
+           type="password"
+           autocomplete="new-password"
+           placeholder="Confirm new password">
   </div>
 
-  <button class="primary" onclick="changePassword()">
+  <button id="changePasswordBtn"
+          class="primary"
+          onclick="changePassword()">
     Change Password
   </button>
 
@@ -662,50 +580,44 @@ button,input{
 </div>
 
 
-<!-- ADMIN RESET -->
-
 <div id="adminResetForm" class="form">
 
-  <div class="form-title">
-    🔐 Admin Password Reset
-  </div>
+  <div class="form-title">🔐 Admin Password Reset</div>
 
   <div class="info-box" style="margin-bottom:12px;">
-    For security, enter your current password before setting a new
-    administrator password.
+    Enter your current password and choose a new password.
   </div>
 
   <div class="input-group">
     <label>Current Password</label>
-    <input
-      id="resetCurrentPassword"
-      class="input"
-      type="password"
-      autocomplete="current-password"
-      placeholder="Current password">
+    <input id="resetCurrentPassword"
+           class="input"
+           type="password"
+           autocomplete="current-password"
+           placeholder="Current password">
   </div>
 
   <div class="input-group">
     <label>New Password</label>
-    <input
-      id="resetNewPassword"
-      class="input"
-      type="password"
-      autocomplete="new-password"
-      placeholder="New password">
+    <input id="resetNewPassword"
+           class="input"
+           type="password"
+           autocomplete="new-password"
+           placeholder="New password">
   </div>
 
   <div class="input-group">
     <label>Confirm New Password</label>
-    <input
-      id="resetConfirmPassword"
-      class="input"
-      type="password"
-      autocomplete="new-password"
-      placeholder="Confirm password">
+    <input id="resetConfirmPassword"
+           class="input"
+           type="password"
+           autocomplete="new-password"
+           placeholder="Confirm password">
   </div>
 
-  <button class="primary" onclick="adminResetPassword()">
+  <button id="adminResetBtn"
+          class="primary"
+          onclick="adminResetPassword()">
     Reset Password
   </button>
 
@@ -716,44 +628,39 @@ button,input{
 </div>
 
 
-<!-- USER RESET -->
-
 <div id="userResetForm" class="form">
 
-  <div class="form-title">
-    👤 Reset User Password
-  </div>
+  <div class="form-title">👤 Reset User Password</div>
 
   <div class="input-group">
     <label>User ID</label>
-    <input
-      id="resetUserId"
-      class="input"
-      type="number"
-      placeholder="Enter user ID">
+    <input id="resetUserId"
+           class="input"
+           type="number"
+           placeholder="Enter user ID">
   </div>
 
   <div class="input-group">
     <label>New Password</label>
-    <input
-      id="resetUserPassword"
-      class="input"
-      type="password"
-      autocomplete="new-password"
-      placeholder="New password">
+    <input id="resetUserPassword"
+           class="input"
+           type="password"
+           autocomplete="new-password"
+           placeholder="New password">
   </div>
 
   <div class="input-group">
     <label>Confirm New Password</label>
-    <input
-      id="resetUserPasswordConfirm"
-      class="input"
-      type="password"
-      autocomplete="new-password"
-      placeholder="Confirm password">
+    <input id="resetUserPasswordConfirm"
+           class="input"
+           type="password"
+           autocomplete="new-password"
+           placeholder="Confirm password">
   </div>
 
-  <button class="primary" onclick="resetUserPassword()">
+  <button id="userResetBtn"
+          class="primary"
+          onclick="resetUserPassword()">
     Reset User Password
   </button>
 
@@ -780,15 +687,19 @@ button,input{
     Account
   </button></nav><script>
 
-const API_BASE = "https://mlm-platform-production.up.railway.app";
+const API_BASE =
+  "https://mlm-platform-production.up.railway.app";
+
 
 function getToken(){
 
-  return (
-    localStorage.getItem("adminToken") ||
-    localStorage.getItem("token") ||
-    ""
-  );
+  const adminToken =
+    localStorage.getItem("adminToken");
+
+  const normalToken =
+    localStorage.getItem("token");
+
+  return adminToken || normalToken || "";
 
 }
 
@@ -803,28 +714,62 @@ async function apiRequest(url, options = {}){
   };
 
   if(token){
-    headers.Authorization = "Bearer " + token;
+    headers.Authorization =
+      "Bearer " + token;
   }
 
-  const response = await fetch(API_BASE + url, {
-    ...options,
-    headers
-  });
+  let response;
+
+  try{
+
+    response = await fetch(
+      API_BASE + url,
+      {
+        ...options,
+        headers
+      }
+    );
+
+  }catch(error){
+
+    throw new Error(
+      "Railway server-এর সাথে connection হচ্ছে না।"
+    );
+
+  }
+
 
   let data = {};
 
   try{
     data = await response.json();
-  }catch(e){
+  }catch(error){
     data = {};
   }
 
+
   if(!response.ok){
+
+    if(response.status === 401){
+
+      throw new Error(
+        "Login session expired. আবার Admin Login করুন।"
+      );
+
+    }
+
+    if(response.status === 403){
+
+      throw new Error(
+        "এই account-এর Admin permission নেই।"
+      );
+
+    }
 
     throw new Error(
       data.message ||
       data.error ||
-      "Request failed"
+      "Server request failed."
     );
 
   }
@@ -837,10 +782,6 @@ async function apiRequest(url, options = {}){
 function openAdmin(){
 
   hideForms();
-
-  document
-    .getElementById("accountMenu")
-    .style.display = "block";
 
   document
     .getElementById("modalHeading")
@@ -887,14 +828,12 @@ document.addEventListener(
 
 function hideForms(){
 
-  const forms = [
+  [
     "profileForm",
     "changePasswordForm",
     "adminResetForm",
     "userResetForm"
-  ];
-
-  forms.forEach(function(id){
+  ].forEach(function(id){
 
     document
       .getElementById(id)
@@ -905,25 +844,6 @@ function hideForms(){
   document
     .getElementById("accountMenu")
     .style.display = "block";
-
-}
-
-
-function showForm(id, title){
-
-  document
-    .getElementById("accountMenu")
-    .style.display = "none";
-
-  hideFormsOnly();
-
-  document
-    .getElementById(id)
-    .classList.add("show");
-
-  document
-    .getElementById("modalHeading")
-    .textContent = title;
 
 }
 
@@ -942,6 +862,25 @@ function hideFormsOnly(){
       .classList.remove("show");
 
   });
+
+}
+
+
+function showForm(id,title){
+
+  document
+    .getElementById("accountMenu")
+    .style.display = "none";
+
+  hideFormsOnly();
+
+  document
+    .getElementById(id)
+    .classList.add("show");
+
+  document
+    .getElementById("modalHeading")
+    .textContent = title;
 
 }
 
@@ -967,19 +906,61 @@ async function loadAdminProfile(){
   const box =
     document.getElementById("profileInfo");
 
-  box.textContent = "Loading...";
+  box.innerHTML =
+    "Loading admin profile...";
+
+
+  if(!getToken()){
+
+    box.innerHTML = `
+      <div class="error-box">
+        Admin login token পাওয়া যায়নি।
+        <br><br>
+        Please login again.
+      </div>
+    `;
+
+    return;
+
+  }
+
 
   try{
 
-    const data =
-      await apiRequest("/api/admin/account");
+    let data;
+
+    try{
+
+      data =
+        await apiRequest(
+          "/api/admin/account"
+        );
+
+    }catch(firstError){
+
+      /*
+       * Fallback:
+       * যদি /api/admin/account route পুরোনো
+       * deployment-এ না থাকে, /api/auth/me try করবে।
+       */
+
+      data =
+        await apiRequest(
+          "/api/auth/me"
+        );
+
+    }
+
 
     const user =
       data.user ||
       data.admin ||
+      data.data ||
       data;
 
+
     box.innerHTML = `
+
       <div>
         <div class="info-label">Name</div>
         <div class="info-value">
@@ -1011,17 +992,26 @@ async function loadAdminProfile(){
       <div>
         <div class="info-label">User ID</div>
         <div class="info-value">
-          ${escapeHtml(String(user.id || "—"))}
+          ${escapeHtml(
+            String(user.id || user.user_id || "—")
+          )}
         </div>
       </div>
+
     `;
+
 
   }catch(error){
 
-    box.innerHTML =
-      `<div style="color:#fca5a5;">
-        ${escapeHtml(error.message)}
-      </div>`;
+    box.innerHTML = `
+      <div class="error-box">
+        ❌ ${escapeHtml(error.message)}
+        <br><br>
+        <small>
+          প্রথমে Admin Login আবার করে দেখুন।
+        </small>
+      </div>
+    `;
 
   }
 
@@ -1061,13 +1051,20 @@ function openUserReset(){
 async function changePassword(){
 
   const current =
-    document.getElementById("currentPassword").value;
+    document
+      .getElementById("currentPassword")
+      .value;
 
   const newPass =
-    document.getElementById("newPassword").value;
+    document
+      .getElementById("newPassword")
+      .value;
 
   const confirm =
-    document.getElementById("confirmPassword").value;
+    document
+      .getElementById("confirmPassword")
+      .value;
+
 
   if(!current || !newPass || !confirm){
 
@@ -1080,6 +1077,7 @@ async function changePassword(){
 
   }
 
+
   if(newPass.length < 6){
 
     showToast(
@@ -1091,6 +1089,7 @@ async function changePassword(){
 
   }
 
+
   if(newPass !== confirm){
 
     showToast(
@@ -1101,6 +1100,16 @@ async function changePassword(){
     return;
 
   }
+
+
+  const button =
+    document.getElementById(
+      "changePasswordBtn"
+    );
+
+  button.disabled = true;
+  button.textContent = "Changing...";
+
 
   try{
 
@@ -1115,18 +1124,31 @@ async function changePassword(){
       }
     );
 
+
     showToast(
       "Password successfully changed.",
       "success"
     );
 
-    document.getElementById("currentPassword").value = "";
-    document.getElementById("newPassword").value = "";
-    document.getElementById("confirmPassword").value = "";
 
-    setTimeout(function(){
-      backToAccount();
-    },1200);
+    document.getElementById(
+      "currentPassword"
+    ).value = "";
+
+    document.getElementById(
+      "newPassword"
+    ).value = "";
+
+    document.getElementById(
+      "confirmPassword"
+    ).value = "";
+
+
+    setTimeout(
+      backToAccount,
+      1200
+    );
+
 
   }catch(error){
 
@@ -1134,6 +1156,11 @@ async function changePassword(){
       error.message,
       "error"
     );
+
+  }finally{
+
+    button.disabled = false;
+    button.textContent = "Change Password";
 
   }
 
@@ -1143,13 +1170,20 @@ async function changePassword(){
 async function adminResetPassword(){
 
   const current =
-    document.getElementById("resetCurrentPassword").value;
+    document
+      .getElementById("resetCurrentPassword")
+      .value;
 
   const newPass =
-    document.getElementById("resetNewPassword").value;
+    document
+      .getElementById("resetNewPassword")
+      .value;
 
   const confirm =
-    document.getElementById("resetConfirmPassword").value;
+    document
+      .getElementById("resetConfirmPassword")
+      .value;
+
 
   if(!current || !newPass || !confirm){
 
@@ -1162,6 +1196,7 @@ async function adminResetPassword(){
 
   }
 
+
   if(newPass.length < 6){
 
     showToast(
@@ -1173,6 +1208,7 @@ async function adminResetPassword(){
 
   }
 
+
   if(newPass !== confirm){
 
     showToast(
@@ -1183,6 +1219,16 @@ async function adminResetPassword(){
     return;
 
   }
+
+
+  const button =
+    document.getElementById(
+      "adminResetBtn"
+    );
+
+  button.disabled = true;
+  button.textContent = "Resetting...";
+
 
   try{
 
@@ -1197,18 +1243,31 @@ async function adminResetPassword(){
       }
     );
 
+
     showToast(
       "Admin password reset successful.",
       "success"
     );
 
-    document.getElementById("resetCurrentPassword").value = "";
-    document.getElementById("resetNewPassword").value = "";
-    document.getElementById("resetConfirmPassword").value = "";
 
-    setTimeout(function(){
-      backToAccount();
-    },1200);
+    document.getElementById(
+      "resetCurrentPassword"
+    ).value = "";
+
+    document.getElementById(
+      "resetNewPassword"
+    ).value = "";
+
+    document.getElementById(
+      "resetConfirmPassword"
+    ).value = "";
+
+
+    setTimeout(
+      backToAccount,
+      1200
+    );
+
 
   }catch(error){
 
@@ -1216,6 +1275,11 @@ async function adminResetPassword(){
       error.message,
       "error"
     );
+
+  }finally{
+
+    button.disabled = false;
+    button.textContent = "Reset Password";
 
   }
 
@@ -1225,13 +1289,23 @@ async function adminResetPassword(){
 async function resetUserPassword(){
 
   const userId =
-    document.getElementById("resetUserId").value.trim();
+    document
+      .getElementById("resetUserId")
+      .value
+      .trim();
 
   const newPass =
-    document.getElementById("resetUserPassword").value;
+    document
+      .getElementById("resetUserPassword")
+      .value;
 
   const confirm =
-    document.getElementById("resetUserPasswordConfirm").value;
+    document
+      .getElementById(
+        "resetUserPasswordConfirm"
+      )
+      .value;
+
 
   if(!userId || !newPass || !confirm){
 
@@ -1244,6 +1318,7 @@ async function resetUserPassword(){
 
   }
 
+
   if(newPass.length < 6){
 
     showToast(
@@ -1255,6 +1330,7 @@ async function resetUserPassword(){
 
   }
 
+
   if(newPass !== confirm){
 
     showToast(
@@ -1265,6 +1341,16 @@ async function resetUserPassword(){
     return;
 
   }
+
+
+  const button =
+    document.getElementById(
+      "userResetBtn"
+    );
+
+  button.disabled = true;
+  button.textContent = "Resetting...";
+
 
   try{
 
@@ -1280,14 +1366,25 @@ async function resetUserPassword(){
       }
     );
 
+
     showToast(
       "User password reset successful.",
       "success"
     );
 
-    document.getElementById("resetUserId").value = "";
-    document.getElementById("resetUserPassword").value = "";
-    document.getElementById("resetUserPasswordConfirm").value = "";
+
+    document.getElementById(
+      "resetUserId"
+    ).value = "";
+
+    document.getElementById(
+      "resetUserPassword"
+    ).value = "";
+
+    document.getElementById(
+      "resetUserPasswordConfirm"
+    ).value = "";
+
 
   }catch(error){
 
@@ -1295,6 +1392,11 @@ async function resetUserPassword(){
       error.message,
       "error"
     );
+
+  }finally{
+
+    button.disabled = false;
+    button.textContent = "Reset User Password";
 
   }
 
@@ -1327,8 +1429,7 @@ function showToast(message,type){
   const toast =
     document.getElementById("toast");
 
-  toast.textContent =
-    message;
+  toast.textContent = message;
 
   toast.className =
     "toast show " +
@@ -1336,8 +1437,7 @@ function showToast(message,type){
 
   setTimeout(function(){
 
-    toast.className =
-      "toast";
+    toast.className = "toast";
 
   },2500);
 
@@ -1359,7 +1459,6 @@ function goHome(){
 function logout(){
 
   localStorage.removeItem("token");
-
   localStorage.removeItem("adminToken");
 
   window.location.href =
