@@ -1,0 +1,1469 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Dashboard</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+margin
+  background:#070b12;
+  color:#f4f7fb;
+  font-family:Arial,sans-serif;
+  min-height:100vh;
+  padding-bottom:80px;
+}
+
+button,input{font:inherit}
+
+.header{
+  height:70px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 16px;
+  background:#0a0f18;
+  border-bottom:1px solid #202938;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.logo{
+  width:40px;
+  height:40px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#6c63ff;
+  font-weight:900;
+  font-size:20px;
+}
+
+.name{font-size:14px;font-weight:800}
+
+.sub{
+  color:#8994a5;
+  font-size:10px;
+  margin-top:3px;
+}
+
+.bell{
+  width:40px;
+  height:40px;
+  border:1px solid #273143;
+  border-radius:12px;
+  background:#101725;
+  color:white;
+  font-size:18px;
+  cursor:pointer;
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:20px 15px;
+}
+
+.welcome{
+  padding:22px;
+  border:1px solid #202938;
+  border-radius:20px;
+  background:#0e1522;
+  margin-bottom:20px;
+}
+
+.welcome h1{
+  font-size:23px;
+  margin-bottom:8px;
+}
+
+.welcome p{
+  color:#8d99aa;
+  font-size:12px;
+  line-height:1.6;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:11px;
+}
+
+.card{
+  min-height:110px;
+  padding:16px;
+  border:1px solid #202938;
+  border-radius:18px;
+  background:#0e1522;
+  color:white;
+  text-align:left;
+  cursor:pointer;
+  transition:.15s;
+}
+
+.card:active{transform:scale(.97)}
+
+.icon{
+  font-size:22px;
+  margin-bottom:12px;
+}
+
+.title{
+  font-size:13px;
+  font-weight:bold;
+}
+
+.desc{
+  color:#7f8a9c;
+  font-size:10px;
+  line-height:1.4;
+  margin-top:5px;
+}
+
+.overlay{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  background:rgba(0,0,0,.75);
+}
+
+.overlay.show{display:flex}
+
+.modal{
+  width:100%;
+  max-width:600px;
+  max-height:90vh;
+  overflow:auto;
+  background:#0b111b;
+  border:1px solid #263044;
+  border-radius:24px 24px 0 0;
+  padding:20px;
+}
+
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.modal-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.modal-icon{
+  width:42px;
+  height:42px;
+  border-radius:13px;
+  background:#151b36;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+}
+
+.modal-title h2{font-size:17px}
+
+.modal-title p{
+  color:#7f8a9c;
+  font-size:10px;
+  margin-top:3px;
+}
+
+.close{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  border:1px solid #273143;
+  background:#111827;
+  color:white;
+  cursor:pointer;
+  font-size:18px;
+}
+
+.actions{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+
+.action{
+  padding:15px;
+  background:#111827;
+  border:1px solid #222d40;
+  border-radius:16px;
+  color:white;
+  text-align:left;
+  cursor:pointer;
+}
+
+.action:active{transform:scale(.98)}
+
+.action-icon{
+  font-size:20px;
+  margin-bottom:8px;
+}
+
+.action-title{
+  font-size:12px;
+  font-weight:bold;
+}
+
+.action-desc{
+  color:#7f8a9c;
+  font-size:9px;
+  line-height:1.4;
+  margin-top:4px;
+}
+
+.form{display:none}
+.form.show{display:block}
+
+.form-title{
+  font-size:15px;
+  font-weight:bold;
+  margin-bottom:14px;
+}
+
+.input-group{margin-bottom:11px}
+
+.input-group label{
+  display:block;
+  color:#8994a5;
+  font-size:10px;
+  margin-bottom:6px;
+}
+
+.input{
+  width:100%;
+  padding:13px;
+  border-radius:12px;
+  border:1px solid #273143;
+  outline:none;
+  background:#101725;
+  color:white;
+}
+
+.input:focus{border-color:#6c63ff}
+
+.primary{
+  width:100%;
+  padding:13px;
+  border:0;
+  border-radius:13px;
+  background:#6c63ff;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+  margin-top:5px;
+}
+
+.secondary{
+  width:100%;
+  padding:12px;
+  border:1px solid #273143;
+  border-radius:13px;
+  background:#101725;
+  color:#cbd5e1;
+  cursor:pointer;
+  margin-top:9px;
+}
+
+.primary:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+
+.info-box{
+  background:#101725;
+  border:1px solid #273143;
+  border-radius:15px;
+  padding:15px;
+  line-height:1.8;
+  font-size:12px;
+}
+
+.info-label{
+  color:#7f8a9c;
+  font-size:10px;
+}
+
+.info-value{
+  color:#fff;
+  font-weight:bold;
+  word-break:break-word;
+}
+
+.error-box{
+  color:#fca5a5;
+  line-height:1.6;
+}
+
+.logout{
+  width:100%;
+  margin-top:12px;
+  padding:13px;
+  border-radius:14px;
+  border:1px solid rgba(239,68,68,.25);
+  background:rgba(239,68,68,.08);
+  color:#fca5a5;
+  cursor:pointer;
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:90px;
+  transform:translate(-50%,20px);
+  z-index:200;
+  opacity:0;
+  pointer-events:none;
+  background:#172033;
+  border:1px solid #29364c;
+  color:white;
+  padding:12px 16px;
+  border-radius:12px;
+  font-size:11px;
+  transition:.2s;
+  text-align:center;
+  max-width:90%;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+
+.toast.success{border-color:#245c43}
+.toast.error{border-color:#713b3b}
+
+.bottom{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:68px;
+  z-index:50;
+  background:#0a0f18;
+  border-top:1px solid #202938;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+}
+
+.nav{
+  border:0;
+  background:none;
+  color:#7f8a9c;
+  cursor:pointer;
+  font-size:10px;
+}
+
+.nav span{
+  display:block;
+  font-size:18px;
+  margin-bottom:3px;
+}
+
+.nav.active{color:#a5a0ff}
+
+@media(max-width:380px){
+  .grid,.actions{grid-template-columns:1fr}
+}
+</style></head><body><header class="header">  <div class="brand">
+    <div class="logo">P</div><div>
+  <div class="name">Proyjon Marketing LTD</div>
+  <div class="sub">আপনার প্রয়োজন আমাদের আয়োজন</div>
+</div>
+
+  </div><button class="bell" onclick="showComing('Notifications')">🔔</button>
+
+</header><main class="container">  <section class="welcome">
+    <h1>Admin Dashboard 👋</h1><p>
+  Manage users, requests, packages, deposits,
+  withdrawals and system settings.
+</p>
+
+  </section>  <section class="grid"><button class="card" onclick="showComing('New User Requests')">
+  <div class="icon">🆕</div>
+  <div class="title">New User Requests</div>
+  <div class="desc">Review new registration requests.</div>
+</button>
+
+<button class="card" onclick="showComing('User Management')">
+  <div class="icon">👥</div>
+  <div class="title">User Management</div>
+  <div class="desc">Create and manage users.</div>
+</button>
+
+<button class="card" onclick="showComing('Tree Management')">
+  <div class="icon">🌳</div>
+  <div class="title">Tree Management</div>
+  <div class="desc">Manage binary tree placement.</div>
+</button>
+
+<button class="card" onclick="showComing('Withdraw Requests')">
+  <div class="icon">💸</div>
+  <div class="title">Withdraw Requests</div>
+  <div class="desc">Review withdrawal requests.</div>
+</button>
+
+<button class="card" onclick="showComing('Purchase Requests')">
+  <div class="icon">🛒</div>
+  <div class="title">Purchase Requests</div>
+  <div class="desc">Manage purchase requests.</div>
+</button>
+
+<button class="card" onclick="showComing('Package Management')">
+  <div class="icon">📦</div>
+  <div class="title">Package Management</div>
+  <div class="desc">Create and manage packages.</div>
+</button>
+
+<button class="card" onclick="showComing('Deposit Requests')">
+  <div class="icon">💰</div>
+  <div class="title">Deposit Requests</div>
+  <div class="desc">Review deposit requests.</div>
+</button>
+
+<button class="card" onclick="showComing('Profile Update Requests')">
+  <div class="icon">📝</div>
+  <div class="title">Profile Update Requests</div>
+  <div class="desc">Approve profile changes.</div>
+</button>
+
+<button class="card" onclick="openAdmin()">
+  <div class="icon">🔐</div>
+  <div class="title">Admin Account</div>
+  <div class="desc">Profile, password and security.</div>
+</button>
+
+<button class="card" onclick="showComing('Notifications')">
+  <div class="icon">🔔</div>
+  <div class="title">Notifications</div>
+  <div class="desc">View system notifications.</div>
+</button>
+
+  </section></main><div id="adminOverlay"
+     class="overlay"
+     onclick="closeOutside(event)">  <div class="modal"><div class="modal-head">
+
+  <div class="modal-title">
+
+    <div class="modal-icon">🔐</div>
+
+    <div>
+      <h2 id="modalHeading">Admin Account</h2>
+      <p>Account and security settings</p>
+    </div>
+
+  </div>
+
+  <button class="close" onclick="closeAdmin()">✕</button>
+
+</div>
+
+
+<div id="accountMenu">
+
+  <div class="actions">
+
+    <button class="action" onclick="loadAdminProfile()">
+      <div class="action-icon">👤</div>
+      <div class="action-title">Admin Profile</div>
+      <div class="action-desc">
+        View admin account information.
+      </div>
+    </button>
+
+
+    <button class="action" onclick="openChangePassword()">
+      <div class="action-icon">🔑</div>
+      <div class="action-title">Change Password</div>
+      <div class="action-desc">
+        Change your current password.
+      </div>
+    </button>
+
+
+    <button class="action" onclick="openAdminReset()">
+      <div class="action-icon">🔐</div>
+      <div class="action-title">Admin Password Reset</div>
+      <div class="action-desc">
+        Reset your administrator password.
+      </div>
+    </button>
+
+
+    <button class="action" onclick="openUserReset()">
+      <div class="action-icon">👤</div>
+      <div class="action-title">Reset User Password</div>
+      <div class="action-desc">
+        Reset password for a selected user.
+      </div>
+    </button>
+
+  </div>
+
+
+  <button class="logout" onclick="logout()">
+    🚪 Logout
+  </button>
+
+</div>
+
+
+<div id="profileForm" class="form">
+
+  <div class="form-title">👤 Admin Profile</div>
+
+  <div id="profileInfo" class="info-box">
+    Loading...
+  </div>
+
+  <button class="secondary" onclick="backToAccount()">
+    ← Back
+  </button>
+
+</div>
+
+
+<div id="changePasswordForm" class="form">
+
+  <div class="form-title">🔑 Change Password</div>
+
+  <div class="input-group">
+    <label>Current Password</label>
+    <input id="currentPassword"
+           class="input"
+           type="password"
+           autocomplete="current-password"
+           placeholder="Enter current password">
+  </div>
+
+  <div class="input-group">
+    <label>New Password</label>
+    <input id="newPassword"
+           class="input"
+           type="password"
+           autocomplete="new-password"
+           placeholder="Minimum 6 characters">
+  </div>
+
+  <div class="input-group">
+    <label>Confirm New Password</label>
+    <input id="confirmPassword"
+           class="input"
+           type="password"
+           autocomplete="new-password"
+           placeholder="Confirm new password">
+  </div>
+
+  <button id="changePasswordBtn"
+          class="primary"
+          onclick="changePassword()">
+    Change Password
+  </button>
+
+  <button class="secondary" onclick="backToAccount()">
+    ← Back
+  </button>
+
+</div>
+
+
+<div id="adminResetForm" class="form">
+
+  <div class="form-title">🔐 Admin Password Reset</div>
+
+  <div class="info-box" style="margin-bottom:12px;">
+    Enter your current password and choose a new password.
+  </div>
+
+  <div class="input-group">
+    <label>Current Password</label>
+    <input id="resetCurrentPassword"
+           class="input"
+           type="password"
+           autocomplete="current-password"
+           placeholder="Current password">
+  </div>
+
+  <div class="input-group">
+    <label>New Password</label>
+    <input id="resetNewPassword"
+           class="input"
+           type="password"
+           autocomplete="new-password"
+           placeholder="New password">
+  </div>
+
+  <div class="input-group">
+    <label>Confirm New Password</label>
+    <input id="resetConfirmPassword"
+           class="input"
+           type="password"
+           autocomplete="new-password"
+           placeholder="Confirm password">
+  </div>
+
+  <button id="adminResetBtn"
+          class="primary"
+          onclick="adminResetPassword()">
+    Reset Password
+  </button>
+
+  <button class="secondary" onclick="backToAccount()">
+    ← Back
+  </button>
+
+</div>
+
+
+<div id="userResetForm" class="form">
+
+  <div class="form-title">👤 Reset User Password</div>
+
+  <div class="input-group">
+    <label>User ID</label>
+    <input id="resetUserId"
+           class="input"
+           type="number"
+           placeholder="Enter user ID">
+  </div>
+
+  <div class="input-group">
+    <label>New Password</label>
+    <input id="resetUserPassword"
+           class="input"
+           type="password"
+           autocomplete="new-password"
+           placeholder="New password">
+  </div>
+
+  <div class="input-group">
+    <label>Confirm New Password</label>
+    <input id="resetUserPasswordConfirm"
+           class="input"
+           type="password"
+           autocomplete="new-password"
+           placeholder="Confirm password">
+  </div>
+
+  <button id="userResetBtn"
+          class="primary"
+          onclick="resetUserPassword()">
+    Reset User Password
+  </button>
+
+  <button class="secondary" onclick="backToAccount()">
+    ← Back
+  </button>
+
+</div>
+
+  </div></div><div id="toast" class="toast"></div><nav class="bottom">  <button class="nav active" onclick="goHome()">
+    <span>⌂</span>
+    Home
+  </button>  <button class="nav" onclick="showComing('Users')">
+    <span>👥</span>
+    Users
+  </button>  <button class="nav" onclick="showComing('Requests')">
+    <span>📋</span>
+    Requests
+  </button>  <button class="nav" onclick="showComing('Alerts')">
+    <span>🔔</span>
+    Alerts
+  </button>  <button class="nav" onclick="openAdmin()">
+    <span>⚙️</span>
+    Account
+  </button></nav><script>
+
+const API_BASE =
+  "https://mlm-platform-production.up.railway.app";
+
+
+function getToken(){
+
+  const adminToken =
+    localStorage.getItem("adminToken");
+
+  const normalToken =
+    localStorage.getItem("token");
+
+  return adminToken || normalToken || "";
+
+}
+
+
+async function apiRequest(url, options = {}){
+
+  const token = getToken();
+
+  const headers = {
+    "Content-Type":"application/json",
+    ...(options.headers || {})
+  };
+
+  if(token){
+    headers.Authorization =
+      "Bearer " + token;
+  }
+
+  let response;
+
+  try{
+
+    response = await fetch(
+      API_BASE + url,
+      {
+        ...options,
+        headers
+      }
+    );
+
+  }catch(error){
+
+    throw new Error(
+      "Railway server-এর সাথে connection হচ্ছে না।"
+    );
+
+  }
+
+
+  let data = {};
+
+  try{
+    data = await response.json();
+  }catch(error){
+    data = {};
+  }
+
+
+  if(!response.ok){
+
+    if(response.status === 401){
+
+      throw new Error(
+        "Login session expired. আবার Admin Login করুন।"
+      );
+
+    }
+
+    if(response.status === 403){
+
+      throw new Error(
+        "এই account-এর Admin permission নেই।"
+      );
+
+    }
+
+    throw new Error(
+      data.message ||
+      data.error ||
+      "Server request failed."
+    );
+
+  }
+
+  return data;
+
+}
+
+
+function openAdmin(){
+
+  hideForms();
+
+  document
+    .getElementById("modalHeading")
+    .textContent = "Admin Account";
+
+  document
+    .getElementById("adminOverlay")
+    .classList.add("show");
+
+}
+
+
+function closeAdmin(){
+
+  document
+    .getElementById("adminOverlay")
+    .classList.remove("show");
+
+  hideForms();
+
+}
+
+
+function closeOutside(event){
+
+  if(event.target.id === "adminOverlay"){
+    closeAdmin();
+  }
+
+}
+
+
+document.addEventListener(
+  "keydown",
+  function(event){
+
+    if(event.key === "Escape"){
+      closeAdmin();
+    }
+
+  }
+);
+
+
+function hideForms(){
+
+  [
+    "profileForm",
+    "changePasswordForm",
+    "adminResetForm",
+    "userResetForm"
+  ].forEach(function(id){
+
+    document
+      .getElementById(id)
+      .classList.remove("show");
+
+  });
+
+  document
+    .getElementById("accountMenu")
+    .style.display = "block";
+
+}
+
+
+function hideFormsOnly(){
+
+  [
+    "profileForm",
+    "changePasswordForm",
+    "adminResetForm",
+    "userResetForm"
+  ].forEach(function(id){
+
+    document
+      .getElementById(id)
+      .classList.remove("show");
+
+  });
+
+}
+
+
+function showForm(id,title){
+
+  document
+    .getElementById("accountMenu")
+    .style.display = "none";
+
+  hideFormsOnly();
+
+  document
+    .getElementById(id)
+    .classList.add("show");
+
+  document
+    .getElementById("modalHeading")
+    .textContent = title;
+
+}
+
+
+function backToAccount(){
+
+  hideForms();
+
+  document
+    .getElementById("modalHeading")
+    .textContent = "Admin Account";
+
+}
+
+
+async function loadAdminProfile(){
+
+  showForm(
+    "profileForm",
+    "Admin Profile"
+  );
+
+  const box =
+    document.getElementById("profileInfo");
+
+  box.innerHTML =
+    "Loading admin profile...";
+
+
+  if(!getToken()){
+
+    box.innerHTML = `
+      <div class="error-box">
+        Admin login token পাওয়া যায়নি।
+        <br><br>
+        Please login again.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  try{
+
+    let data;
+
+    try{
+
+      data =
+        await apiRequest(
+          "/api/admin/account"
+        );
+
+    }catch(firstError){
+
+      /*
+       * Fallback:
+       * যদি /api/admin/account route পুরোনো
+       * deployment-এ না থাকে, /api/auth/me try করবে।
+       */
+
+      data =
+        await apiRequest(
+          "/api/auth/me"
+        );
+
+    }
+
+
+    const user =
+      data.user ||
+      data.admin ||
+      data.data ||
+      data;
+
+
+    box.innerHTML = `
+
+      <div>
+        <div class="info-label">Name</div>
+        <div class="info-value">
+          ${escapeHtml(user.name || "—")}
+        </div>
+      </div>
+
+      <div>
+        <div class="info-label">Username</div>
+        <div class="info-value">
+          ${escapeHtml(user.username || "—")}
+        </div>
+      </div>
+
+      <div>
+        <div class="info-label">Email</div>
+        <div class="info-value">
+          ${escapeHtml(user.email || "—")}
+        </div>
+      </div>
+
+      <div>
+        <div class="info-label">Role</div>
+        <div class="info-value">
+          ${escapeHtml(user.role || "admin")}
+        </div>
+      </div>
+
+      <div>
+        <div class="info-label">User ID</div>
+        <div class="info-value">
+          ${escapeHtml(
+            String(user.id || user.user_id || "—")
+          )}
+        </div>
+      </div>
+
+    `;
+
+
+  }catch(error){
+
+    box.innerHTML = `
+      <div class="error-box">
+        ❌ ${escapeHtml(error.message)}
+        <br><br>
+        <small>
+          প্রথমে Admin Login আবার করে দেখুন।
+        </small>
+      </div>
+    `;
+
+  }
+
+}
+
+
+function openChangePassword(){
+
+  showForm(
+    "changePasswordForm",
+    "Change Password"
+  );
+
+}
+
+
+function openAdminReset(){
+
+  showForm(
+    "adminResetForm",
+    "Admin Password Reset"
+  );
+
+}
+
+
+function openUserReset(){
+
+  showForm(
+    "userResetForm",
+    "Reset User Password"
+  );
+
+}
+
+
+async function changePassword(){
+
+  const current =
+    document
+      .getElementById("currentPassword")
+      .value;
+
+  const newPass =
+    document
+      .getElementById("newPassword")
+      .value;
+
+  const confirm =
+    document
+      .getElementById("confirmPassword")
+      .value;
+
+
+  if(!current || !newPass || !confirm){
+
+    showToast(
+      "সব password field পূরণ করুন।",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if(newPass.length < 6){
+
+    showToast(
+      "New password কমপক্ষে 6 characters হতে হবে।",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if(newPass !== confirm){
+
+    showToast(
+      "New password দুটো একই নয়।",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const button =
+    document.getElementById(
+      "changePasswordBtn"
+    );
+
+  button.disabled = true;
+  button.textContent = "Changing...";
+
+
+  try{
+
+    await apiRequest(
+      "/api/admin/account/password",
+      {
+        method:"PUT",
+        body:JSON.stringify({
+          currentPassword:current,
+          newPassword:newPass
+        })
+      }
+    );
+
+
+    showToast(
+      "Password successfully changed.",
+      "success"
+    );
+
+
+    document.getElementById(
+      "currentPassword"
+    ).value = "";
+
+    document.getElementById(
+      "newPassword"
+    ).value = "";
+
+    document.getElementById(
+      "confirmPassword"
+    ).value = "";
+
+
+    setTimeout(
+      backToAccount,
+      1200
+    );
+
+
+  }catch(error){
+
+    showToast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    button.disabled = false;
+    button.textContent = "Change Password";
+
+  }
+
+}
+
+
+async function adminResetPassword(){
+
+  const current =
+    document
+      .getElementById("resetCurrentPassword")
+      .value;
+
+  const newPass =
+    document
+      .getElementById("resetNewPassword")
+      .value;
+
+  const confirm =
+    document
+      .getElementById("resetConfirmPassword")
+      .value;
+
+
+  if(!current || !newPass || !confirm){
+
+    showToast(
+      "সব field পূরণ করুন।",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if(newPass.length < 6){
+
+    showToast(
+      "New password কমপক্ষে 6 characters হতে হবে।",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if(newPass !== confirm){
+
+    showToast(
+      "New password দুটো একই নয়।",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const button =
+    document.getElementById(
+      "adminResetBtn"
+    );
+
+  button.disabled = true;
+  button.textContent = "Resetting...";
+
+
+  try{
+
+    await apiRequest(
+      "/api/admin/account/password",
+      {
+        method:"PUT",
+        body:JSON.stringify({
+          currentPassword:current,
+          newPassword:newPass
+        })
+      }
+    );
+
+
+    showToast(
+      "Admin password reset successful.",
+      "success"
+    );
+
+
+    document.getElementById(
+      "resetCurrentPassword"
+    ).value = "";
+
+    document.getElementById(
+      "resetNewPassword"
+    ).value = "";
+
+    document.getElementById(
+      "resetConfirmPassword"
+    ).value = "";
+
+
+    setTimeout(
+      backToAccount,
+      1200
+    );
+
+
+  }catch(error){
+
+    showToast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    button.disabled = false;
+    button.textContent = "Reset Password";
+
+  }
+
+}
+
+
+async function resetUserPassword(){
+
+  const userId =
+    document
+      .getElementById("resetUserId")
+      .value
+      .trim();
+
+  const newPass =
+    document
+      .getElementById("resetUserPassword")
+      .value;
+
+  const confirm =
+    document
+      .getElementById(
+        "resetUserPasswordConfirm"
+      )
+      .value;
+
+
+  if(!userId || !newPass || !confirm){
+
+    showToast(
+      "সব field পূরণ করুন।",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if(newPass.length < 6){
+
+    showToast(
+      "Password কমপক্ষে 6 characters হতে হবে।",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if(newPass !== confirm){
+
+    showToast(
+      "Password দুটো একই নয়।",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const button =
+    document.getElementById(
+      "userResetBtn"
+    );
+
+  button.disabled = true;
+  button.textContent = "Resetting...";
+
+
+  try{
+
+    await apiRequest(
+      "/api/admin/users/" +
+      encodeURIComponent(userId) +
+      "/password",
+      {
+        method:"PUT",
+        body:JSON.stringify({
+          newPassword:newPass
+        })
+      }
+    );
+
+
+    showToast(
+      "User password reset successful.",
+      "success"
+    );
+
+
+    document.getElementById(
+      "resetUserId"
+    ).value = "";
+
+    document.getElementById(
+      "resetUserPassword"
+    ).value = "";
+
+    document.getElementById(
+      "resetUserPasswordConfirm"
+    ).value = "";
+
+
+  }catch(error){
+
+    showToast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    button.disabled = false;
+    button.textContent = "Reset User Password";
+
+  }
+
+}
+
+
+function escapeHtml(value){
+
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+function showComing(name){
+
+  showToast(
+    name + " module will be connected next."
+  );
+
+}
+
+
+function showToast(message,type){
+
+  const toast =
+    document.getElementById("toast");
+
+  toast.textContent = message;
+
+  toast.className =
+    "toast show " +
+    (type || "");
+
+  setTimeout(function(){
+
+    toast.className = "toast";
+
+  },2500);
+
+}
+
+
+function goHome(){
+
+  closeAdmin();
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+function logout(){
+
+  localStorage.removeItem("token");
+  localStorage.removeItem("adminToken");
+
+  window.location.href =
+    "admin-login.html";
+
+}
+
+</script></body>
+</html>
