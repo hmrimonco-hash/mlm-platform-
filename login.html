@@ -1,1289 +1,701 @@
-<!DOCTYPE html>
-<html lang="bn">
+const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+const mysql = require("mysql2/promise");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+const app = express();
 
-  <title>Login — Proyjon Marketing LTD</title>
+/* =========================
+   BASIC CONFIG
+========================= */
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Inter, Arial, sans-serif;
-    }
+app.use(helmet());
+app.use(cors());
+app.use(express.json({ limit: "5mb" }));
 
-    body {
-      min-height: 100vh;
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100
+});
 
-      background:
-        radial-gradient(
-          circle at 15% 10%,
-          rgba(124,58,237,.20),
-          transparent 35%
-        ),
-        radial-gradient(
-          circle at 85% 90%,
-          rgba(37,99,235,.16),
-          transparent 35%
-        ),
-        #070b14;
+app.use("/api/", limiter);
 
-      color: #fff;
+const PORT = process.env.PORT || 3000;
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+const JWT_SECRET =
+  process.env.JWT_SECRET || "change-this-secret";
 
-      padding: 20px;
-    }
 
-    .container {
-      width: 100%;
-      max-width: 430px;
-    }
+/* =========================
+   DATABASE
+========================= */
 
-    .brand {
-      text-align: center;
-      margin-bottom: 24px;
-    }
+const db = mysql.createPool({
+  host: process.env.MYSQLHOST,
+  port: process.env.MYSQLPORT,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE,
 
-    .brand-icon {
-      width: 58px;
-      height: 58px;
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+});
 
-      margin: 0 auto 13px;
 
-      border-radius: 17px;
+/* =========================
+   CREATE TABLES
+========================= */
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+async function createTables() {
 
-      background:
-        linear-gradient(
-          135deg,
-          #7c3aed,
-          #2563eb
+  try {
+
+    /* =========================
+       USERS
+    ========================= */
+
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        email VARCHAR(150) NOT NULL UNIQUE,
+        phone VARCHAR(30),
+        password VARCHAR(255) NOT NULL,
+        role ENUM('user','admin') DEFAULT 'user',
+        referral_code VARCHAR(50) UNIQUE,
+        wallet_balance DECIMAL(12,2) DEFAULT 0.00,
+        father_name VARCHAR(100),
+        nid VARCHAR(50),
+        address TEXT,
+        nominee_name VARCHAR(100),
+        nominee_number VARCHAR(30),
+        nominee_nid VARCHAR(50),
+        profile_pic LONGTEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+      )
+    `);
+
+
+    /* =========================
+       PACKAGES
+    ========================= */
+
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS packages (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        price DECIMAL(12,2) NOT NULL,
+        description TEXT,
+        status ENUM('active','inactive') DEFAULT 'active',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+
+    /* =========================
+       TRANSACTIONS
+    ========================= */
+
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS transactions (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        type ENUM('deposit','withdraw','package','share') NOT NULL,
+        amount DECIMAL(12,2) NOT NULL,
+        method VARCHAR(50),
+        sender_number VARCHAR(30),
+        transaction_id VARCHAR(100),
+        status ENUM('pending','approved','rejected') DEFAULT 'pending',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      )
+    `);
+
+
+    /* =========================
+       USER PACKAGES
+    ========================= */
+
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS user_packages (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        package_id INT NOT NULL,
+        purchased_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (package_id) REFERENCES packages(id) ON DELETE CASCADE
+      )
+    `);
+
+
+    /* =========================
+       BINARY TREE
+    ========================= */
+
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS binary_tree (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL UNIQUE,
+        parent_id INT NULL,
+        position ENUM('left','right') NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      )
+    `);
+
+
+    /* =========================
+       ADMIN ALERTS
+    ========================= */
+
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS admin_alerts (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        type VARCHAR(50) NOT NULL,
+        title VARCHAR(200) NOT NULL,
+        message TEXT,
+        status ENUM('unread','read') DEFAULT 'unread',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      )
+    `);
+    
+    /* =========================
+       PROFILE REQUESTS (WITH HISTORY & DIFF)
+    ========================= */
+
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS profile_requests (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        old_data JSON NULL,
+        requested_data JSON NOT NULL,
+        status ENUM('pending','approved','rejected') DEFAULT 'pending',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      )
+    `);
+
+
+    /* =========================
+       OLD DATABASE COMPATIBILITY
+    ========================= */
+
+    async function addColumnIfMissing(table, column, definition) {
+      const [columns] = await db.query(
+          `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND COLUMN_NAME = ?`,
+          [process.env.MYSQLDATABASE, table, column]
         );
-
-      box-shadow:
-        0 12px 35px
-        rgba(99,102,241,.30);
-
-      font-size: 27px;
-      font-weight: 900;
-    }
-
-    .brand h1 {
-      font-size: 20px;
-      font-weight: 850;
-    }
-
-    .brand p {
-      margin-top: 5px;
-      color: #8b95a7;
-      font-size: 11px;
-    }
-
-    .card {
-      background: rgba(13,19,30,.92);
-
-      border: 1px solid #202a39;
-
-      border-radius: 25px;
-
-      padding: 26px 21px;
-
-      box-shadow:
-        0 25px 70px
-        rgba(0,0,0,.40);
-
-      backdrop-filter: blur(18px);
-    }
-
-    .card-title {
-      margin-bottom: 22px;
-    }
-
-    .card-title h2 {
-      font-size: 22px;
-      font-weight: 850;
-    }
-
-    .card-title p {
-      margin-top: 6px;
-      color: #788497;
-      font-size: 11px;
-    }
-
-    .field {
-      margin-bottom: 16px;
-    }
-
-    .field label {
-      display: block;
-
-      color: #9ca7b8;
-
-      font-size: 11px;
-
-      font-weight: 700;
-
-      margin-bottom: 7px;
-    }
-
-    .input-wrap {
-      position: relative;
-    }
-
-    .input-wrap input {
-      width: 100%;
-
-      height: 48px;
-
-      padding: 0 14px;
-
-      border-radius: 13px;
-
-      border: 1px solid #263143;
-
-      outline: none;
-
-      background: #080d16;
-
-      color: #fff;
-
-      font-size: 13px;
-
-      transition: .2s;
-    }
-
-    .input-wrap input:focus {
-      border-color: #6d5ce7;
-
-      box-shadow:
-        0 0 0 3px
-        rgba(109,92,231,.12);
-    }
-
-    .password-wrap input {
-      padding-right: 48px;
-    }
-
-    .toggle-password {
-      position: absolute;
-
-      right: 5px;
-      top: 5px;
-
-      width: 38px;
-      height: 38px;
-
-      border: none;
-
-      border-radius: 10px;
-
-      background: #151d2b;
-
-      color: #9ba6b7;
-
-      cursor: pointer;
-
-      font-size: 16px;
-    }
-
-    .login-btn {
-      width: 100%;
-
-      height: 50px;
-
-      margin-top: 7px;
-
-      border: none;
-
-      border-radius: 14px;
-
-      background:
-        linear-gradient(
-          135deg,
-          #7c3aed,
-          #4f46e5
-        );
-
-      color: #fff;
-
-      font-size: 13px;
-
-      font-weight: 800;
-
-      cursor: pointer;
-
-      box-shadow:
-        0 12px 30px
-        rgba(79,70,229,.22);
-
-      transition: .2s;
-    }
-
-    .login-btn:active {
-      transform: scale(.98);
-    }
-
-    .login-btn:disabled {
-      opacity: .6;
-      cursor: not-allowed;
-    }
-
-    .message {
-      display: none;
-
-      margin-top: 15px;
-
-      padding: 11px 13px;
-
-      border-radius: 11px;
-
-      font-size: 11px;
-
-      line-height: 1.5;
-    }
-
-    .message.show {
-      display: block;
-    }
-
-    .message.error {
-      background: rgba(239,68,68,.10);
-
-      border: 1px solid
-        rgba(239,68,68,.20);
-
-      color: #fca5a5;
-    }
-
-    .message.success {
-      background: rgba(34,197,94,.10);
-
-      border: 1px solid
-        rgba(34,197,94,.20);
-
-      color: #86efac;
-    }
-
-    .links {
-      text-align: center;
-
-      margin-top: 20px;
-    }
-
-    .links p {
-      color: #6f7b8e;
-
-      font-size: 11px;
-
-      margin-bottom: 9px;
-    }
-
-    .links a {
-      color: #a78bfa;
-
-      text-decoration: none;
-
-      font-size: 11px;
-
-      font-weight: 700;
-
-      cursor: pointer;
-    }
-
-    .links a:hover {
-      text-decoration: underline;
-    }
-
-    .admin-link {
-      margin-top: 16px;
-    }
-
-    .back-link {
-      margin-top: 18px;
-    }
-
-    .secure-note {
-      display: flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      gap: 6px;
-
-      margin-top: 21px;
-
-      color: #5f6b7d;
-
-      font-size: 9px;
-    }
-
-    .secure-note span {
-      font-size: 12px;
-    }
-
-    /* ADMIN MODE */
-
-    #adminMode {
-      display: none;
-    }
-
-    .admin-badge {
-      display: inline-flex;
-
-      align-items: center;
-
-      gap: 6px;
-
-      padding: 6px 10px;
-
-      border-radius: 20px;
-
-      background: rgba(124,58,237,.10);
-
-      border: 1px solid rgba(124,58,237,.20);
-
-      color: #c4b5fd;
-
-      font-size: 9px;
-
-      font-weight: 800;
-
-      margin-bottom: 12px;
-    }
-
-    @media (max-width: 380px) {
-
-      .card {
-        padding: 23px 17px;
+      if (columns.length === 0) {
+        await db.query(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+        console.log(`Added column ${column} to ${table}`);
       }
-
-      .brand h1 {
-        font-size: 18px;
-      }
-
     }
-  </style>
-</head>
-
-<body>
-
-  <div class="container">
-
-    <!-- BRAND -->
-
-    <div class="brand">
-
-      <div class="brand-icon">
-        P
-      </div>
-
-      <h1>
-        Proyjon Marketing LTD
-      </h1>
-
-      <p>
-        আপনার প্রয়োজন আমাদের আয়োজন
-      </p>
-
-    </div>
-
-
-    <!-- LOGIN CARD -->
-
-    <div class="card">
-
-
-      <!-- ========================= -->
-      <!-- USER LOGIN -->
-      <!-- ========================= -->
-
-      <div id="userMode">
-
-        <div class="card-title">
-
-          <h2>
-            Welcome Back
-          </h2>
-
-          <p>
-            Login to your account
-          </p>
-
-        </div>
-
-
-        <form id="loginForm">
-
-          <!-- EMAIL -->
-
-          <div class="field">
-
-            <label for="email">
-              Email Address
-            </label>
-
-            <div class="input-wrap">
-
-              <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="Enter your email"
-                autocomplete="email"
-                required>
-
-            </div>
-
-          </div>
-
-
-          <!-- PASSWORD -->
-
-          <div class="field">
-
-            <label for="password">
-              Password
-            </label>
-
-            <div class="input-wrap password-wrap">
-
-              <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="Enter your password"
-                autocomplete="current-password"
-                required>
-
-              <button
-                type="button"
-                class="toggle-password"
-                id="togglePassword">
-                👁
-              </button>
-
-            </div>
-
-          </div>
-
-
-          <!-- LOGIN -->
-
-          <button
-            type="submit"
-            class="login-btn"
-            id="loginBtn">
-
-            Login to Account
-
-          </button>
-
-
-          <!-- MESSAGE -->
-
-          <div
-            class="message"
-            id="message">
-          </div>
-
-        </form>
-
-
-        <!-- REGISTER -->
-
-        <div class="links">
-
-          <p>
-            Don't have an account?
-          </p>
-
-          <a href="register.html">
-            Create a New Account
-          </a>
-
-        </div>
-
-
-        <!-- ADMIN -->
-
-        <div class="links admin-link">
-
-          <p>
-            Administrator?
-          </p>
-
-          <a id="openAdmin">
-            Admin Login
-          </a>
-
-        </div>
-
-      </div>
-
-
-      <!-- ========================= -->
-      <!-- ADMIN LOGIN -->
-      <!-- ========================= -->
-
-      <div id="adminMode">
-
-        <div class="card-title">
-
-          <div class="admin-badge">
-            👑 Administrator Access
-          </div>
-
-          <h2>
-            Admin Login
-          </h2>
-
-          <p>
-            Login to administration panel
-          </p>
-
-        </div>
-
-
-        <form id="adminLoginForm">
-
-          <!-- ADMIN EMAIL -->
-
-          <div class="field">
-
-            <label for="adminEmail">
-              Admin Email
-            </label>
-
-            <div class="input-wrap">
-
-              <input
-                type="email"
-                id="adminEmail"
-                placeholder="Enter admin email"
-                autocomplete="username"
-                required>
-
-            </div>
-
-          </div>
-
-
-          <!-- ADMIN PASSWORD -->
-
-          <div class="field">
-
-            <label for="adminPassword">
-              Password
-            </label>
-
-            <div class="input-wrap password-wrap">
-
-              <input
-                type="password"
-                id="adminPassword"
-                placeholder="Enter admin password"
-                autocomplete="current-password"
-                required>
-
-              <button
-                type="button"
-                class="toggle-password"
-                id="toggleAdminPassword">
-                👁
-              </button>
-
-            </div>
-
-          </div>
-
-
-          <!-- ADMIN LOGIN -->
-
-          <button
-            type="submit"
-            class="login-btn"
-            id="adminLoginBtn">
-
-            Login as Administrator
-
-          </button>
-
-
-          <!-- ADMIN MESSAGE -->
-
-          <div
-            class="message"
-            id="adminMessage">
-          </div>
-
-        </form>
-
-
-        <!-- BACK -->
-
-        <div class="links back-link">
-
-          <a id="backToUser">
-            ← Back to User Login
-          </a>
-
-        </div>
-
-      </div>
-
-
-      <!-- SECURITY -->
-
-      <div class="secure-note">
-
-        <span>🔒</span>
-
-        Secure account authentication
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <script>
-
-    /* =========================
-       API
-    ========================= */
-
-    const API_URL =
-      "https://mlm-platform-production.up.railway.app";
 
 
     /* =========================
-       USER ELEMENTS
+       USERS OLD COLUMNS
     ========================= */
 
-    const userMode =
-      document.getElementById("userMode");
+    await addColumnIfMissing("users", "father_name", "VARCHAR(100)");
+    await addColumnIfMissing("users", "nid", "VARCHAR(50)");
+    await addColumnIfMissing("users", "address", "TEXT");
+    await addColumnIfMissing("users", "nominee_name", "VARCHAR(100)");
+    await addColumnIfMissing("users", "nominee_number", "VARCHAR(30)");
+    await addColumnIfMissing("users", "nominee_nid", "VARCHAR(50)");
+    await addColumnIfMissing("users", "profile_pic", "LONGTEXT");
 
-    const adminMode =
-      document.getElementById("adminMode");
+    /* IMPORTANT FIX */
+    await addColumnIfMissing("users", "updated_at", "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
 
-    const openAdmin =
-      document.getElementById("openAdmin");
+    console.log("Database tables are ready.");
 
-    const backToUser =
-      document.getElementById("backToUser");
-
-
-    const form =
-      document.getElementById("loginForm");
-
-    const emailInput =
-      document.getElementById("email");
-
-    const passwordInput =
-      document.getElementById("password");
-
-    const loginBtn =
-      document.getElementById("loginBtn");
-
-    const message =
-      document.getElementById("message");
-
-    const togglePassword =
-      document.getElementById("togglePassword");
+  } catch (error) {
+    console.error("Database table error:", error.message);
+    throw error;
+  }
+}
 
 
-    /* =========================
-       ADMIN ELEMENTS
-    ========================= */
+/* =========================
+   AUTH MIDDLEWARE (FIXED)
+========================= */
 
-    const adminForm =
-      document.getElementById(
-        "adminLoginForm"
-      );
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ success: false, message: "Authentication required" });
+  }
 
-    const adminEmail =
-      document.getElementById(
-        "adminEmail"
-      );
+  const token = authHeader.split(" ");
 
-    const adminPassword =
-      document.getElementById(
-        "adminPassword"
-      );
-
-    const adminLoginBtn =
-      document.getElementById(
-        "adminLoginBtn"
-      );
-
-    const adminMessage =
-      document.getElementById(
-        "adminMessage"
-      );
-
-    const toggleAdminPassword =
-      document.getElementById(
-        "toggleAdminPassword"
-      );
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    console.error("JWT error:", error.message);
+    return res.status(401).json({ success: false, message: "Invalid or expired token" });
+  }
+}
 
 
-    /* =========================
-       USER / ADMIN SWITCH
-    ========================= */
+/* =========================
+   ADMIN MIDDLEWARE
+========================= */
 
-    openAdmin.addEventListener(
-      "click",
-      function(event) {
+function requireAdmin(req, res, next) {
+  if (!req.user || req.user.role !== "admin") {
+    return res.status(403).json({ success: false, message: "Admin access required" });
+  }
+  next();
+}
 
-        event.preventDefault();
 
-        userMode.style.display =
-          "none";
+/* =========================
+   HOME
+========================= */
 
-        adminMode.style.display =
-          "block";
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    company: "Proyjon Marketing LTD",
+    slogan: "আপনার প্রয়োজন আমাদের আয়োজন",
+    message: "Proyjon Marketing LTD API is running"
+  });
+});
 
-        clearMessage(
-          message
-        );
 
-        clearMessage(
-          adminMessage
-        );
+/* =========================
+   HEALTH
+========================= */
 
-      }
+app.get("/api/health", (req, res) => {
+  res.json({ success: true, status: "OK" });
+});
+
+
+/* =========================
+   DB TEST
+========================= */
+
+app.get("/api/db-test", async (req, res) => {
+  try {
+    const [rows] = await db.query("SELECT 1 AS test");
+    res.json({ success: true, database: "connected", result: rows });
+  } catch (error) {
+    console.error("DB test error:", error.message);
+    res.status(500).json({ success: false, message: "Database connection failed" });
+  }
+});
+
+
+/* =========================
+   REGISTER
+========================= */
+
+app.post("/api/auth/register", async (req, res) => {
+  try {
+    const { name, email, phone, password, referral_code } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ success: false, message: "Name, email and password are required" });
+    }
+
+    const [existing] = await db.query("SELECT id FROM users WHERE email = ?", [email]);
+    if (existing.length > 0) {
+      return res.status(409).json({ success: false, message: "Email already registered" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const generatedReferral = "PM" + Date.now().toString().slice(-8);
+
+    const [result] = await db.query(
+      `INSERT INTO users (name, email, phone, password, referral_code) VALUES (?, ?, ?, ?, ?)`,
+      [name, email, phone || null, hashedPassword, generatedReferral]
     );
 
-
-    backToUser.addEventListener(
-      "click",
-      function(event) {
-
-        event.preventDefault();
-
-        adminMode.style.display =
-          "none";
-
-        userMode.style.display =
-          "block";
-
-        clearMessage(
-          message
-        );
-
-        clearMessage(
-          adminMessage
-        );
-
+    res.status(201).json({
+      success: true,
+      message: "Registration successful",
+      user: {
+        id: result.insertId,
+        name,
+        email,
+        phone: phone || null,
+        referral_code: generatedReferral
       }
-    );
+    });
+
+  } catch (error) {
+    console.error("Register error:", error.message);
+    res.status(500).json({ success: false, message: "Registration failed" });
+  }
+});
 
 
-    /* =========================
-       PASSWORD TOGGLE
-    ========================= */
+/* =========================
+   LOGIN
+========================= */
 
-    togglePassword.addEventListener(
-      "click",
-      function() {
+app.post("/api/auth/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-        if (
-          passwordInput.type ===
-          "password"
-        ) {
-
-          passwordInput.type =
-            "text";
-
-          togglePassword.textContent =
-            "🙈";
-
-        } else {
-
-          passwordInput.type =
-            "password";
-
-          togglePassword.textContent =
-            "👁";
-
-        }
-
-      }
-    );
-
-
-    toggleAdminPassword.addEventListener(
-      "click",
-      function() {
-
-        if (
-          adminPassword.type ===
-          "password"
-        ) {
-
-          adminPassword.type =
-            "text";
-
-          toggleAdminPassword.textContent =
-            "🙈";
-
-        } else {
-
-          adminPassword.type =
-            "password";
-
-          toggleAdminPassword.textContent =
-            "👁";
-
-        }
-
-      }
-    );
-
-
-    /* =========================
-       MESSAGE
-    ========================= */
-
-    function showMessage(
-      element,
-      text,
-      type
-    ) {
-
-      element.textContent =
-        text;
-
-      element.className =
-        "message show " + type;
-
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: "Email and password are required" });
     }
 
-
-    function clearMessage(
-      element
-    ) {
-
-      element.textContent =
-        "";
-
-      element.className =
-        "message";
-
+    const [users] = await db.query("SELECT * FROM users WHERE email = ? LIMIT 1", [email]);
+    if (users.length === 0) {
+      return res.status(401).json({ success: false, message: "Invalid email or password" });
     }
 
+    const user = users[0];
+    const passwordMatch = await bcrypt.compare(password, user.password);
 
-    /* =========================
-       USER LOGIN
-    ========================= */
+    if (!passwordMatch) {
+      return res.status(401).json({ success: false, message: "Invalid email or password" });
+    }
 
-    form.addEventListener(
-      "submit",
-      async function(event) {
+    const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: "7d" });
+    delete user.password;
 
-        event.preventDefault();
+    res.json({ success: true, message: "Login successful", token, user });
 
-
-        const email =
-          emailInput.value.trim();
-
-        const password =
-          passwordInput.value;
-
-
-        if (
-          !email ||
-          !password
-        ) {
-
-          showMessage(
-            message,
-            "Email এবং password দিন।",
-            "error"
-          );
-
-          return;
-
-        }
+  } catch (error) {
+    console.error("Login error:", error.message);
+    res.status(500).json({ success: false, message: "Login failed" });
+  }
+});
 
 
-        loginBtn.disabled =
-          true;
+/* =========================
+   CURRENT USER
+========================= */
 
-        loginBtn.textContent =
-          "Logging in...";
-
-        clearMessage(
-          message
-        );
-
-
-        try {
-
-          const response =
-            await fetch(
-              API_URL +
-              "/api/auth/login",
-              {
-                method: "POST",
-
-                headers: {
-                  "Content-Type":
-                    "application/json",
-
-                  "Accept":
-                    "application/json"
-                },
-
-                body: JSON.stringify({
-                  email: email,
-                  password: password
-                })
-              }
-            );
-
-
-          let data = null;
-
-
-          try {
-
-            data =
-              await response.json();
-
-          } catch (error) {
-
-            data = null;
-
-          }
-
-
-          if (
-            response.ok &&
-            data &&
-            data.success &&
-            data.token
-          ) {
-
-            /* USER TOKEN */
-
-            localStorage.setItem(
-              "token",
-              data.token
-            );
-
-
-            if (data.user) {
-
-              localStorage.setItem(
-                "user",
-                JSON.stringify(
-                  data.user
-                )
-              );
-
-            }
-
-
-            /* REMOVE OLD ADMIN TOKEN */
-
-            localStorage.removeItem(
-              "adminToken"
-            );
-
-
-            window.location.href =
-              "dashboard.html";
-
-
-          } else {
-
-            showMessage(
-              message,
-              data &&
-              data.message
-                ? data.message
-                : "Login failed.",
-              "error"
-            );
-
-
-            loginBtn.disabled =
-              false;
-
-            loginBtn.textContent =
-              "Login to Account";
-
-          }
-
-        } catch (error) {
-
-          console.error(
-            "USER LOGIN ERROR:",
-            error
-          );
-
-
-          showMessage(
-            message,
-            "Server-এর সাথে connection করা যাচ্ছে না।",
-            "error"
-          );
-
-
-          loginBtn.disabled =
-            false;
-
-          loginBtn.textContent =
-            "Login to Account";
-
-        }
-
-      }
+app.get("/api/auth/me", authenticateToken, async (req, res) => {
+  try {
+    const [users] = await db.query(
+      `SELECT id, name, email, phone, role, referral_code, wallet_balance, father_name, nid, address, nominee_name, nominee_number, nominee_nid, profile_pic, created_at, updated_at FROM users WHERE id = ?`,
+      [req.user.id]
     );
 
-
-    /* =========================
-       ADMIN LOGIN
-    ========================= */
-
-    adminForm.addEventListener(
-      "submit",
-      async function(event) {
-
-        event.preventDefault();
-
-
-        const email =
-          adminEmail.value.trim();
-
-        const password =
-          adminPassword.value;
-
-
-        if (
-          !email ||
-          !password
-        ) {
-
-          showMessage(
-            adminMessage,
-            "Admin email এবং password দিন।",
-            "error"
-          );
-
-          return;
-
-        }
-
-
-        adminLoginBtn.disabled =
-          true;
-
-        adminLoginBtn.textContent =
-          "Checking access...";
-
-        clearMessage(
-          adminMessage
-        );
-
-
-        try {
-
-          /*
-            Same authentication endpoint
-          */
-
-          const response =
-            await fetch(
-              API_URL +
-              "/api/auth/login",
-              {
-                method: "POST",
-
-                headers: {
-                  "Content-Type":
-                    "application/json",
-
-                  "Accept":
-                    "application/json"
-                },
-
-                body: JSON.stringify({
-                  email: email,
-                  password: password
-                })
-              }
-            );
-
-
-          let data = null;
-
-
-          try {
-
-            data =
-              await response.json();
-
-          } catch (error) {
-
-            data = null;
-
-          }
-
-
-          /*
-            LOGIN SUCCESS
-          */
-
-          if (
-            response.ok &&
-            data &&
-            data.success &&
-            data.token
-          ) {
-
-
-            /*
-              IMPORTANT:
-              Admin role check
-            */
-
-            if (
-              !data.user ||
-              data.user.role !==
-              "admin"
-            ) {
-
-              showMessage(
-                adminMessage,
-                "এই account-এর Admin access নেই।",
-                "error"
-              );
-
-
-              adminLoginBtn.disabled =
-                false;
-
-              adminLoginBtn.textContent =
-                "Login as Administrator";
-
-              return;
-
-            }
-
-
-            /*
-              SAVE ADMIN TOKEN
-            */
-
-            localStorage.setItem(
-              "adminToken",
-              data.token
-            );
-
-
-            localStorage.setItem(
-              "adminUser",
-              JSON.stringify(
-                data.user
-              )
-            );
-
-
-            /*
-              REMOVE NORMAL TOKEN
-            */
-
-            localStorage.removeItem(
-              "token"
-            );
-
-            localStorage.removeItem(
-              "user"
-            );
-
-
-            showMessage(
-              adminMessage,
-              "Admin authentication successful.",
-              "success"
-            );
-
-
-            /*
-              GO ADMIN DASHBOARD
-            */
-
-            setTimeout(
-              function() {
-
-                window.location.href =
-                  "admin-dashboard.html";
-
-              },
-              500
-            );
-
-
-          } else {
-
-            showMessage(
-              adminMessage,
-              data &&
-              data.message
-                ? data.message
-                : "Admin login failed.",
-              "error"
-            );
-
-
-            adminLoginBtn.disabled =
-              false;
-
-            adminLoginBtn.textContent =
-              "Login as Administrator";
-
-          }
-
-        } catch (error) {
-
-          console.error(
-            "ADMIN LOGIN ERROR:",
-            error
-          );
-
-
-          showMessage(
-            adminMessage,
-            "Server-এর সাথে connection করা যাচ্ছে না।",
-            "error"
-          );
-
-
-          adminLoginBtn.disabled =
-            false;
-
-          adminLoginBtn.textContent =
-            "Login as Administrator";
-
-        }
-
-      }
+    if (users.length === 0) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.json({ success: true, user: users[0] });
+
+  } catch (error) {
+    console.error("Get user error:", error);
+    res.status(500).json({ success: false, message: "Failed to load user information", error: error.message });
+  }
+});
+
+
+/* =========================
+   UPDATE PROFILE (PENDING WITH OLD VS NEW)
+========================= */
+
+app.put("/api/auth/profile", authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const requestedData = req.body;
+    const { email } = requestedData;
+
+    if (!email) {
+      return res.status(400).json({ success: false, message: "Email is required" });
+    }
+
+    const [emailUsers] = await db.query("SELECT id FROM users WHERE email = ? AND id != ?", [email, userId]);
+    if (emailUsers.length > 0) {
+      return res.status(409).json({ success: false, message: "This email is already used by another account" });
+    }
+
+    const [existing] = await db.query(
+      "SELECT id FROM profile_requests WHERE user_id = ? AND status = 'pending'",
+      [userId]
     );
 
-  </script>
+    if (existing.length > 0) {
+      return res.status(400).json({ success: false, message: "আপনার একটি রিকোয়েস্ট আগেই Pending আছে। অ্যাডমিন অ্যাপ্রুভ করা পর্যন্ত অপেক্ষা করুন।" });
+    }
 
-</body>
-</html>
+    const [currentUsers] = await db.query(
+      "SELECT name, father_name, phone, email, nid, address, nominee_name, nominee_number, nominee_nid FROM users WHERE id = ?",
+      [userId]
+    );
+
+    await db.query(
+      "INSERT INTO profile_requests (user_id, old_data, requested_data) VALUES (?, ?, ?)",
+      [userId, JSON.stringify(currentUsers[0] || {}), JSON.stringify(requestedData)]
+    );
+
+    res.json({ success: true, message: "Profile update request sent to admin for approval." });
+
+  } catch (error) {
+    console.error("Profile request error:", error);
+    res.status(500).json({ success: false, message: "Request failed", error: error.message });
+  }
+});
+
+
+/* =========================
+   CHECK PENDING PROFILE STATUS
+========================= */
+
+app.get("/api/auth/profile-status", authenticateToken, async (req, res) => {
+  try {
+    const [pending] = await db.query(
+      "SELECT id FROM profile_requests WHERE user_id = ? AND status = 'pending'",
+      [req.user.id]
+    );
+    res.json({ success: true, isPending: pending.length > 0 });
+  } catch (error) {
+    res.json({ success: false, isPending: false });
+  }
+});
+
+
+/* =========================
+   ADMIN: GET PROFILE REQUESTS (WITH DIFF/HISTORY)
+========================= */
+
+app.get("/api/admin/profile-requests", authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const [requests] = await db.query(`
+      SELECT p.id, p.user_id, p.old_data, p.requested_data, p.status, p.created_at, 
+             u.name as current_name, u.phone as current_phone 
+      FROM profile_requests p
+      JOIN users u ON p.user_id = u.id
+      ORDER BY p.created_at DESC
+    `);
+    res.json({ success: true, requests });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to load requests" });
+  }
+});
+
+
+/* =========================
+   ADMIN: USER MANAGEMENT LIST
+========================= */
+
+app.get("/api/admin/users", authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const [users] = await db.query(`
+      SELECT id, name, email, phone, role, referral_code, wallet_balance, created_at 
+      FROM users 
+      ORDER BY id DESC
+    `);
+    res.json({ success: true, users });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to load users" });
+  }
+});
+
+
+/* =========================
+   ADMIN: APPROVE/REJECT PROFILE
+========================= */
+
+app.put("/api/admin/profile-requests/:id", authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const { action } = req.body; // 'approve' or 'reject'
+    const requestId = req.params.id;
+
+    const [requests] = await db.query("SELECT * FROM profile_requests WHERE id = ?", [requestId]);
+    if (requests.length === 0) return res.status(404).json({ success: false, message: "Request not found" });
+
+    const reqData = requests[0];
+
+    if (action === 'approve') {
+      const newData = typeof reqData.requested_data === 'string' ? JSON.parse(reqData.requested_data) : reqData.requested_data;
+
+      await db.query(`
+        UPDATE users SET 
+          name = ?, father_name = ?, phone = ?, email = ?, nid = ?, address = ?, 
+          nominee_name = ?, nominee_number = ?, nominee_nid = ?
+        WHERE id = ?
+      `, [
+        newData.name, newData.father_name || null, newData.phone || null, newData.email, newData.nid || null,
+        newData.address || null, newData.nominee_name || null, newData.nominee_number || null, newData.nominee_nid || null,
+        reqData.user_id
+      ]);
+
+      await db.query("UPDATE profile_requests SET status = 'approved' WHERE id = ?", [requestId]);
+      
+      await db.query(
+        "INSERT INTO admin_alerts (user_id, type, title, message) VALUES (?, ?, ?, ?)",
+        [reqData.user_id, "profile_approved", "Profile Approved", "Admin approved a profile update."]
+      );
+
+      res.json({ success: true, message: "Profile approved successfully!" });
+    } else {
+      await db.query("UPDATE profile_requests SET status = 'rejected' WHERE id = ?", [requestId]);
+      res.json({ success: true, message: "Profile request rejected." });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Action failed", error: error.message });
+  }
+});
+
+
+/* =========================
+   UPDATE PROFILE PHOTO
+========================= */
+
+app.put("/api/auth/profile-photo", authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { profile_pic } = req.body;
+
+    if (!profile_pic) {
+      return res.status(400).json({ success: false, message: "Profile photo is required" });
+    }
+
+    await db.query("UPDATE users SET profile_pic = ? WHERE id = ?", [profile_pic, userId]);
+
+    const [users] = await db.query("SELECT name FROM users WHERE id = ?", [userId]);
+    const userName = users[0]?.name || "User";
+
+    await db.query(
+      `INSERT INTO admin_alerts (user_id, type, title, message) VALUES (?, ?, ?, ?)`,
+      [userId, "profile_photo_update", "Profile Photo Updated", `${userName} updated their profile photo.`]
+    );
+
+    const [updatedUsers] = await db.query(
+      `SELECT id, name, email, phone, role, referral_code, wallet_balance, father_name, nid, address, nominee_name, nominee_number, nominee_nid, profile_pic, created_at, updated_at FROM users WHERE id = ?`,
+      [userId]
+    );
+
+    res.json({ success: true, message: "Profile photo updated successfully", user: updatedUsers[0] });
+
+  } catch (error) {
+    console.error("Profile photo error:", error);
+    res.status(500).json({ success: false, message: "Profile photo update failed", error: error.message });
+  }
+});
+
+
+/* =========================
+   ADMIN ALERTS
+========================= */
+
+app.get("/api/admin/alerts", authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const [alerts] = await db.query(`
+      SELECT a.id, a.type, a.title, a.message, a.status, a.created_at, u.id AS user_id, u.name AS user_name, u.email AS user_email
+      FROM admin_alerts a
+      JOIN users u ON a.user_id = u.id
+      ORDER BY a.created_at DESC
+    `);
+    res.json({ success: true, alerts });
+  } catch (error) {
+    console.error("Admin alerts error:", error);
+    res.status(500).json({ success: false, message: "Failed to load admin alerts" });
+  }
+});
+
+
+/* =========================
+   ADMIN UNREAD ALERT COUNT
+========================= */
+
+app.get("/api/admin/alerts/unread-count", authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const [rows] = await db.query("SELECT COUNT(*) AS count FROM admin_alerts WHERE status = 'unread'");
+    res.json({ success: true, count: rows[0].count });
+  } catch (error) {
+    console.error("Unread alert error:", error);
+    res.status(500).json({ success: false, message: "Failed to load alert count" });
+  }
+});
+
+
+/* =========================
+   MARK ALERT AS READ
+========================= */
+
+app.put("/api/admin/alerts/:id/read", authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    await db.query("UPDATE admin_alerts SET status = 'read' WHERE id = ?", [req.params.id]);
+    res.json({ success: true, message: "Alert marked as read" });
+  } catch (error) {
+    console.error("Mark alert error:", error);
+    res.status(500).json({ success: false, message: "Failed to update alert" });
+  }
+});
+
+
+/* =========================
+   SETUP ADMIN (Password: 123456)
+========================= */
+
+app.get("/api/setup-admin", async (req, res) => {
+  try {
+    const adminEmail = "admin@proyjon.com";
+    const adminPassword = "123456"; 
+    
+    const hashedPassword = await bcrypt.hash(adminPassword, 10);
+    const [existing] = await db.query("SELECT id FROM users WHERE email = ?", [adminEmail]);
+    
+    if (existing.length > 0) {
+      await db.query("UPDATE users SET password = ?, role = 'admin' WHERE email = ?", [hashedPassword, adminEmail]);
+      return res.json({ 
+        success: true, 
+        message: "Admin password updated to 123456!", 
+        email: adminEmail, 
+        password: adminPassword 
+      });
+    }
+
+    const generatedReferral = "ADMIN" + Date.now().toString().slice(-6);
+
+    await db.query(`
+      INSERT INTO users (name, email, password, role, referral_code)
+      VALUES (?, ?, ?, 'admin', ?)
+    `, ["Super Admin", adminEmail, hashedPassword, generatedReferral]);
+
+    res.json({ 
+      success: true, 
+      message: "Admin account created successfully with password 123456!", 
+      email: adminEmail, 
+      password: adminPassword 
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+/* =========================
+   ERROR HANDLER
+========================= */
+
+app.use((err, req, res, next) => {
+  console.error("Server error:", err);
+  res.status(500).json({ success: false, message: "Internal server error" });
+});
+
+
+/* =========================
+   START SERVER
+========================= */
+
+createTables().then(() => {
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}).catch((error) => {
+  console.error("Server startup failed:", error.message);
+  process.exit(1);
+});
