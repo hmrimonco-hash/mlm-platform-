@@ -1,968 +1,1169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Admin Dashboard — Proyjon Marketing LTD</title>
-
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Inter, Arial, sans-serif;
-    }
-
-    body {
-      background: #080b11;
-      color: #fff;
-      min-height: 100vh;
-    }
-
-    button {
-      font-family: inherit;
-    }
-
-    .app {
-      min-height: 100vh;
-      padding-bottom: 90px;
-    }
-
-    /* HEADER */
-
-    header {
-      height: 70px;
-      padding: 0 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid #1d2330;
-      background: #0c1018;
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .brand-logo {
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #2563eb, #7c3aed);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 16px;
-    }
-
-    .brand-text h2 {
-      font-size: 15px;
-    }
-
-    .brand-text p {
-      font-size: 10px;
-      color: #777;
-      margin-top: 2px;
-    }
-
-    .notification-btn {
-      position: relative;
-      width: 42px;
-      height: 42px;
-      border: 1px solid #252c39;
-      border-radius: 12px;
-      background: #111722;
-      color: #fff;
-      font-size: 19px;
-      cursor: pointer;
-    }
-
-    .badge {
-      position: absolute;
-      top: -5px;
-      right: -5px;
-      min-width: 19px;
-      height: 19px;
-      padding: 0 5px;
-      border-radius: 20px;
-      background: #ef4444;
-      color: #fff;
-      font-size: 10px;
-      font-weight: 800;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid #0c1018;
-    }
-
-    /* MAIN */
-
-    main {
-      padding: 20px 16px;
-      max-width: 1100px;
-      margin: auto;
-    }
-
-    .welcome {
-      margin-bottom: 20px;
-    }
-
-    .welcome h1 {
-      font-size: 24px;
-      margin-bottom: 5px;
-    }
-
-    .welcome p {
-      color: #777;
-      font-size: 13px;
-    }
-
-    /* STATS */
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 22px;
-    }
-
-    .stat {
-      background: #10151f;
-      border: 1px solid #1d2430;
-      border-radius: 16px;
-      padding: 15px;
-    }
-
-    .stat-icon {
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
-
-    .stat-value {
-      font-size: 23px;
-      font-weight: 800;
-    }
-
-    .stat-label {
-      color: #777;
-      font-size: 11px;
-      margin-top: 4px;
-    }
-
-    /* SECTION */
-
-    .section-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 22px 0 12px;
-    }
-
-    .section-title h3 {
-      font-size: 16px;
-    }
-
-    .section-title span {
-      font-size: 11px;
-      color: #777;
-    }
-
-    /* CARDS */
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-
-    .card {
-      background: #10151f;
-      border: 1px solid #1d2430;
-      border-radius: 17px;
-      padding: 18px;
-      cursor: pointer;
-      transition: .2s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card:hover {
-      border-color: #334155;
-      transform: translateY(-1px);
-    }
-
-    .card-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      background: #182131;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 19px;
-      margin-bottom: 13px;
-    }
-
-    .card h4 {
-      font-size: 14px;
-      margin-bottom: 5px;
-    }
-
-    .card p {
-      color: #777;
-      font-size: 11px;
-      line-height: 1.5;
-    }
-
-    .coming {
-      position: absolute;
-      top: 13px;
-      right: 13px;
-      font-size: 9px;
-      padding: 4px 7px;
-      border-radius: 10px;
-      background: #1b2230;
-      color: #7c8798;
-    }
-
-    .working {
-      position: absolute;
-      top: 13px;
-      right: 13px;
-      font-size: 9px;
-      padding: 4px 7px;
-      border-radius: 10px;
-      background: rgba(34,197,94,.12);
-      color: #4ade80;
-    }
-
-    .alert-count {
-      position: absolute;
-      top: 11px;
-      right: 11px;
-      min-width: 21px;
-      height: 21px;
-      padding: 0 5px;
-      border-radius: 20px;
-      background: #ef4444;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      font-weight: 800;
-    }
-
-    /* PAGE */
-
-    .page {
-      display: none;
-    }
-
-    .page.active {
-      display: block;
-    }
-
-    .back-btn {
-      border: 1px solid #252d3a;
-      background: #111722;
-      color: #fff;
-      padding: 9px 13px;
-      border-radius: 10px;
-      cursor: pointer;
-      margin-bottom: 15px;
-    }
-
-    /* REQUEST */
-
-    .request-card {
-      background: #10151f;
-      border: 1px solid #2b3443;
-      border-radius: 17px;
-      padding: 17px;
-      margin-bottom: 14px;
-    }
-
-    .request-card.pending {
-      border-color: #f59e0b;
-    }
-
-    .request-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: flex-start;
-      margin-bottom: 15px;
-    }
-
-    .request-user {
-      font-weight: 800;
-      font-size: 16px;
-    }
-
-    .request-email {
-      color: #777;
-      font-size: 11px;
-      margin-top: 4px;
-    }
-
-    .request-id {
-      color: #555;
-      font-size: 10px;
-      margin-top: 4px;
-    }
-
-    .status {
-      padding: 6px 9px;
-      border-radius: 20px;
-      font-size: 9px;
-      font-weight: 800;
-      white-space: nowrap;
-    }
-
-    .status.pending {
-      color: #fbbf24;
-      background: rgba(245,158,11,.12);
-    }
-
-    .status.approved {
-      color: #4ade80;
-      background: rgba(34,197,94,.12);
-    }
-
-    .status.rejected {
-      color: #f87171;
-      background: rgba(239,68,68,.12);
-    }
-
-    .change-box {
-      border-top: 1px solid #202733;
-    }
-
-    .change {
-      padding: 11px 0;
-      border-bottom: 1px solid #202733;
-    }
-
-    .field-name {
-      color: #8b95a5;
-      font-size: 11px;
-      margin-bottom: 6px;
-    }
-
-    .old {
-      color: #f87171;
-      font-size: 12px;
-      word-break: break-word;
-    }
-
-    .new {
-      color: #4ade80;
-      font-size: 12px;
-      margin-top: 4px;
-      word-break: break-word;
-    }
-
-    .decision-text {
-      margin-top: 14px;
-      padding: 11px;
-      border-radius: 10px;
-      background: #0c1119;
-      color: #8993a2;
-      font-size: 11px;
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .btn {
-      border: 0;
-      border-radius: 10px;
-      padding: 11px 15px;
-      cursor: pointer;
-      font-weight: 800;
-      flex: 1;
-    }
-
-    .approve {
-      background: #16a34a;
-      color: white;
-    }
-
-    .reject {
-      background: #dc2626;
-      color: white;
-    }
-
-    .btn:disabled {
-      opacity: .5;
-      cursor: not-allowed;
-    }
-
-    /* ALERTS */
-
-    .alert-item {
-      background: #10151f;
-      border: 1px solid #1e2734;
-      border-radius: 15px;
-      padding: 15px;
-      margin-bottom: 11px;
-    }
-
-    .alert-item.unread {
-      border-color: #f59e0b;
-      background: #131820;
-    }
-
-    .alert-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .alert-title {
-      font-size: 14px;
-      font-weight: 800;
-    }
-
-    .alert-time {
-      color: #666;
-      font-size: 10px;
-      white-space: nowrap;
-    }
-
-    .alert-message {
-      color: #8d96a4;
-      font-size: 12px;
-      line-height: 1.5;
-      margin-top: 7px;
-    }
-
-    .alert-user {
-      color: #6ea8ff;
-      font-size: 11px;
-      margin-top: 8px;
-    }
-
-    .alert-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .small-btn {
-      border: 1px solid #293241;
-      background: #151b25;
-      color: #fff;
-      border-radius: 8px;
-      padding: 7px 10px;
-      font-size: 10px;
-      cursor: pointer;
-    }
-
-    /* USERS */
-
-    .user-item {
-      background: #10151f;
-      border: 1px solid #1e2734;
-      border-radius: 15px;
-      padding: 15px;
-      margin-bottom: 10px;
-    }
-
-    .user-name {
-      font-weight: 800;
-      font-size: 14px;
-    }
-
-    .user-info {
-      color: #777;
-      font-size: 11px;
-      margin-top: 4px;
-    }
-
-    .user-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    /* ACCOUNT */
-
-    .account-box {
-      background: #10151f;
-      border: 1px solid #1e2734;
-      border-radius: 17px;
-      padding: 18px;
-    }
-
-    .account-line {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      padding: 13px 0;
-      border-bottom: 1px solid #202733;
-    }
-
-    .account-line:last-child {
-      border-bottom: 0;
-    }
-
-    .account-line span:first-child {
-      color: #777;
-      font-size: 12px;
-    }
-
-    .account-line span:last-child {
-      text-align: right;
-      font-size: 12px;
-      word-break: break-word;
-    }
-
-    /* EMPTY / ERROR */
-
-    .empty {
-      padding: 35px 15px;
-      text-align: center;
-      color: #6b7280;
-      background: #10151f;
-      border: 1px solid #1d2430;
-      border-radius: 15px;
-      font-size: 13px;
-    }
-
-    .error {
-      padding: 18px;
-      background: #2a1111;
-      border: 1px solid #7f1d1d;
-      border-radius: 15px;
-      color: #ff8a8a;
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    .retry {
-      margin-top: 12px;
-      background: #fff;
-      color: #111;
-      border: 0;
-      padding: 9px 13px;
-      border-radius: 8px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    /* BOTTOM NAV */
-
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 70px;
-      background: rgba(12,16,24,.96);
-      backdrop-filter: blur(12px);
-      border-top: 1px solid #1d2330;
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      z-index: 100;
-    }
-
-    .nav-btn {
-      border: 0;
-      background: transparent;
-      color: #667080;
-      cursor: pointer;
-      font-size: 10px;
-      position: relative;
-    }
-
-    .nav-btn .nav-icon {
-      display: block;
-      font-size: 19px;
-      margin-bottom: 3px;
-    }
-
-    .nav-btn.active {
-      color: #fff;
-    }
-
-    .nav-badge {
-      position: absolute;
-      top: 7px;
-      right: 23%;
-      min-width: 17px;
-      height: 17px;
-      border-radius: 20px;
-      background: #ef4444;
-      color: white;
-      font-size: 9px;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 0 4px;
-    }
-
-    /* TOAST */
-
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: 88px;
-      transform: translateX(-50%) translateY(20px);
-      background: #171d28;
-      border: 1px solid #303949;
-      color: #fff;
-      padding: 11px 15px;
-      border-radius: 11px;
-      font-size: 12px;
-      opacity: 0;
-      pointer-events: none;
-      transition: .25s;
-      z-index: 200;
-      max-width: 90%;
-      text-align: center;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    @media (min-width: 700px) {
-      main {
-        padding: 30px 25px;
-      }
-
-      .cards {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .stats {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Dashboard — Proyjon Marketing LTD</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Inter,Arial,sans-serif;
+}
+
+body{
+  background:#080b11;
+  color:#fff;
+  min-height:100vh;
+}
+
+button,input,select{
+  font-family:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.app{
+  min-height:100vh;
+  padding-bottom:90px;
+}
+
+header{
+  height:70px;
+  padding:0 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid #1d2330;
+  background:#0c1018;
+  position:sticky;
+  top:0;
+  z-index:50;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.brand-logo{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#7c3aed);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+}
+
+.brand-text h2{
+  font-size:15px;
+}
+
+.brand-text p{
+  font-size:10px;
+  color:#777;
+  margin-top:2px;
+}
+
+.notification-btn{
+  position:relative;
+  width:42px;
+  height:42px;
+  border:1px solid #252c39;
+  border-radius:12px;
+  background:#111722;
+  color:#fff;
+  font-size:19px;
+}
+
+.badge,
+.alert-count,
+.nav-badge{
+  background:#ef4444;
+  color:#fff;
+  font-weight:800;
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+
+.badge{
+  position:absolute;
+  top:-5px;
+  right:-5px;
+  min-width:19px;
+  height:19px;
+  padding:0 5px;
+  border-radius:20px;
+  font-size:10px;
+  border:2px solid #0c1018;
+}
+
+main{
+  padding:20px 16px;
+  max-width:1100px;
+  margin:auto;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+.welcome{
+  margin-bottom:20px;
+}
+
+.welcome h1{
+  font-size:24px;
+  margin-bottom:5px;
+}
+
+.welcome p{
+  color:#777;
+  font-size:13px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-bottom:22px;
+}
+
+.stat{
+  background:#10151f;
+  border:1px solid #1d2430;
+  border-radius:16px;
+  padding:15px;
+}
+
+.stat-icon{
+  font-size:20px;
+  margin-bottom:10px;
+}
+
+.stat-value{
+  font-size:23px;
+  font-weight:800;
+}
+
+.stat-label{
+  color:#777;
+  font-size:11px;
+  margin-top:4px;
+}
+
+.section-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin:22px 0 12px;
+}
+
+.section-title h3{
+  font-size:16px;
+}
+
+.section-title span{
+  font-size:11px;
+  color:#777;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.card{
+  background:#10151f;
+  border:1px solid #1d2430;
+  border-radius:17px;
+  padding:18px;
+  cursor:pointer;
+  transition:.2s;
+  position:relative;
+  overflow:hidden;
+}
+
+.card:hover{
+  border-color:#334155;
+  transform:translateY(-1px);
+}
+
+.card-icon{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  background:#182131;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:19px;
+  margin-bottom:13px;
+}
+
+.card h4{
+  font-size:14px;
+  margin-bottom:5px;
+}
+
+.card p{
+  color:#777;
+  font-size:11px;
+  line-height:1.5;
+}
+
+.working{
+  position:absolute;
+  top:13px;
+  right:13px;
+  font-size:9px;
+  padding:4px 7px;
+  border-radius:10px;
+  background:rgba(34,197,94,.12);
+  color:#4ade80;
+}
+
+.alert-count{
+  position:absolute;
+  top:11px;
+  right:11px;
+  min-width:21px;
+  height:21px;
+  padding:0 5px;
+  border-radius:20px;
+  font-size:10px;
+}
+
+.back-btn{
+  border:1px solid #252d3a;
+  background:#111722;
+  color:#fff;
+  padding:9px 13px;
+  border-radius:10px;
+  margin-bottom:15px;
+}
+
+.request-card,
+.alert-item,
+.user-item,
+.account-box,
+.management-box{
+  background:#10151f;
+  border:1px solid #1e2734;
+  border-radius:17px;
+  padding:17px;
+  margin-bottom:14px;
+}
+
+.request-card.pending{
+  border-color:#f59e0b;
+}
+
+.request-head,
+.user-row,
+.alert-head{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+}
+
+.request-user,
+.user-name{
+  font-weight:800;
+  font-size:15px;
+}
+
+.request-email,
+.user-info{
+  color:#777;
+  font-size:11px;
+  margin-top:4px;
+}
+
+.request-id{
+  color:#555;
+  font-size:10px;
+  margin-top:4px;
+}
+
+.status{
+  padding:6px 9px;
+  border-radius:20px;
+  font-size:9px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.status.pending{
+  color:#fbbf24;
+  background:rgba(245,158,11,.12);
+}
+
+.status.approved{
+  color:#4ade80;
+  background:rgba(34,197,94,.12);
+}
+
+.status.rejected{
+  color:#f87171;
+  background:rgba(239,68,68,.12);
+}
+
+.change-box{
+  border-top:1px solid #202733;
+  margin-top:15px;
+}
+
+.change{
+  padding:11px 0;
+  border-bottom:1px solid #202733;
+}
+
+.field-name{
+  color:#8b95a5;
+  font-size:11px;
+  margin-bottom:6px;
+}
+
+.old{
+  color:#f87171;
+  font-size:12px;
+  word-break:break-word;
+}
+
+.new{
+  color:#4ade80;
+  font-size:12px;
+  margin-top:4px;
+  word-break:break-word;
+}
+
+.decision-text{
+  margin-top:14px;
+  padding:11px;
+  border-radius:10px;
+  background:#0c1119;
+  color:#8993a2;
+  font-size:11px;
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+  margin-top:15px;
+}
+
+.btn{
+  border:0;
+  border-radius:10px;
+  padding:11px 15px;
+  font-weight:800;
+  flex:1;
+}
+
+.approve{
+  background:#16a34a;
+  color:#fff;
+}
+
+.reject,
+.danger{
+  background:#dc2626;
+  color:#fff;
+}
+
+.primary{
+  background:#2563eb;
+  color:#fff;
+}
+
+.secondary{
+  background:#1b2431;
+  color:#fff;
+  border:1px solid #303b4c;
+}
+
+.small-btn{
+  border:1px solid #293241;
+  background:#151b25;
+  color:#fff;
+  border-radius:8px;
+  padding:7px 10px;
+  font-size:10px;
+}
+
+.alert-item.unread{
+  border-color:#f59e0b;
+  background:#131820;
+}
+
+.alert-title{
+  font-size:14px;
+  font-weight:800;
+}
+
+.alert-time{
+  color:#666;
+  font-size:10px;
+  white-space:nowrap;
+}
+
+.alert-message{
+  color:#8d96a4;
+  font-size:12px;
+  line-height:1.5;
+  margin-top:7px;
+}
+
+.alert-user{
+  color:#6ea8ff;
+  font-size:11px;
+  margin-top:8px;
+}
+
+.alert-actions{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+  flex-wrap:wrap;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.form-group{
+  margin-bottom:12px;
+}
+
+.form-group.full{
+  grid-column:1/-1;
+}
+
+.form-group label{
+  display:block;
+  color:#8993a2;
+  font-size:11px;
+  margin-bottom:6px;
+}
+
+.form-group input,
+.form-group select{
+  width:100%;
+  padding:11px 12px;
+  border-radius:10px;
+  border:1px solid #293241;
+  background:#0c1119;
+  color:#fff;
+  outline:none;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+  border-color:#2563eb;
+}
+
+.search-box{
+  margin-bottom:13px;
+}
+
+.search-box input{
+  width:100%;
+  padding:12px;
+  border-radius:11px;
+  border:1px solid #293241;
+  background:#0c1119;
+  color:#fff;
+  outline:none;
+}
+
+.user-actions{
+  display:flex;
+  gap:7px;
+  margin-top:12px;
+  flex-wrap:wrap;
+}
+
+.package-price{
+  color:#4ade80;
+  font-size:16px;
+  font-weight:800;
+}
+
+.package-status{
+  font-size:10px;
+  color:#4ade80;
+}
+
+.empty{
+  padding:35px 15px;
+  text-align:center;
+  color:#6b7280;
+  background:#10151f;
+  border:1px solid #1d2430;
+  border-radius:15px;
+  font-size:13px;
+}
+
+.error{
+  padding:18px;
+  background:#2a1111;
+  border:1px solid #7f1d1d;
+  border-radius:15px;
+  color:#ff8a8a;
+  font-size:12px;
+  line-height:1.5;
+}
+
+.retry{
+  margin-top:12px;
+  background:#fff;
+  color:#111;
+  border:0;
+  padding:9px 13px;
+  border-radius:8px;
+  font-weight:800;
+}
+
+.account-line{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  padding:13px 0;
+  border-bottom:1px solid #202733;
+}
+
+.account-line:last-child{
+  border-bottom:0;
+}
+
+.account-line span:first-child{
+  color:#777;
+  font-size:12px;
+}
+
+.account-line span:last-child{
+  text-align:right;
+  font-size:12px;
+  word-break:break-word;
+}
+
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:70px;
+  background:rgba(12,16,24,.96);
+  backdrop-filter:blur(12px);
+  border-top:1px solid #1d2330;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  z-index:100;
+}
+
+.nav-btn{
+  border:0;
+  background:transparent;
+  color:#667080;
+  font-size:10px;
+  position:relative;
+}
+
+.nav-icon{
+  display:block;
+  font-size:19px;
+  margin-bottom:3px;
+}
+
+.nav-btn.active{
+  color:#fff;
+}
+
+.nav-badge{
+  position:absolute;
+  top:7px;
+  right:23%;
+  min-width:17px;
+  height:17px;
+  border-radius:20px;
+  font-size:9px;
+  padding:0 4px;
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:88px;
+  transform:translateX(-50%) translateY(20px);
+  background:#171d28;
+  border:1px solid #303949;
+  color:#fff;
+  padding:11px 15px;
+  border-radius:11px;
+  font-size:12px;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+  z-index:200;
+  max-width:90%;
+  text-align:center;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.7);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:15px;
+  z-index:300;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.modal-box{
+  width:100%;
+  max-width:500px;
+  max-height:90vh;
+  overflow:auto;
+  background:#10151f;
+  border:1px solid #303a4b;
+  border-radius:18px;
+  padding:20px;
+}
+
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
+}
+
+.modal-head h3{
+  font-size:16px;
+}
+
+.close-btn{
+  border:0;
+  background:#1b2431;
+  color:#fff;
+  width:32px;
+  height:32px;
+  border-radius:9px;
+}
+
+@media(max-width:600px){
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .cards{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .form-group.full{
+    grid-column:auto;
+  }
+}
+
+@media(min-width:700px){
+  main{
+    padding:30px 25px;
+  }
+
+  .cards{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+</style>
 </head>
 
 <body>
 
 <div class="app">
 
-  <!-- HEADER -->
-
-  <header>
-    <div class="brand">
-      <div class="brand-logo">P</div>
-
-      <div class="brand-text">
-        <h2>Proyjon Marketing LTD</h2>
-        <p>Administrator Panel</p>
-      </div>
+<header>
+  <div class="brand">
+    <div class="brand-logo">P</div>
+    <div class="brand-text">
+      <h2>Proyjon Marketing LTD</h2>
+      <p>Administrator Panel</p>
     </div>
+  </div>
+
+  <button class="notification-btn" onclick="openAlerts()">
+    🔔
+    <span id="notificationBadge" class="badge">0</span>
+  </button>
+</header>
+
+<main>
+
+<!-- HOME -->
+
+<section id="homePage" class="page active">
+
+<div class="welcome">
+  <h1>Admin Dashboard</h1>
+  <p>Manage your Proyjon Marketing LTD platform.</p>
+</div>
+
+<div class="stats">
+
+<div class="stat">
+  <div class="stat-icon">👥</div>
+  <div id="totalUsers" class="stat-value">—</div>
+  <div class="stat-label">Total Users</div>
+</div>
+
+<div class="stat">
+  <div class="stat-icon">📝</div>
+  <div id="pendingRequests" class="stat-value">—</div>
+  <div class="stat-label">Pending Profile Requests</div>
+</div>
+
+<div class="stat">
+  <div class="stat-icon">🔔</div>
+  <div id="unreadAlerts" class="stat-value">—</div>
+  <div class="stat-label">Unread Notifications</div>
+</div>
+
+</div>
+
+<div class="section-title">
+  <h3>Management</h3>
+  <span>Admin controls</span>
+</div>
+
+<div class="cards">
+
+<div class="card" onclick="openUsers()">
+  <div class="card-icon">👥</div>
+  <span class="working">Working</span>
+  <h4>User Management</h4>
+  <p>View, create, delete and manage user accounts.</p>
+</div>
+
+<div class="card" onclick="openProfileRequests()">
+  <div class="card-icon">📋</div>
+  <span class="working">Working</span>
+  <span id="profileRequestBadge" class="alert-count">0</span>
+  <h4>Profile Update Requests</h4>
+  <p>Compare old and new information and approve or reject changes.</p>
+</div>
+
+<div class="card" onclick="openAlerts()">
+  <div class="card-icon">🔔</div>
+  <span id="notificationCardBadge" class="alert-count">0</span>
+  <h4>Notifications</h4>
+  <p>View system notifications and admin alerts.</p>
+</div>
 
-    <button class="notification-btn" onclick="openAlerts()">
-      🔔
-      <span id="notificationBadge" class="badge">0</span>
-    </button>
-  </header>
+<div class="card" onclick="openPackages()">
+  <div class="card-icon">📦</div>
+  <span class="working">Working</span>
+  <h4>Package Management</h4>
+  <p>Create, update and delete MLM packages.</p>
+</div>
 
+<div class="card" onclick="openPurchases()">
+  <div class="card-icon">🛒</div>
+  <span class="working">Working</span>
+  <h4>Purchase Requests</h4>
+  <p>Review package purchase requests.</p>
+</div>
 
-  <main>
+<div class="card" onclick="openDeposits()">
+  <div class="card-icon">💰</div>
+  <span class="working">Working</span>
+  <h4>Deposit Requests</h4>
+  <p>Review deposit and payment transactions.</p>
+</div>
 
-    <!-- HOME -->
+<div class="card" onclick="openWithdrawals()">
+  <div class="card-icon">💸</div>
+  <span class="working">Working</span>
+  <h4>Withdraw Requests</h4>
+  <p>Review withdrawal requests.</p>
+</div>
 
-    <section id="homePage" class="page active">
+<div class="card" onclick="openTree()">
+  <div class="card-icon">🌳</div>
+  <span class="working">Working</span>
+  <h4>Tree Management</h4>
+  <p>View MLM referral tree structure.</p>
+</div>
 
-      <div class="welcome">
-        <h1>Admin Dashboard</h1>
-        <p>Manage your Proyjon Marketing LTD platform.</p>
-      </div>
+<div class="card" onclick="openAccount()">
+  <div class="card-icon">🔐</div>
+  <span class="working">Working</span>
+  <h4>Admin Account</h4>
+  <p>Manage administrator account and password.</p>
+</div>
 
+</div>
+</section>
 
-      <div class="stats">
 
-        <div class="stat">
-          <div class="stat-icon">👥</div>
-          <div id="totalUsers" class="stat-value">—</div>
-          <div class="stat-label">Total Users</div>
-        </div>
+<!-- USERS -->
 
-        <div class="stat">
-          <div class="stat-icon">📝</div>
-          <div id="pendingRequests" class="stat-value">—</div>
-          <div class="stat-label">Pending Profile Requests</div>
-        </div>
+<section id="usersPage" class="page">
 
-        <div class="stat">
-          <div class="stat-icon">🔔</div>
-          <div id="unreadAlerts" class="stat-value">—</div>
-          <div class="stat-label">Unread Notifications</div>
-        </div>
+<button class="back-btn" onclick="goHome()">← Back</button>
 
-      </div>
+<div class="section-title">
+  <h3>User Management</h3>
+  <span id="userCountText"></span>
+</div>
 
+<div class="actions">
+  <button class="btn primary" onclick="openCreateUserModal()">
+    + Create User
+  </button>
+</div>
 
-      <div class="section-title">
-        <h3>Management</h3>
-        <span>Admin controls</span>
-      </div>
+<div class="search-box">
+  <input
+    id="userSearch"
+    type="text"
+    placeholder="Search by name, email or phone..."
+    oninput="filterUsers()"
+  >
+</div>
 
+<div id="usersList"></div>
 
-      <div class="cards">
+</section>
 
-        <div class="card" onclick="showComing('New User Requests')">
-          <div class="card-icon">🆕</div>
-          <span class="coming">Soon</span>
-          <h4>New User Requests</h4>
-          <p>Review and manage new registration requests.</p>
-        </div>
 
+<!-- PROFILE REQUESTS -->
 
-        <div class="card" onclick="openUsers()">
-          <div class="card-icon">👥</div>
-          <span class="working">Working</span>
-          <h4>User Management</h4>
-          <p>View registered users and their account information.</p>
-        </div>
+<section id="profileRequestsPage" class="page">
 
+<button class="back-btn" onclick="goHome()">← Back</button>
 
-        <div class="card" onclick="showComing('Tree Management')">
-          <div class="card-icon">🌳</div>
-          <span class="coming">Soon</span>
-          <h4>Tree Management</h4>
-          <p>Manage referral and MLM tree structure.</p>
-        </div>
+<div class="section-title">
+  <h3>Profile Update Requests</h3>
+  <span id="requestCountText"></span>
+</div>
 
+<div id="profileRequestsList"></div>
 
-        <div class="card" onclick="showComing('Withdraw Requests')">
-          <div class="card-icon">💸</div>
-          <span class="coming">Soon</span>
-          <h4>Withdraw Requests</h4>
-          <p>Review user withdrawal requests.</p>
-        </div>
+</section>
 
 
-        <div class="card" onclick="showComing('Purchase Requests')">
-          <div class="card-icon">🛒</div>
-          <span class="coming">Soon</span>
-          <h4>Purchase Requests</h4>
-          <p>Review package purchase requests.</p>
-        </div>
+<!-- ALERTS -->
 
+<section id="alertsPage" class="page">
 
-        <div class="card" onclick="showComing('Package Management')">
-          <div class="card-icon">📦</div>
-          <span class="coming">Soon</span>
-          <h4>Package Management</h4>
-          <p>Create and manage MLM packages.</p>
-        </div>
+<button class="back-btn" onclick="goHome()">← Back</button>
 
+<div class="section-title">
+  <h3>Notifications</h3>
+  <span>Admin alerts</span>
+</div>
 
-        <div class="card" onclick="showComing('Deposit Requests')">
-          <div class="card-icon">💰</div>
-          <span class="coming">Soon</span>
-          <h4>Deposit Requests</h4>
-          <p>Review deposit and payment requests.</p>
-        </div>
+<div id="alertsList"></div>
 
+</section>
 
-        <div class="card" onclick="openProfileRequests()">
-          <div class="card-icon">📋</div>
 
-          <span class="working">Working</span>
+<!-- PACKAGES -->
 
-          <span id="profileRequestBadge"
-                class="alert-count">
-            0
-          </span>
+<section id="packagesPage" class="page">
 
-          <h4>Profile Update Requests</h4>
+<button class="back-btn" onclick="goHome()">← Back</button>
 
-          <p>
-            Compare old and new information and approve or reject changes.
-          </p>
-        </div>
+<div class="section-title">
+  <h3>Package Management</h3>
+  <button class="small-btn" onclick="openPackageModal()">+ Add Package</button>
+</div>
 
+<div id="packagesList"></div>
 
-        <div class="card" onclick="openAccount()">
-          <div class="card-icon">🔐</div>
-          <span class="working">Working</span>
-          <h4>Admin Account</h4>
-          <p>View administrator account information.</p>
-        </div>
+</section>
 
 
-        <div class="card" onclick="openAlerts()">
-          <div class="card-icon">🔔</div>
+<!-- PURCHASES -->
 
-          <span id="notificationCardBadge"
-                class="alert-count">
-            0
-          </span>
+<section id="purchasesPage" class="page">
 
-          <h4>Notifications</h4>
+<button class="back-btn" onclick="goHome()">← Back</button>
 
-          <p>
-            View system notifications and admin alerts.
-          </p>
-        </div>
+<div class="section-title">
+  <h3>Purchase Requests</h3>
+  <span>Package purchases</span>
+</div>
 
-      </div>
+<div id="purchasesList"></div>
 
-    </section>
+</section>
 
 
-    <!-- PROFILE REQUESTS -->
+<!-- DEPOSITS -->
 
-    <section id="profileRequestsPage" class="page">
+<section id="depositsPage" class="page">
 
-      <button class="back-btn" onclick="goHome()">
-        ← Back
-      </button>
+<button class="back-btn" onclick="goHome()">← Back</button>
 
-      <div class="section-title">
-        <h3>Profile Update Requests</h3>
-        <span id="requestCountText"></span>
-      </div>
+<div class="section-title">
+  <h3>Deposit Requests</h3>
+  <span>Deposit transactions</span>
+</div>
 
-      <div id="profileRequestsList"></div>
+<div id="depositsList"></div>
 
-    </section>
+</section>
 
 
-    <!-- ALERTS -->
+<!-- WITHDRAWALS -->
 
-    <section id="alertsPage" class="page">
+<section id="withdrawalsPage" class="page">
 
-      <button class="back-btn" onclick="goHome()">
-        ← Back
-      </button>
+<button class="back-btn" onclick="goHome()">← Back</button>
 
-      <div class="section-title">
-        <h3>Notifications</h3>
-        <span>Admin alerts</span>
-      </div>
+<div class="section-title">
+  <h3>Withdraw Requests</h3>
+  <span>Withdrawal transactions</span>
+</div>
 
-      <div id="alertsList"></div>
+<div id="withdrawalsList"></div>
 
-    </section>
+</section>
 
 
-    <!-- USERS -->
+<!-- TREE -->
 
-    <section id="usersPage" class="page">
+<section id="treePage" class="page">
 
-      <button class="back-btn" onclick="goHome()">
-        ← Back
-      </button>
+<button class="back-btn" onclick="goHome()">← Back</button>
 
-      <div class="section-title">
-        <h3>User Management</h3>
-        <span id="userCountText"></span>
-      </div>
+<div class="section-title">
+  <h3>Tree Management</h3>
+  <span>MLM structure</span>
+</div>
 
-      <div id="usersList"></div>
+<div id="treeList"></div>
 
-    </section>
+</section>
 
 
-    <!-- ACCOUNT -->
+<!-- ACCOUNT -->
 
-    <section id="accountPage" class="page">
+<section id="accountPage" class="page">
 
-      <button class="back-btn" onclick="goHome()">
-        ← Back
-      </button>
+<button class="back-btn" onclick="goHome()">← Back</button>
 
-      <div class="section-title">
-        <h3>Admin Account</h3>
-        <span>Administrator</span>
-      </div>
+<div class="section-title">
+  <h3>Admin Account</h3>
+  <span>Administrator</span>
+</div>
 
-      <div id="accountBox" class="account-box">
-        Loading...
-      </div>
+<div id="accountBox" class="account-box">
+  Loading...
+</div>
 
-      <div style="margin-top:15px;">
-        <button
-          class="btn"
-          style="background:#dc2626;color:white;width:100%;"
-          onclick="logout()"
-        >
-          Logout
-        </button>
-      </div>
+<div class="actions">
+  <button class="btn primary" onclick="openChangePasswordModal()">
+    🔐 Change Password
+  </button>
+</div>
 
-    </section>
+<div style="margin-top:15px">
+  <button class="btn danger" style="width:100%" onclick="logout()">
+    Logout
+  </button>
+</div>
 
-  </main>
+</section>
 
+</main>
 
-  <!-- BOTTOM NAV -->
 
-  <nav class="bottom-nav">
+<!-- BOTTOM NAV -->
 
-    <button id="navHome"
-            class="nav-btn active"
-            onclick="goHome()">
-      <span class="nav-icon">⌂</span>
-      Home
-    </button>
+<nav class="bottom-nav">
 
+<button id="navHome" class="nav-btn active" onclick="goHome()">
+  <span class="nav-icon">⌂</span>
+  Home
+</button>
 
-    <button id="navUsers"
-            class="nav-btn"
-            onclick="openUsers()">
-      <span class="nav-icon">👥</span>
-      Users
-    </button>
+<button id="navUsers" class="nav-btn" onclick="openUsers()">
+  <span class="nav-icon">👥</span>
+  Users
+</button>
 
+<button id="navRequests" class="nav-btn" onclick="openProfileRequests()">
+  <span class="nav-icon">📋</span>
+  Requests
+  <span id="navRequestBadge" class="nav-badge">0</span>
+</button>
 
-    <button id="navRequests"
-            class="nav-btn"
-            onclick="openProfileRequests()">
-      <span class="nav-icon">📋</span>
-      Requests
+<button id="navAlerts" class="nav-btn" onclick="openAlerts()">
+  <span class="nav-icon">🔔</span>
+  Alerts
+  <span id="navAlertBadge" class="nav-badge">0</span>
+</button>
 
-      <span id="navRequestBadge"
-            class="nav-badge">
-        0
-      </span>
-    </button>
+<button id="navAccount" class="nav-btn" onclick="openAccount()">
+  <span class="nav-icon">⚙️</span>
+  Account
+</button>
 
+</nav>
 
-    <button id="navAlerts"
-            class="nav-btn"
-            onclick="openAlerts()">
-      <span class="nav-icon">🔔</span>
-      Alerts
+</div>
 
-      <span id="navAlertBadge"
-            class="nav-badge">
-        0
-      </span>
-    </button>
 
+<!-- CREATE USER MODAL -->
 
-    <button id="navAccount"
-            class="nav-btn"
-            onclick="openAccount()">
-      <span class="nav-icon">⚙️</span>
-      Account
-    </button>
+<div id="createUserModal" class="modal">
 
-  </nav>
+<div class="modal-box">
 
+<div class="modal-head">
+  <h3>Create New User</h3>
+  <button class="close-btn" onclick="closeModal('createUserModal')">×</button>
+</div>
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Name</label>
+<input id="newUserName" placeholder="Full name">
+</div>
+
+<div class="form-group">
+<label>Email</label>
+<input id="newUserEmail" type="email" placeholder="Email">
+</div>
+
+<div class="form-group">
+<label>Phone</label>
+<input id="newUserPhone" placeholder="Phone number">
+</div>
+
+<div class="form-group">
+<label>Password</label>
+<input id="newUserPassword" type="password" placeholder="Password">
+</div>
+
+<div class="form-group">
+<label>Father's Name</label>
+<input id="newUserFather" placeholder="Father's name">
+</div>
+
+<div class="form-group">
+<label>NID</label>
+<input id="newUserNid" placeholder="NID">
+</div>
+
+</div>
+
+<div class="actions">
+<button class="btn secondary" onclick="closeModal('createUserModal')">Cancel</button>
+<button class="btn primary" onclick="createUser()">Create User</button>
+</div>
+
+</div>
+</div>
+
+
+<!-- PASSWORD MODAL -->
+
+<div id="passwordModal" class="modal">
+
+<div class="modal-box">
+
+<div class="modal-head">
+<h3 id="passwordModalTitle">Change Password</h3>
+<button class="close-btn" onclick="closeModal('passwordModal')">×</button>
+</div>
+
+<div id="currentPasswordGroup" class="form-group">
+<label>Current Password</label>
+<input id="currentPassword" type="password">
+</div>
+
+<div class="form-group">
+<label>New Password</label>
+<input id="newPassword" type="password" placeholder="Minimum 6 characters">
+</div>
+
+<div class="actions">
+<button class="btn secondary" onclick="closeModal('passwordModal')">Cancel</button>
+<button class="btn primary" onclick="submitPasswordChange()">Save Password</button>
+</div>
+
+</div>
+</div>
+
+
+<!-- PACKAGE MODAL -->
+
+<div id="packageModal" class="modal">
+
+<div class="modal-box">
+
+<div class="modal-head">
+<h3 id="packageModalTitle">Add Package</h3>
+<button class="close-btn" onclick="closeModal('packageModal')">×</button>
+</div>
+
+<input type="hidden" id="editPackageId">
+
+<div class="form-group">
+<label>Package Name</label>
+<input id="packageName" placeholder="Example: Basic Package">
+</div>
+
+<div class="form-group">
+<label>Price</label>
+<input id="packagePrice" type="number" min="0" placeholder="0">
+</div>
+
+<div class="form-group">
+<label>Description</label>
+<input id="packageDescription" placeholder="Package description">
+</div>
+
+<div class="actions">
+<button class="btn secondary" onclick="closeModal('packageModal')">Cancel</button>
+<button class="btn primary" onclick="savePackage()">Save Package</button>
+</div>
+
+</div>
 </div>
 
 
@@ -971,1414 +1172,1953 @@
 
 <script>
 
-  /* =========================
-     CONFIG
-  ========================= */
+/* =========================
+   CONFIG
+========================= */
 
-  const API_URL =
-    "https://mlm-platform-production.up.railway.app";
+const API_URL =
+"https://mlm-platform-production.up.railway.app";
 
 
-  /* =========================
-     AUTH
-  ========================= */
+/* =========================
+   AUTH
+========================= */
 
-  function getAdminToken() {
-    return localStorage.getItem("adminToken");
+function getAdminToken(){
+  return localStorage.getItem("adminToken");
+}
+
+function checkAuth(){
+
+  if(!getAdminToken()){
+    window.location.href="login.html";
+    return false;
   }
 
+  return true;
+}
 
-  function checkAuth() {
 
-    const token = getAdminToken();
+/* =========================
+   API
+========================= */
 
-    if (!token) {
-      window.location.href = "login.html";
-      return false;
-    }
+async function apiRequest(endpoint,options={}){
 
-    return true;
+  const token=getAdminToken();
+
+  if(!token){
+    throw new Error("Admin session expired. Please login again.");
   }
 
-
-  /* =========================
-     API REQUEST
-  ========================= */
-
-  async function apiRequest(endpoint, options = {}) {
-
-    const token = getAdminToken();
-
-    if (!token) {
-      throw new Error("Admin session expired. Please login again.");
+  const config={
+    ...options,
+    headers:{
+      ...(options.headers||{}),
+      Authorization:`Bearer ${token}`,
+      "Content-Type":"application/json"
     }
+  };
 
-    const config = {
-      ...options,
-      headers: {
-        ...(options.headers || {}),
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    };
+  const response=await fetch(
+    `${API_URL}${endpoint}`,
+    config
+  );
 
-    const response = await fetch(
-      `${API_URL}${endpoint}`,
-      config
+  let data={};
+
+  try{
+    data=await response.json();
+  }catch(e){
+    throw new Error(
+      `Server returned invalid response (${response.status})`
     );
+  }
 
-    let data;
+  if(!response.ok){
 
-    try {
-      data = await response.json();
-    } catch (e) {
-      throw new Error(
-        `Server returned invalid response (${response.status})`
-      );
+    if(response.status===401){
+
+      localStorage.removeItem("adminToken");
+      localStorage.removeItem("adminUser");
+
+      window.location.href="login.html";
+
+      throw new Error("Admin session expired.");
     }
 
-    if (!response.ok) {
+    throw new Error(
+      data.message ||
+      `Request failed (${response.status})`
+    );
+  }
 
-      if (response.status === 401) {
-        localStorage.removeItem("adminToken");
-        localStorage.removeItem("adminUser");
+  return data;
+}
 
-        window.location.href = "login.html";
 
-        throw new Error("Admin session expired.");
-      }
+/* =========================
+   ESCAPE
+========================= */
 
-      if (response.status === 403) {
-        throw new Error(
-          data.message || "Admin access denied."
-        );
-      }
+function escapeHtml(value){
 
-      throw new Error(
-        data.message ||
-        `Request failed (${response.status})`
+  return String(value??"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+let toastTimer;
+
+function showToast(message){
+
+  const toast=document.getElementById("toast");
+
+  toast.textContent=message;
+
+  toast.classList.add("show");
+
+  clearTimeout(toastTimer);
+
+  toastTimer=setTimeout(()=>{
+    toast.classList.remove("show");
+  },2500);
+}
+
+
+/* =========================
+   MODAL
+========================= */
+
+function closeModal(id){
+  document.getElementById(id).classList.remove("show");
+}
+
+function openModal(id){
+  document.getElementById(id).classList.add("show");
+}
+
+
+/* =========================
+   PAGE CONTROL
+========================= */
+
+function hidePages(){
+
+  document.querySelectorAll(".page")
+    .forEach(p=>p.classList.remove("active"));
+
+  document.querySelectorAll(".nav-btn")
+    .forEach(b=>b.classList.remove("active"));
+}
+
+function goHome(){
+
+  hidePages();
+
+  document.getElementById("homePage")
+    .classList.add("active");
+
+  document.getElementById("navHome")
+    .classList.add("active");
+
+  loadDashboardStats();
+}
+
+
+/* =========================
+   PROFILE REQUESTS
+========================= */
+
+async function openProfileRequests(){
+
+  hidePages();
+
+  document.getElementById("profileRequestsPage")
+    .classList.add("active");
+
+  document.getElementById("navRequests")
+    .classList.add("active");
+
+  await loadProfileRequests();
+}
+
+async function loadProfileRequests(){
+
+  const container=
+    document.getElementById("profileRequestsList");
+
+  container.innerHTML=
+    `<div class="empty">Loading profile requests...</div>`;
+
+  try{
+
+    const data=
+      await apiRequest("/api/admin/profile-requests");
+
+    let requests=
+      data.requests ||
+      data.data ||
+      [];
+
+    const pending=
+      requests.filter(r=>
+        String(r.status||"").toLowerCase()==="pending"
       );
+
+    document.getElementById("requestCountText")
+      .textContent=`${pending.length} pending`;
+
+    updateRequestBadges(pending.length);
+
+    requests.sort((a,b)=>{
+
+      const ap=
+        String(a.status).toLowerCase()==="pending";
+
+      const bp=
+        String(b.status).toLowerCase()==="pending";
+
+      if(ap&&!bp)return -1;
+      if(!ap&&bp)return 1;
+
+      return new Date(b.created_at||0)-
+             new Date(a.created_at||0);
+    });
+
+    if(!requests.length){
+
+      container.innerHTML=
+        `<div class="empty">No profile update requests found.</div>`;
+
+      return;
     }
 
-    return data;
+    container.innerHTML=
+      requests.map(renderProfileRequest).join("");
+
+  }catch(error){
+
+    container.innerHTML=`
+      <div class="error">
+        <strong>Failed to load requests</strong>
+        <div style="margin-top:7px">
+          ${escapeHtml(error.message)}
+        </div>
+        <button class="retry" onclick="loadProfileRequests()">
+          Retry
+        </button>
+      </div>
+    `;
   }
+}
 
 
-  /* =========================
-     HTML ESCAPE
-  ========================= */
+function renderProfileRequest(req){
 
-  function escapeHtml(value) {
+  let oldData={};
+  let newData={};
 
-    return String(value ?? "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
+  try{
 
+    oldData=
+      typeof req.old_data==="string"
+      ?JSON.parse(req.old_data)
+      :(req.old_data||{});
 
-  /* =========================
-     TOAST
-  ========================= */
+    newData=
+      typeof req.requested_data==="string"
+      ?JSON.parse(req.requested_data)
+      :(req.requested_data||{});
 
-  let toastTimer;
-
-  function showToast(message) {
-
-    const toast =
-      document.getElementById("toast");
-
-    toast.textContent = message;
-
-    toast.classList.add("show");
-
-    clearTimeout(toastTimer);
-
-    toastTimer = setTimeout(() => {
-      toast.classList.remove("show");
-    }, 2500);
-  }
+  }catch(e){}
 
 
-  /* =========================
-     PAGE CONTROL
-  ========================= */
+  const fields=[
+    ["name","Name"],
+    ["father_name","Father's Name"],
+    ["phone","Phone"],
+    ["email","Email"],
+    ["nid","NID"],
+    ["address","Address"],
+    ["nominee_name","Nominee Name"],
+    ["nominee_number","Nominee Number"],
+    ["nominee_nid","Nominee NID"]
+  ];
 
-  function hidePages() {
+  const changes=fields.map(([key,label])=>{
 
-    document
-      .querySelectorAll(".page")
-      .forEach(page => {
-        page.classList.remove("active");
-      });
+    const oldValue=oldData[key]??"";
+    const newValue=newData[key]??"";
 
-    document
-      .querySelectorAll(".nav-btn")
-      .forEach(btn => {
-        btn.classList.remove("active");
-      });
-  }
+    if(String(oldValue)===String(newValue)){
+      return "";
+    }
 
+    return`
+      <div class="change">
+        <div class="field-name">${escapeHtml(label)}</div>
 
-  function goHome() {
+        <div class="old">
+          <strong>OLD:</strong>
+          ${escapeHtml(oldValue||"Not provided")}
+        </div>
 
-    hidePages();
-
-    document
-      .getElementById("homePage")
-      .classList.add("active");
-
-    document
-      .getElementById("navHome")
-      .classList.add("active");
-
-    loadDashboardStats();
-  }
-
-
-  /* =========================
-     PROFILE REQUESTS
-  ========================= */
-
-  async function openProfileRequests() {
-
-    hidePages();
-
-    document
-      .getElementById("profileRequestsPage")
-      .classList.add("active");
-
-    document
-      .getElementById("navRequests")
-      .classList.add("active");
-
-    await loadProfileRequests();
-  }
-
-
-  async function loadProfileRequests() {
-
-    const container =
-      document.getElementById("profileRequestsList");
-
-    container.innerHTML = `
-      <div class="empty">
-        Loading profile requests...
+        <div class="new">
+          <strong>NEW:</strong>
+          ${escapeHtml(newValue||"Not provided")}
+        </div>
       </div>
     `;
 
-    try {
-
-      const data =
-        await apiRequest(
-          "/api/admin/profile-requests"
-        );
-
-      console.log(
-        "Profile Requests API:",
-        data
-      );
-
-      const requests =
-        data.requests ||
-        data.data ||
-        [];
-
-      const pending =
-        requests.filter(
-          r =>
-            String(r.status || "")
-              .toLowerCase() === "pending"
-        );
-
-      document.getElementById(
-        "requestCountText"
-      ).textContent =
-        `${pending.length} pending`;
-
-      updateRequestBadges(
-        pending.length
-      );
+  }).join("");
 
 
-      if (!requests.length) {
+  const status=
+    String(req.status||"pending").toLowerCase();
 
-        container.innerHTML = `
-          <div class="empty">
-            No profile update requests found.
+  const createdAt=
+    req.created_at
+    ?new Date(req.created_at).toLocaleString()
+    :"Unknown";
+
+  const userName=
+    req.user_name||
+    req.name||
+    newData.name||
+    "Unknown User";
+
+  const userEmail=
+    req.user_email||
+    req.email||
+    newData.email||
+    "";
+
+
+  return`
+    <div class="request-card ${status==="pending"?"pending":""}">
+
+      <div class="request-head">
+
+        <div>
+          <div class="request-user">
+            ${escapeHtml(userName)}
           </div>
-        `;
 
-        return;
+          <div class="request-email">
+            ${escapeHtml(userEmail)}
+          </div>
+
+          <div class="request-id">
+            Request ID: ${escapeHtml(req.id)}
+          </div>
+
+          <div class="request-id">
+            Submitted: ${escapeHtml(createdAt)}
+          </div>
+        </div>
+
+        <span class="status ${status}">
+          ${escapeHtml(status.toUpperCase())}
+        </span>
+
+      </div>
+
+      ${
+        changes
+        ?`<div class="change-box">${changes}</div>`
+        :`<div class="decision-text">No changed fields detected.</div>`
       }
 
-
-      /*
-        Pending first.
-      */
-
-      requests.sort((a, b) => {
-
-        const aPending =
-          String(a.status).toLowerCase() === "pending";
-
-        const bPending =
-          String(b.status).toLowerCase() === "pending";
-
-        if (aPending && !bPending) return -1;
-        if (!aPending && bPending) return 1;
-
-        return new Date(b.created_at || 0)
-          - new Date(a.created_at || 0);
-      });
-
-
-      container.innerHTML =
-        requests
-          .map(renderProfileRequest)
-          .join("");
-
-    } catch (error) {
-
-      console.error(
-        "loadProfileRequests:",
-        error
-      );
-
-      container.innerHTML = `
-        <div class="error">
-
-          <strong>Failed to load requests</strong>
-
-          <div style="margin-top:7px;">
-            ${escapeHtml(error.message)}
+      ${
+        status==="pending"
+        ?`
+          <div class="decision-text">
+            ⏳ <strong>PENDING</strong> —
+            Waiting for admin decision.
           </div>
 
-          <button
-            class="retry"
-            onclick="loadProfileRequests()"
-          >
-            Retry
-          </button>
+          <div class="actions">
 
-        </div>
-      `;
-    }
+            <button class="btn approve"
+              onclick="handleProfileRequest(${Number(req.id)},'approve')">
+              ✓ Approve
+            </button>
+
+            <button class="btn reject"
+              onclick="handleProfileRequest(${Number(req.id)},'reject')">
+              ✕ Reject
+            </button>
+
+          </div>
+        `
+        :`
+          <div class="decision-text">
+            This request has already been ${escapeHtml(status)}.
+          </div>
+        `
+      }
+
+    </div>
+  `;
+}
+
+
+async function handleProfileRequest(id,action){
+
+  if(!confirm(
+    `Are you sure you want to ${action} this request?`
+  )){
+    return;
   }
 
+  try{
 
-  function renderProfileRequest(req) {
-
-    let oldData = {};
-    let newData = {};
-
-    try {
-
-      oldData =
-        typeof req.old_data === "string"
-          ? JSON.parse(req.old_data)
-          : (req.old_data || {});
-
-      newData =
-        typeof req.requested_data === "string"
-          ? JSON.parse(req.requested_data)
-          : (req.requested_data || {});
-
-    } catch (error) {
-
-      console.error(
-        "Request JSON parse error:",
-        error
+    const data=
+      await apiRequest(
+        `/api/admin/profile-requests/${id}`,
+        {
+          method:"PUT",
+          body:JSON.stringify({action})
+        }
       );
+
+    showToast(
+      data.message||
+      `Request ${action}d successfully.`
+    );
+
+    await loadProfileRequests();
+    await loadDashboardStats();
+
+  }catch(error){
+
+    showToast(error.message);
+  }
+}
+
+
+/* =========================
+   ALERTS
+========================= */
+
+async function openAlerts(){
+
+  hidePages();
+
+  document.getElementById("alertsPage")
+    .classList.add("active");
+
+  document.getElementById("navAlerts")
+    .classList.add("active");
+
+  await loadAlerts();
+}
+
+async function loadAlerts(){
+
+  const container=
+    document.getElementById("alertsList");
+
+  container.innerHTML=
+    `<div class="empty">Loading notifications...</div>`;
+
+  try{
+
+    const data=
+      await apiRequest("/api/admin/alerts");
+
+    const alerts=
+      data.alerts||
+      data.data||
+      [];
+
+    if(!alerts.length){
+
+      container.innerHTML=
+        `<div class="empty">🎉 No notifications found.</div>`;
+
+      return;
     }
 
+    container.innerHTML=
+      alerts.map(renderAlert).join("");
 
-    const fields = [
+  }catch(error){
 
-      ["name", "Name"],
-      ["father_name", "Father's Name"],
-      ["phone", "Phone"],
-      ["email", "Email"],
-      ["nid", "NID"],
-      ["address", "Address"],
-      ["nominee_name", "Nominee Name"],
-      ["nominee_number", "Nominee Number"],
-      ["nominee_nid", "Nominee NID"]
-
-    ];
-
-
-    const changes =
-      fields
-        .map(([key, label]) => {
-
-          const oldValue =
-            oldData[key] ?? "";
-
-          const newValue =
-            newData[key] ?? "";
+    container.innerHTML=`
+      <div class="error">
+        <strong>Failed to load notifications</strong>
+        <div style="margin-top:7px">
+          ${escapeHtml(error.message)}
+        </div>
+        <button class="retry" onclick="loadAlerts()">Retry</button>
+      </div>
+    `;
+  }
+}
 
 
-          if (
-            String(oldValue) ===
-            String(newValue)
-          ) {
-            return "";
-          }
+function renderAlert(alert){
+
+  const unread=
+    String(alert.status||"").toLowerCase()==="unread";
+
+  const createdAt=
+    alert.created_at
+    ?new Date(alert.created_at).toLocaleString()
+    :"";
 
 
-          return `
-            <div class="change">
+  return`
+    <div class="alert-item ${unread?"unread":""}">
 
-              <div class="field-name">
-                ${escapeHtml(label)}
-              </div>
+      <div class="alert-head">
 
-              <div class="old">
-                <strong>OLD:</strong>
-                ${escapeHtml(
-                  oldValue || "Not provided"
-                )}
-              </div>
+        <div class="alert-title">
+          ${escapeHtml(alert.title||"Notification")}
+        </div>
 
-              <div class="new">
-                <strong>NEW:</strong>
-                ${escapeHtml(
-                  newValue || "Not provided"
-                )}
-              </div>
+        <div class="alert-time">
+          ${escapeHtml(createdAt)}
+        </div>
 
-            </div>
-          `;
+      </div>
 
-        })
-        .join("");
+      <div class="alert-message">
+        ${escapeHtml(alert.message||"")}
+      </div>
+
+      ${
+        alert.user_name
+        ?`
+          <div class="alert-user">
+            👤 ${escapeHtml(alert.user_name)}
+            ${
+              alert.user_email
+              ?` — ${escapeHtml(alert.user_email)}`
+              :""
+            }
+          </div>
+        `
+        :""
+      }
+
+      <div class="alert-actions">
+
+        ${
+          alert.type==="profile_update_request"
+          ?`
+            <button class="small-btn"
+              onclick="openProfileRequests()">
+              Review Request
+            </button>
+          `
+          :""
+        }
+
+        ${
+          unread
+          ?`
+            <button class="small-btn"
+              onclick="markAlertRead(${Number(alert.id)})">
+              Mark as Read
+            </button>
+          `
+          :`
+            <span style="color:#555;font-size:10px;padding:7px 0">
+              ✓ Read
+            </span>
+          `
+        }
+
+      </div>
+
+    </div>
+  `;
+}
 
 
-    const status =
-      String(
-        req.status || "pending"
-      ).toLowerCase();
+async function markAlertRead(id){
+
+  try{
+
+    await apiRequest(
+      `/api/admin/alerts/${id}/read`,
+      {method:"PUT"}
+    );
+
+    await loadAlerts();
+    await loadUnreadAlerts();
+
+  }catch(error){
+
+    showToast(error.message);
+  }
+}
 
 
-    const createdAt =
-      req.created_at
-        ? new Date(req.created_at)
-            .toLocaleString()
-        : "Unknown";
+async function loadUnreadAlerts(){
+
+  try{
+
+    const data=
+      await apiRequest(
+        "/api/admin/alerts/unread-count"
+      );
+
+    const count=
+      Number(
+        data.count||
+        data.unread_count||
+        0
+      );
+
+    updateAlertBadges(count);
+
+  }catch(error){}
+}
 
 
-    const userName =
-      req.user_name ||
-      req.name ||
-      newData.name ||
-      "Unknown User";
+function updateAlertBadges(count){
+
+  const value=
+    count>99?"99+":String(count);
+
+  const ids=[
+    "notificationBadge",
+    "notificationCardBadge",
+    "navAlertBadge"
+  ];
+
+  ids.forEach(id=>{
+
+    const el=document.getElementById(id);
+
+    if(count>0){
+
+      el.textContent=value;
+      el.style.display="flex";
+
+    }else{
+
+      el.style.display="none";
+
+    }
+  });
+
+  document.getElementById("unreadAlerts")
+    .textContent=count;
+}
 
 
-    const userEmail =
-      req.user_email ||
-      req.email ||
-      newData.email ||
-      "";
+function updateRequestBadges(count){
+
+  const value=
+    count>99?"99+":String(count);
+
+  const card=
+    document.getElementById("profileRequestBadge");
+
+  const nav=
+    document.getElementById("navRequestBadge");
+
+  if(count>0){
+
+    card.textContent=value;
+    card.style.display="flex";
+
+    nav.textContent=value;
+    nav.style.display="flex";
+
+  }else{
+
+    card.style.display="none";
+    nav.style.display="none";
+  }
+
+  document.getElementById("pendingRequests")
+    .textContent=count;
+}
 
 
-    return `
-      <div class="request-card ${status === "pending" ? "pending" : ""}">
+/* =========================
+   USERS
+========================= */
 
-        <div class="request-head">
+let allUsers=[];
+
+async function openUsers(){
+
+  hidePages();
+
+  document.getElementById("usersPage")
+    .classList.add("active");
+
+  document.getElementById("navUsers")
+    .classList.add("active");
+
+  await loadUsers();
+}
+
+
+async function loadUsers(){
+
+  const container=
+    document.getElementById("usersList");
+
+  container.innerHTML=
+    `<div class="empty">Loading users...</div>`;
+
+  try{
+
+    const data=
+      await apiRequest("/api/admin/users");
+
+    allUsers=
+      data.users||
+      data.data||
+      [];
+
+    document.getElementById("userCountText")
+      .textContent=`${allUsers.length} users`;
+
+    document.getElementById("totalUsers")
+      .textContent=allUsers.length;
+
+    renderUsers(allUsers);
+
+  }catch(error){
+
+    container.innerHTML=`
+      <div class="error">
+        <strong>Failed to load users</strong>
+        <div style="margin-top:7px">
+          ${escapeHtml(error.message)}
+        </div>
+        <button class="retry" onclick="loadUsers()">Retry</button>
+      </div>
+    `;
+  }
+}
+
+
+function filterUsers(){
+
+  const q=
+    document.getElementById("userSearch")
+      .value
+      .toLowerCase()
+      .trim();
+
+  const filtered=
+    allUsers.filter(user=>
+      String(user.name||"").toLowerCase().includes(q)||
+      String(user.email||"").toLowerCase().includes(q)||
+      String(user.phone||"").toLowerCase().includes(q)
+    );
+
+  renderUsers(filtered);
+}
+
+
+function renderUsers(users){
+
+  const container=
+    document.getElementById("usersList");
+
+  if(!users.length){
+
+    container.innerHTML=
+      `<div class="empty">No users found.</div>`;
+
+    return;
+  }
+
+  container.innerHTML=
+    users.map(user=>`
+
+      <div class="user-item">
+
+        <div class="user-row">
 
           <div>
 
-            <div class="request-user">
-              ${escapeHtml(userName)}
+            <div class="user-name">
+              ${escapeHtml(user.name||"Unnamed User")}
             </div>
 
-            <div class="request-email">
-              ${escapeHtml(userEmail)}
+            <div class="user-info">
+              ${escapeHtml(user.email||"No email")}
             </div>
 
-            <div class="request-id">
-              Request ID: ${escapeHtml(req.id)}
-            </div>
-
-            <div class="request-id">
-              Submitted: ${escapeHtml(createdAt)}
+            <div class="user-info">
+              ${escapeHtml(user.phone||"No phone")}
             </div>
 
           </div>
 
+          <div style="text-align:right">
 
-          <span class="status ${status}">
-            ${escapeHtml(status.toUpperCase())}
-          </span>
+            <div style="font-size:11px;color:#4ade80">
+              ৳ ${escapeHtml(user.wallet_balance??"0")}
+            </div>
+
+            <div style="font-size:9px;color:#555;margin-top:5px">
+              ID: ${escapeHtml(user.id)}
+            </div>
+
+          </div>
 
         </div>
 
+        <div class="user-actions">
 
-        ${
-          changes
-            ? `
-              <div class="change-box">
-                ${changes}
-              </div>
-            `
-            : `
-              <div class="decision-text">
-                No changed fields detected.
-              </div>
-            `
-        }
-
-
-        ${
-          status === "pending"
-            ? `
-              <div class="decision-text">
-                ⏳ <strong>PENDING</strong> —
-                Waiting for admin decision.
-              </div>
-
-              <div class="actions">
-
-                <button
-                  class="btn approve"
-                  onclick="handleProfileRequest(${Number(req.id)}, 'approve')"
-                >
-                  ✓ Approve
-                </button>
-
-                <button
-                  class="btn reject"
-                  onclick="handleProfileRequest(${Number(req.id)}, 'reject')"
-                >
-                  ✕ Reject
-                </button>
-
-              </div>
-            `
-            : `
-              <div class="decision-text">
-                This request has already been
-                ${escapeHtml(status)}.
-              </div>
-            `
-        }
-
-      </div>
-    `;
-  }
-
-
-  /* =========================
-     APPROVE / REJECT
-  ========================= */
-
-  async function handleProfileRequest(
-    id,
-    action
-  ) {
-
-    const actionText =
-      action === "approve"
-        ? "approve"
-        : "reject";
-
-
-    const confirmed =
-      confirm(
-        `Are you sure you want to ${actionText} this profile update request?`
-      );
-
-
-    if (!confirmed) {
-      return;
-    }
-
-
-    try {
-
-      const data =
-        await apiRequest(
-          `/api/admin/profile-requests/${id}`,
-          {
-            method: "PUT",
-
-            body: JSON.stringify({
-              action: action
-            })
-          }
-        );
-
-
-      showToast(
-        data.message ||
-        `Request ${actionText}d successfully.`
-      );
-
-
-      await loadProfileRequests();
-
-      await loadDashboardStats();
-
-      await loadUnreadAlerts();
-
-    } catch (error) {
-
-      console.error(
-        "handleProfileRequest:",
-        error
-      );
-
-      showToast(
-        error.message ||
-        "Failed to process request."
-      );
-    }
-  }
-
-
-  /* =========================
-     ALERTS
-  ========================= */
-
-  async function openAlerts() {
-
-    hidePages();
-
-    document
-      .getElementById("alertsPage")
-      .classList.add("active");
-
-    document
-      .getElementById("navAlerts")
-      .classList.add("active");
-
-    await loadAlerts();
-  }
-
-
-  async function loadAlerts() {
-
-    const container =
-      document.getElementById("alertsList");
-
-
-    container.innerHTML = `
-      <div class="empty">
-        Loading notifications...
-      </div>
-    `;
-
-
-    try {
-
-      const data =
-        await apiRequest(
-          "/api/admin/alerts"
-        );
-
-
-      const alerts =
-        data.alerts ||
-        data.data ||
-        [];
-
-
-      if (!alerts.length) {
-
-        container.innerHTML = `
-          <div class="empty">
-            🎉 No notifications found.
-          </div>
-        `;
-
-        return;
-      }
-
-
-      container.innerHTML =
-        alerts
-          .map(renderAlert)
-          .join("");
-
-
-    } catch (error) {
-
-      console.error(
-        "loadAlerts:",
-        error
-      );
-
-
-      container.innerHTML = `
-        <div class="error">
-
-          <strong>
-            Failed to load notifications
-          </strong>
-
-          <div style="margin-top:7px;">
-            ${escapeHtml(error.message)}
-          </div>
-
-          <button
-            class="retry"
-            onclick="loadAlerts()"
-          >
-            Retry
+          <button class="small-btn"
+            onclick="resetUserPassword(${Number(user.id)},'${escapeHtml(user.name||"User")}')">
+            🔐 Reset Password
           </button>
 
-        </div>
-      `;
-    }
-  }
+          <button class="small-btn"
+            onclick="viewUser(${Number(user.id)})">
+            👁 View
+          </button>
 
-
-  function renderAlert(alert) {
-
-    const unread =
-      String(alert.status || "")
-        .toLowerCase() === "unread";
-
-
-    const createdAt =
-      alert.created_at
-        ? new Date(
-            alert.created_at
-          ).toLocaleString()
-        : "";
-
-
-    return `
-      <div class="alert-item ${unread ? "unread" : ""}">
-
-        <div class="alert-head">
-
-          <div class="alert-title">
-            ${escapeHtml(
-              alert.title ||
-              "Notification"
-            )}
-          </div>
-
-          <div class="alert-time">
-            ${escapeHtml(createdAt)}
-          </div>
-
-        </div>
-
-
-        <div class="alert-message">
-          ${escapeHtml(
-            alert.message ||
-            ""
-          )}
-        </div>
-
-
-        ${
-          alert.user_name
-            ? `
-              <div class="alert-user">
-                👤 ${escapeHtml(
-                  alert.user_name
-                )}
-                ${
-                  alert.user_email
-                    ? ` — ${escapeHtml(alert.user_email)}`
-                    : ""
-                }
-              </div>
+          ${
+            String(user.role||"").toLowerCase()!=="admin"
+            ?`
+              <button class="small-btn"
+                style="color:#f87171"
+                onclick="deleteUser(${Number(user.id)},'${escapeHtml(user.name||"User")}')">
+                🗑 Delete
+              </button>
             `
-            : ""
-        }
-
-
-        <div class="alert-actions">
-
-          ${
-            alert.type ===
-              "profile_update_request"
-              ? `
-                <button
-                  class="small-btn"
-                  onclick="openProfileRequests()"
-                >
-                  Review Request
-                </button>
-              `
-              : ""
-          }
-
-
-          ${
-            unread
-              ? `
-                <button
-                  class="small-btn"
-                  onclick="markAlertRead(${Number(alert.id)})"
-                >
-                  Mark as Read
-                </button>
-              `
-              : `
-                <span style="
-                  color:#555;
-                  font-size:10px;
-                  padding:7px 0;
-                ">
-                  ✓ Read
-                </span>
-              `
+            :""
           }
 
         </div>
 
       </div>
-    `;
+
+    `).join("");
+}
+
+
+function viewUser(id){
+
+  const user=
+    allUsers.find(u=>Number(u.id)===Number(id));
+
+  if(!user){
+    showToast("User not found.");
+    return;
   }
 
+  alert(
+`User Information
 
-  async function markAlertRead(id) {
+ID: ${user.id}
+Name: ${user.name||"—"}
+Email: ${user.email||"—"}
+Phone: ${user.phone||"—"}
+Father: ${user.father_name||"—"}
+NID: ${user.nid||"—"}
+Address: ${user.address||"—"}
+Referral Code: ${user.referral_code||"—"}
+Wallet: ৳${user.wallet_balance||"0"}
+Role: ${user.role||"user"}`
+  );
+}
 
-    try {
 
+/* =========================
+   CREATE USER
+========================= */
+
+function openCreateUserModal(){
+
+  document.getElementById("newUserName").value="";
+  document.getElementById("newUserEmail").value="";
+  document.getElementById("newUserPhone").value="";
+  document.getElementById("newUserPassword").value="";
+  document.getElementById("newUserFather").value="";
+  document.getElementById("newUserNid").value="";
+
+  openModal("createUserModal");
+}
+
+
+async function createUser(){
+
+  const name=
+    document.getElementById("newUserName").value.trim();
+
+  const email=
+    document.getElementById("newUserEmail").value.trim();
+
+  const phone=
+    document.getElementById("newUserPhone").value.trim();
+
+  const password=
+    document.getElementById("newUserPassword").value;
+
+  const father_name=
+    document.getElementById("newUserFather").value.trim();
+
+  const nid=
+    document.getElementById("newUserNid").value.trim();
+
+  if(!name||!email||!password){
+
+    showToast("Name, email and password are required.");
+    return;
+  }
+
+  if(password.length<6){
+
+    showToast("Password must be at least 6 characters.");
+    return;
+  }
+
+  try{
+
+    const data=
       await apiRequest(
-        `/api/admin/alerts/${id}/read`,
+        "/api/admin/users",
         {
-          method: "PUT"
+          method:"POST",
+          body:JSON.stringify({
+            name,
+            email,
+            phone,
+            password,
+            father_name,
+            nid
+          })
         }
       );
 
-
-      await loadAlerts();
-
-      await loadUnreadAlerts();
-
-      await loadDashboardStats();
-
-    } catch (error) {
-
-      console.error(
-        "markAlertRead:",
-        error
-      );
-
-      showToast(
-        error.message ||
-        "Failed to mark notification as read."
-      );
-    }
-  }
-
-
-  /* =========================
-     UNREAD ALERT COUNT
-  ========================= */
-
-  async function loadUnreadAlerts() {
-
-    try {
-
-      const data =
-        await apiRequest(
-          "/api/admin/alerts/unread-count"
-        );
-
-
-      const count =
-        Number(
-          data.count ??
-          data.unread_count ??
-          0
-        );
-
-
-      updateAlertBadges(count);
-
-    } catch (error) {
-
-      console.error(
-        "loadUnreadAlerts:",
-        error
-      );
-    }
-  }
-
-
-  function updateAlertBadges(count) {
-
-    const badge =
-      document.getElementById(
-        "notificationBadge"
-      );
-
-    const cardBadge =
-      document.getElementById(
-        "notificationCardBadge"
-      );
-
-    const navBadge =
-      document.getElementById(
-        "navAlertBadge"
-      );
-
-
-    const value =
-      count > 99
-        ? "99+"
-        : String(count);
-
-
-    if (count > 0) {
-
-      badge.textContent = value;
-      badge.style.display = "flex";
-
-      cardBadge.textContent = value;
-      cardBadge.style.display = "flex";
-
-      navBadge.textContent = value;
-      navBadge.style.display = "flex";
-
-    } else {
-
-      badge.style.display = "none";
-      cardBadge.style.display = "none";
-      navBadge.style.display = "none";
-    }
-
-
-    document.getElementById(
-      "unreadAlerts"
-    ).textContent = count;
-  }
-
-
-  /* =========================
-     REQUEST BADGES
-  ========================= */
-
-  function updateRequestBadges(count) {
-
-    const card =
-      document.getElementById(
-        "profileRequestBadge"
-      );
-
-    const nav =
-      document.getElementById(
-        "navRequestBadge"
-      );
-
-
-    if (count > 0) {
-
-      card.textContent =
-        count > 99 ? "99+" : count;
-
-      card.style.display =
-        "flex";
-
-
-      nav.textContent =
-        count > 99 ? "99+" : count;
-
-      nav.style.display =
-        "flex";
-
-    } else {
-
-      card.style.display =
-        "none";
-
-      nav.style.display =
-        "none";
-    }
-
-
-    document.getElementById(
-      "pendingRequests"
-    ).textContent = count;
-  }
-
-
-  /* =========================
-     USERS
-  ========================= */
-
-  async function openUsers() {
-
-    hidePages();
-
-    document
-      .getElementById("usersPage")
-      .classList.add("active");
-
-    document
-      .getElementById("navUsers")
-      .classList.add("active");
-
-    await loadUsers();
-  }
-
-
-  async function loadUsers() {
-
-    const container =
-      document.getElementById(
-        "usersList"
-      );
-
-
-    container.innerHTML = `
-      <div class="empty">
-        Loading users...
-      </div>
-    `;
-
-
-    try {
-
-      const data =
-        await apiRequest(
-          "/api/admin/users"
-        );
-
-
-      const users =
-        data.users ||
-        data.data ||
-        [];
-
-
-      document.getElementById(
-        "userCountText"
-      ).textContent =
-        `${users.length} users`;
-
-
-      document.getElementById(
-        "totalUsers"
-      ).textContent =
-        users.length;
-
-
-      if (!users.length) {
-
-        container.innerHTML = `
-          <div class="empty">
-            No users found.
-          </div>
-        `;
-
-        return;
-      }
-
-
-      container.innerHTML =
-        users.map(user => {
-
-          return `
-            <div class="user-item">
-
-              <div class="user-row">
-
-                <div>
-
-                  <div class="user-name">
-                    ${escapeHtml(
-                      user.name ||
-                      "Unnamed User"
-                    )}
-                  </div>
-
-                  <div class="user-info">
-                    ${escapeHtml(
-                      user.email ||
-                      "No email"
-                    )}
-                  </div>
-
-                  <div class="user-info">
-                    ${escapeHtml(
-                      user.phone ||
-                      "No phone"
-                    )}
-                  </div>
-
-                </div>
-
-
-                <div style="
-                  text-align:right;
-                ">
-
-                  <div style="
-                    font-size:11px;
-                    color:#4ade80;
-                  ">
-                    ৳ ${escapeHtml(
-                      user.wallet_balance ??
-                      "0"
-                    )}
-                  </div>
-
-                  <div style="
-                    font-size:9px;
-                    color:#555;
-                    margin-top:5px;
-                  ">
-                    ID: ${escapeHtml(user.id)}
-                  </div>
-
-                </div>
-
-              </div>
-
-            </div>
-          `;
-
-        }).join("");
-
-
-    } catch (error) {
-
-      console.error(
-        "loadUsers:",
-        error
-      );
-
-
-      container.innerHTML = `
-        <div class="error">
-
-          <strong>
-            Failed to load users
-          </strong>
-
-          <div style="margin-top:7px;">
-            ${escapeHtml(error.message)}
-          </div>
-
-          <button
-            class="retry"
-            onclick="loadUsers()"
-          >
-            Retry
-          </button>
-
-        </div>
-      `;
-    }
-  }
-
-
-  /* =========================
-     ACCOUNT
-  ========================= */
-
-  async function openAccount() {
-
-    hidePages();
-
-    document
-      .getElementById("accountPage")
-      .classList.add("active");
-
-    document
-      .getElementById("navAccount")
-      .classList.add("active");
-
-    await loadAdminAccount();
-  }
-
-
-  async function loadAdminAccount() {
-
-    const box =
-      document.getElementById(
-        "accountBox"
-      );
-
-
-    box.innerHTML =
-      "Loading administrator information...";
-
-
-    try {
-
-      let data;
-
-
-      try {
-
-        data =
-          await apiRequest(
-            "/api/admin/account"
-          );
-
-      } catch (error) {
-
-        /*
-          Current backend may not have
-          /api/admin/account.
-
-          Fallback to /api/auth/me.
-        */
-
-        data =
-          await apiRequest(
-            "/api/auth/me"
-          );
-      }
-
-
-      const user =
-        data.user ||
-        data.data ||
-        data;
-
-
-      box.innerHTML = `
-
-        <div class="account-line">
-          <span>Name</span>
-          <span>
-            ${escapeHtml(
-              user.name ||
-              "Admin"
-            )}
-          </span>
-        </div>
-
-        <div class="account-line">
-          <span>Email</span>
-          <span>
-            ${escapeHtml(
-              user.email ||
-              "—"
-            )}
-          </span>
-        </div>
-
-        <div class="account-line">
-          <span>Phone</span>
-          <span>
-            ${escapeHtml(
-              user.phone ||
-              "—"
-            )}
-          </span>
-        </div>
-
-        <div class="account-line">
-          <span>Role</span>
-          <span>
-            ${escapeHtml(
-              user.role ||
-              "admin"
-            )}
-          </span>
-        </div>
-
-        <div class="account-line">
-          <span>User ID</span>
-          <span>
-            ${escapeHtml(
-              user.id ||
-              "—"
-            )}
-          </span>
-        </div>
-
-      `;
-
-
-    } catch (error) {
-
-      console.error(
-        "loadAdminAccount:",
-        error
-      );
-
-
-      box.innerHTML = `
-        <div class="error">
-
-          Failed to load admin account.
-
-          <div style="margin-top:7px;">
-            ${escapeHtml(
-              error.message
-            )}
-          </div>
-
-        </div>
-      `;
-    }
-  }
-
-
-  /* =========================
-     DASHBOARD STATS
-  ========================= */
-
-  async function loadDashboardStats() {
-
-    try {
-
-      /*
-        Users
-      */
-
-      const usersData =
-        await apiRequest(
-          "/api/admin/users"
-        );
-
-
-      const users =
-        usersData.users ||
-        usersData.data ||
-        [];
-
-
-      document.getElementById(
-        "totalUsers"
-      ).textContent =
-        users.length;
-
-
-      /*
-        Profile requests
-      */
-
-      const requestData =
-        await apiRequest(
-          "/api/admin/profile-requests"
-        );
-
-
-      const requests =
-        requestData.requests ||
-        requestData.data ||
-        [];
-
-
-      const pending =
-        requests.filter(
-          r =>
-            String(r.status || "")
-              .toLowerCase() === "pending"
-        ).length;
-
-
-      updateRequestBadges(
-        pending
-      );
-
-
-      /*
-        Alerts
-      */
-
-      await loadUnreadAlerts();
-
-
-    } catch (error) {
-
-      console.error(
-        "Dashboard stats:",
-        error
-      );
-
-      /*
-        Don't redirect here.
-        Individual API errors should
-        not break the dashboard.
-      */
-    }
-  }
-
-
-  /* =========================
-     COMING SOON
-  ========================= */
-
-  function showComing(name) {
+    closeModal("createUserModal");
 
     showToast(
-      `${name} is coming soon.`
+      data.message||
+      "User created successfully."
     );
+
+    await loadUsers();
+    await loadDashboardStats();
+
+  }catch(error){
+
+    showToast(error.message);
+  }
+}
+
+
+/* =========================
+   DELETE USER
+========================= */
+
+async function deleteUser(id,name){
+
+  if(!confirm(
+    `Delete user "${name}"?\n\nThis action cannot be undone.`
+  )){
+    return;
   }
 
+  try{
 
-  /* =========================
-     LOGOUT
-  ========================= */
+    const data=
+      await apiRequest(
+        `/api/admin/users/${id}`,
+        {
+          method:"DELETE"
+        }
+      );
 
-  function logout() {
-
-    localStorage.removeItem(
-      "adminToken"
+    showToast(
+      data.message||
+      "User deleted successfully."
     );
 
-    localStorage.removeItem(
-      "adminUser"
-    );
+    await loadUsers();
+    await loadDashboardStats();
 
-    /*
-      Keep normal user token untouched
-      unless your login system uses the
-      same token.
-    */
+  }catch(error){
 
-    window.location.href =
-      "login.html";
+    showToast(error.message);
+  }
+}
+
+
+/* =========================
+   PASSWORD
+========================= */
+
+function openChangePasswordModal(){
+
+  document.getElementById("passwordModalTitle")
+    .textContent="Change Admin Password";
+
+  document.getElementById("currentPasswordGroup")
+    .style.display="block";
+
+  document.getElementById("currentPassword").value="";
+  document.getElementById("newPassword").value="";
+
+  openModal("passwordModal");
+}
+
+
+async function submitPasswordChange(){
+
+  const currentPassword=
+    document.getElementById("currentPassword").value;
+
+  const newPassword=
+    document.getElementById("newPassword").value;
+
+  if(!newPassword||newPassword.length<6){
+
+    showToast("New password must be at least 6 characters.");
+    return;
   }
 
+  try{
 
-  /* =========================
-     INITIALIZE
-  ========================= */
+    const data=
+      await apiRequest(
+        "/api/admin/account/password",
+        {
+          method:"PUT",
+          body:JSON.stringify({
+            currentPassword,
+            newPassword
+          })
+        }
+      );
 
-  async function init() {
+    closeModal("passwordModal");
 
-    if (!checkAuth()) {
+    showToast(
+      data.message||
+      "Password changed successfully."
+    );
+
+  }catch(error){
+
+    showToast(error.message);
+  }
+}
+
+
+async function resetUserPassword(id,name){
+
+  const newPassword=
+    prompt(
+      `Enter new password for ${name}:`
+    );
+
+  if(newPassword===null){
+    return;
+  }
+
+  if(newPassword.length<6){
+
+    showToast("Password must be at least 6 characters.");
+    return;
+  }
+
+  try{
+
+    const data=
+      await apiRequest(
+        `/api/admin/users/${id}/password`,
+        {
+          method:"PUT",
+          body:JSON.stringify({
+            newPassword
+          })
+        }
+      );
+
+    showToast(
+      data.message||
+      "User password reset successfully."
+    );
+
+  }catch(error){
+
+    showToast(error.message);
+  }
+}
+
+
+/* =========================
+   ACCOUNT
+========================= */
+
+async function openAccount(){
+
+  hidePages();
+
+  document.getElementById("accountPage")
+    .classList.add("active");
+
+  document.getElementById("navAccount")
+    .classList.add("active");
+
+  await loadAdminAccount();
+}
+
+
+async function loadAdminAccount(){
+
+  const box=
+    document.getElementById("accountBox");
+
+  box.innerHTML="Loading administrator information...";
+
+  try{
+
+    const data=
+      await apiRequest("/api/admin/account");
+
+    const user=
+      data.user||
+      data.data||
+      data;
+
+    box.innerHTML=`
+
+      <div class="account-line">
+        <span>Name</span>
+        <span>${escapeHtml(user.name||"Admin")}</span>
+      </div>
+
+      <div class="account-line">
+        <span>Email</span>
+        <span>${escapeHtml(user.email||"—")}</span>
+      </div>
+
+      <div class="account-line">
+        <span>Phone</span>
+        <span>${escapeHtml(user.phone||"—")}</span>
+      </div>
+
+      <div class="account-line">
+        <span>Role</span>
+        <span>${escapeHtml(user.role||"admin")}</span>
+      </div>
+
+      <div class="account-line">
+        <span>User ID</span>
+        <span>${escapeHtml(user.id||"—")}</span>
+      </div>
+
+    `;
+
+  }catch(error){
+
+    box.innerHTML=`
+      <div class="error">
+        Failed to load admin account.
+        <div style="margin-top:7px">
+          ${escapeHtml(error.message)}
+        </div>
+      </div>
+    `;
+  }
+}
+
+
+/* =========================
+   PACKAGES
+========================= */
+
+async function openPackages(){
+
+  hidePages();
+
+  document.getElementById("packagesPage")
+    .classList.add("active");
+
+  await loadPackages();
+}
+
+
+async function loadPackages(){
+
+  const container=
+    document.getElementById("packagesList");
+
+  container.innerHTML=
+    `<div class="empty">Loading packages...</div>`;
+
+  try{
+
+    const data=
+      await apiRequest("/api/admin/packages");
+
+    const packages=
+      data.packages||
+      data.data||
+      [];
+
+    if(!packages.length){
+
+      container.innerHTML=
+        `<div class="empty">No packages found.</div>`;
+
       return;
     }
 
+    container.innerHTML=
+      packages.map(pkg=>`
+
+        <div class="management-box">
+
+          <div class="request-head">
+
+            <div>
+              <div class="request-user">
+                ${escapeHtml(pkg.name||"Package")}
+              </div>
+
+              <div class="request-email">
+                ${escapeHtml(pkg.description||"")}
+              </div>
+            </div>
+
+            <div class="package-price">
+              ৳${escapeHtml(pkg.price||"0")}
+            </div>
+
+          </div>
+
+          <div class="user-actions">
+
+            <button class="small-btn"
+              onclick="editPackage(${Number(pkg.id)})">
+              ✏️ Edit
+            </button>
+
+            <button class="small-btn"
+              style="color:#f87171"
+              onclick="deletePackage(${Number(pkg.id)})">
+              🗑 Delete
+            </button>
+
+          </div>
+
+        </div>
+
+      `).join("");
+
+  }catch(error){
+
+    container.innerHTML=`
+      <div class="error">
+        Failed to load packages.
+        <div style="margin-top:7px">
+          ${escapeHtml(error.message)}
+        </div>
+        <button class="retry" onclick="loadPackages()">Retry</button>
+      </div>
+    `;
+  }
+}
+
+
+function openPackageModal(pkg=null){
+
+  document.getElementById("editPackageId").value=
+    pkg?pkg.id:"";
+
+  document.getElementById("packageModalTitle")
+    .textContent=
+      pkg?"Edit Package":"Add Package";
+
+  document.getElementById("packageName").value=
+    pkg?.name||"";
+
+  document.getElementById("packagePrice").value=
+    pkg?.price||"";
+
+  document.getElementById("packageDescription").value=
+    pkg?.description||"";
+
+  openModal("packageModal");
+}
+
+
+async function editPackage(id){
+
+  try{
+
+    const data=
+      await apiRequest("/api/admin/packages");
+
+    const packages=
+      data.packages||
+      data.data||
+      [];
+
+    const pkg=
+      packages.find(p=>Number(p.id)===Number(id));
+
+    if(pkg){
+      openPackageModal(pkg);
+    }
+
+  }catch(error){
+
+    showToast(error.message);
+  }
+}
+
+
+async function savePackage(){
+
+  const id=
+    document.getElementById("editPackageId").value;
+
+  const name=
+    document.getElementById("packageName").value.trim();
+
+  const price=
+    document.getElementById("packagePrice").value;
+
+  const description=
+    document.getElementById("packageDescription").value.trim();
+
+  if(!name||price===""){
+
+    showToast("Package name and price are required.");
+    return;
+  }
+
+  try{
+
+    const endpoint=
+      id
+      ?`/api/admin/packages/${id}`
+      :"/api/admin/packages";
+
+    const method=
+      id?"PUT":"POST";
+
+    const data=
+      await apiRequest(
+        endpoint,
+        {
+          method,
+          body:JSON.stringify({
+            name,
+            price:Number(price),
+            description
+          })
+        }
+      );
+
+    closeModal("packageModal");
+
+    showToast(
+      data.message||
+      "Package saved successfully."
+    );
+
+    await loadPackages();
+
+  }catch(error){
+
+    showToast(error.message);
+  }
+}
+
+
+async function deletePackage(id){
+
+  if(!confirm("Delete this package?")){
+    return;
+  }
+
+  try{
+
+    const data=
+      await apiRequest(
+        `/api/admin/packages/${id}`,
+        {
+          method:"DELETE"
+        }
+      );
+
+    showToast(
+      data.message||
+      "Package deleted."
+    );
+
+    await loadPackages();
+
+  }catch(error){
+
+    showToast(error.message);
+  }
+}
+
+
+/* =========================
+   PURCHASES
+========================= */
+
+async function openPurchases(){
+
+  hidePages();
+
+  document.getElementById("purchasesPage")
+    .classList.add("active");
+
+  await loadPurchases();
+}
+
+
+async function loadPurchases(){
+
+  const container=
+    document.getElementById("purchasesList");
+
+  container.innerHTML=
+    `<div class="empty">Loading purchase requests...</div>`;
+
+  try{
+
+    const data=
+      await apiRequest(
+        "/api/admin/purchase-requests"
+      );
+
+    const requests=
+      data.requests||
+      data.purchases||
+      data.data||
+      [];
+
+    if(!requests.length){
+
+      container.innerHTML=
+        `<div class="empty">No purchase requests found.</div>`;
+
+      return;
+    }
+
+    container.innerHTML=
+      requests.map(renderTransaction).join("");
+
+  }catch(error){
+
+    container.innerHTML=`
+      <div class="error">
+        Failed to load purchase requests.
+        <div style="margin-top:7px">
+          ${escapeHtml(error.message)}
+        </div>
+        <button class="retry" onclick="loadPurchases()">Retry</button>
+      </div>
+    `;
+  }
+}
+
+
+/* =========================
+   DEPOSITS
+========================= */
+
+async function openDeposits(){
+
+  hidePages();
+
+  document.getElementById("depositsPage")
+    .classList.add("active");
+
+  await loadDeposits();
+}
+
+
+async function loadDeposits(){
+
+  const container=
+    document.getElementById("depositsList");
+
+  container.innerHTML=
+    `<div class="empty">Loading deposit requests...</div>`;
+
+  try{
+
+    const data=
+      await apiRequest(
+        "/api/admin/deposit-requests"
+      );
+
+    const requests=
+      data.requests||
+      data.transactions||
+      data.data||
+      [];
+
+    if(!requests.length){
+
+      container.innerHTML=
+        `<div class="empty">No deposit requests found.</div>`;
+
+      return;
+    }
+
+    container.innerHTML=
+      requests.map(renderTransaction).join("");
+
+  }catch(error){
+
+    container.innerHTML=`
+      <div class="error">
+        Failed to load deposit requests.
+        <div style="margin-top:7px">
+          ${escapeHtml(error.message)}
+        </div>
+        <button class="retry" onclick="loadDeposits()">Retry</button>
+      </div>
+    `;
+  }
+}
+
+
+/* =========================
+   WITHDRAWALS
+========================= */
+
+async function openWithdrawals(){
+
+  hidePages();
+
+  document.getElementById("withdrawalsPage")
+    .classList.add("active");
+
+  await loadWithdrawals();
+}
+
+
+async function loadWithdrawals(){
+
+  const container=
+    document.getElementById("withdrawalsList");
+
+  container.innerHTML=
+    `<div class="empty">Loading withdrawal requests...</div>`;
+
+  try{
+
+    const data=
+      await apiRequest(
+        "/api/admin/withdraw-requests"
+      );
+
+    const requests=
+      data.requests||
+      data.transactions||
+      data.data||
+      [];
+
+    if(!requests.length){
+
+      container.innerHTML=
+        `<div class="empty">No withdrawal requests found.</div>`;
+
+      return;
+    }
+
+    container.innerHTML=
+      requests.map(renderTransaction).join("");
+
+  }catch(error){
+
+    container.innerHTML=`
+      <div class="error">
+        Failed to load withdrawal requests.
+        <div style="margin-top:7px">
+          ${escapeHtml(error.message)}
+        </div>
+        <button class="retry" onclick="loadWithdrawals()">Retry</button>
+      </div>
+    `;
+  }
+}
+
+
+/* =========================
+   TRANSACTION RENDER
+========================= */
+
+function renderTransaction(item){
+
+  const status=
+    String(item.status||"pending").toLowerCase();
+
+  const type=
+    item.type||
+    item.transaction_type||
+    "Transaction";
+
+  const amount=
+    item.amount||
+    item.price||
+    "0";
+
+  const userName=
+    item.user_name||
+    item.name||
+    "User";
+
+  const email=
+    item.user_email||
+    item.email||
+    "";
+
+  const created=
+    item.created_at
+    ?new Date(item.created_at).toLocaleString()
+    :"";
+
+
+  return`
+    <div class="management-box">
+
+      <div class="request-head">
+
+        <div>
+
+          <div class="request-user">
+            ${escapeHtml(userName)}
+          </div>
+
+          <div class="request-email">
+            ${escapeHtml(email)}
+          </div>
+
+          <div class="request-id">
+            ${escapeHtml(type)}
+            · ID ${escapeHtml(item.id)}
+          </div>
+
+          ${
+            created
+            ?`
+              <div class="request-id">
+                ${escapeHtml(created)}
+              </div>
+            `
+            :""
+          }
+
+        </div>
+
+        <div>
+
+          <div style="color:#4ade80;font-weight:800">
+            ৳${escapeHtml(amount)}
+          </div>
+
+          <div class="status ${status}" style="margin-top:7px">
+            ${escapeHtml(status.toUpperCase())}
+          </div>
+
+        </div>
+
+      </div>
+
+      ${
+        status==="pending"
+        ?`
+          <div class="actions">
+
+            <button class="btn approve"
+              onclick="decideTransaction(${Number(item.id)},'approve')">
+              ✓ Approve
+            </button>
+
+            <button class="btn reject"
+              onclick="decideTransaction(${Number(item.id)},'reject')">
+              ✕ Reject
+            </button>
+
+          </div>
+        `
+        :""
+      }
+
+    </div>
+  `;
+}
+
+
+async function decideTransaction(id,action){
+
+  if(!confirm(
+    `Are you sure you want to ${action} this transaction?`
+  )){
+    return;
+  }
+
+  try{
+
+    const data=
+      await apiRequest(
+        `/api/admin/transactions/${id}`,
+        {
+          method:"PUT",
+          body:JSON.stringify({action})
+        }
+      );
+
+    showToast(
+      data.message||
+      `Transaction ${action}d.`
+    );
 
     await loadDashboardStats();
 
-
     /*
-      Refresh notification count
-      every 20 seconds.
+      Refresh whichever page is open.
     */
 
-    setInterval(
-      loadUnreadAlerts,
-      20000
-    );
+    const activePage=
+      document.querySelector(".page.active")?.id;
+
+    if(activePage==="depositsPage"){
+      await loadDeposits();
+    }
+
+    if(activePage==="withdrawalsPage"){
+      await loadWithdrawals();
+    }
+
+    if(activePage==="purchasesPage"){
+      await loadPurchases();
+    }
+
+  }catch(error){
+
+    showToast(error.message);
+  }
+}
 
 
-    /*
-      Refresh dashboard counts
-      every 30 seconds.
-    */
+/* =========================
+   TREE
+========================= */
 
-    setInterval(
-      loadDashboardStats,
-      30000
+async function openTree(){
+
+  hidePages();
+
+  document.getElementById("treePage")
+    .classList.add("active");
+
+  await loadTree();
+}
+
+
+async function loadTree(){
+
+  const container=
+    document.getElementById("treeList");
+
+  container.innerHTML=
+    `<div class="empty">Loading tree...</div>`;
+
+  try{
+
+    const data=
+      await apiRequest("/api/admin/tree");
+
+    const tree=
+      data.tree||
+      data.data||
+      [];
+
+    if(!tree.length){
+
+      container.innerHTML=
+        `<div class="empty">No tree data found.</div>`;
+
+      return;
+    }
+
+    container.innerHTML=
+      tree.map(node=>`
+
+        <div class="management-box">
+
+          <div class="request-head">
+
+            <div>
+
+              <div class="request-user">
+                ${escapeHtml(
+                  node.user_name||
+                  node.name||
+                  "User"
+                )}
+              </div>
+
+              <div class="request-email">
+                ${escapeHtml(
+                  node.user_email||
+                  node.email||
+                  ""
+                )}
+              </div>
+
+              <div class="request-id">
+                User ID: ${escapeHtml(
+                  node.user_id||
+                  node.id||
+                  ""
+                )}
+              </div>
+
+            </div>
+
+            <div style="text-align:right">
+
+              <div style="font-size:10px;color:#8b95a5">
+                Position
+              </div>
+
+              <div style="font-weight:800;margin-top:3px">
+                ${escapeHtml(
+                  node.position||
+                  node.side||
+                  "—"
+                )}
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      `).join("");
+
+  }catch(error){
+
+    container.innerHTML=`
+      <div class="error">
+        Failed to load tree.
+        <div style="margin-top:7px">
+          ${escapeHtml(error.message)}
+        </div>
+        <button class="retry" onclick="loadTree()">Retry</button>
+      </div>
+    `;
+  }
+}
+
+
+/* =========================
+   DASHBOARD STATS
+========================= */
+
+async function loadDashboardStats(){
+
+  try{
+
+    const usersData=
+      await apiRequest("/api/admin/users");
+
+    const users=
+      usersData.users||
+      usersData.data||
+      [];
+
+    document.getElementById("totalUsers")
+      .textContent=users.length;
+
+
+    const requestData=
+      await apiRequest(
+        "/api/admin/profile-requests"
+      );
+
+    const requests=
+      requestData.requests||
+      requestData.data||
+      [];
+
+    const pending=
+      requests.filter(r=>
+        String(r.status||"").toLowerCase()==="pending"
+      ).length;
+
+    updateRequestBadges(pending);
+
+    await loadUnreadAlerts();
+
+  }catch(error){
+
+    console.error(
+      "Dashboard stats:",
+      error
     );
   }
+}
 
 
-  init();
+/* =========================
+   LOGOUT
+========================= */
+
+function logout(){
+
+  localStorage.removeItem("adminToken");
+  localStorage.removeItem("adminUser");
+
+  window.location.href="login.html";
+}
+
+
+/* =========================
+   INIT
+========================= */
+
+async function init(){
+
+  if(!checkAuth()){
+    return;
+  }
+
+  await loadDashboardStats();
+
+  setInterval(
+    loadUnreadAlerts,
+    20000
+  );
+
+  setInterval(
+    loadDashboardStats,
+    30000
+  );
+}
+
+init();
 
 </script>
 
