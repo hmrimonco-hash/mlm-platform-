@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Login — Proyjon Marketing LTD</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+
+      background:
+        radial-gradient(
+          circle at 15% 10%,
+          rgba(124,58,237,.20),
+          transparent 35%
+        ),
+        radial-gradient(
+          circle at 85% 90%,
+          rgba(37,99,235,.16),
+          transparent 35%
+        ),
+        #070b14;
+
+      color: #fff;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 430px;
+    }
+
+    .brand {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .brand-icon {
+      width: 58px;
+      height: 58px;
+
+      margin: 0 auto 13px;
+
+      border-radius: 17px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background:
+        linear-gradient(
+          135deg,
+          #7c3aed,
+          #2563eb
+        );
+
+      box-shadow:
+        0 12px 35px
+        rgba(99,102,241,.30);
+
+      font-size: 27px;
+      font-weight: 900;
+    }
+
+    .brand h1 {
+      font-size: 20px;
+      font-weight: 850;
+    }
+
+    .brand p {
+      margin-top: 5px;
+      color: #8b95a7;
+      font-size: 11px;
+    }
+
+    .card {
+      background: rgba(13,19,30,.92);
+
+      border: 1px solid #202a39;
+
+      border-radius: 25px;
+
+      padding: 26px 21px;
+
+      box-shadow:
+        0 25px 70px
+        rgba(0,0,0,.40);
+
+      backdrop-filter: blur(18px);
+    }
+
+    .card-title {
+      margin-bottom: 22px;
+    }
+
+    .card-title h2 {
+      font-size: 22px;
+      font-weight: 850;
+    }
+
+    .card-title p {
+      margin-top: 6px;
+      color: #788497;
+      font-size: 11px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+
+      color: #9ca7b8;
+
+      font-size: 11px;
+
+      font-weight: 700;
+
+      margin-bottom: 7px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-wrap input {
+      width: 100%;
+
+      height: 48px;
+
+      padding: 0 14px;
+
+      border-radius: 13px;
+
+      border: 1px solid #263143;
+
+      outline: none;
+
+      background: #080d16;
+
+      color: #fff;
+
+      font-size: 13px;
+
+      transition: .2s;
+    }
+
+    .input-wrap input:focus {
+      border-color: #6d5ce7;
+
+      box-shadow:
+        0 0 0 3px
+        rgba(109,92,231,.12);
+    }
+
+    .password-wrap input {
+      padding-right: 48px;
+    }
+
+    .toggle-password {
+      position: absolute;
+
+      right: 5px;
+      top: 5px;
+
+      width: 38px;
+      height: 38px;
+
+      border: none;
+
+      border-radius: 10px;
+
+      background: #151d2b;
+
+      color: #9ba6b7;
+
+      cursor: pointer;
+
+      font-size: 16px;
+    }
+
+    .login-btn {
+      width: 100%;
+
+      height: 50px;
+
+      margin-top: 7px;
+
+      border: none;
+
+      border-radius: 14px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #7c3aed,
+          #4f46e5
+        );
+
+      color: #fff;
+
+      font-size: 13px;
+
+      font-weight: 800;
+
+      cursor: pointer;
+
+      box-shadow:
+        0 12px 30px
+        rgba(79,70,229,.22);
+
+      transition: .2s;
+    }
+
+    .login-btn:active {
+      transform: scale(.98);
+    }
+
+    .login-btn:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .message {
+      display: none;
+
+      margin-top: 15px;
+
+      padding: 11px 13px;
+
+      border-radius: 11px;
+
+      font-size: 11px;
+
+      line-height: 1.5;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.error {
+      background: rgba(239,68,68,.10);
+
+      border: 1px solid
+        rgba(239,68,68,.20);
+
+      color: #fca5a5;
+    }
+
+    .message.success {
+      background: rgba(34,197,94,.10);
+
+      border: 1px solid
+        rgba(34,197,94,.20);
+
+      color: #86efac;
+    }
+
+    .links {
+      text-align: center;
+
+      margin-top: 20px;
+    }
+
+    .links p {
+      color: #6f7b8e;
+
+      font-size: 11px;
+
+      margin-bottom: 9px;
+    }
+
+    .links a {
+      color: #a78bfa;
+
+      text-decoration: none;
+
+      font-size: 11px;
+
+      font-weight: 700;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+
+    .admin-link {
+      margin-top: 16px;
+    }
+
+    .secure-note {
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      gap: 6px;
+
+      margin-top: 21px;
+
+      color: #5f6b7d;
+
+      font-size: 9px;
+    }
+
+    .secure-note span {
+      font-size: 12px;
+    }
+
+    @media (max-width: 380px) {
+
+      .card {
+        padding: 23px 17px;
+      }
+
+      .brand h1 {
+        font-size: 18px;
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- BRAND -->
+
+    <div class="brand">
+
+      <div class="brand-icon">
+        P
+      </div>
+
+      <h1>
+        Proyjon Marketing LTD
+      </h1>
+
+      <p>
+        আপনার প্রয়োজন আমাদের আয়োজন
+      </p>
+
+    </div>
+
+
+    <!-- LOGIN CARD -->
+
+    <div class="card">
+
+      <div class="card-title">
+
+        <h2>
+          Welcome Back
+        </h2>
+
+        <p>
+          Login to your account
+        </p>
+
+      </div>
+
+
+      <form id="loginForm">
+
+        <!-- EMAIL -->
+
+        <div class="field">
+
+          <label for="email">
+            Email Address
+          </label>
+
+          <div class="input-wrap">
+
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Enter your email"
+              autocomplete="email"
+              required>
+
+          </div>
+
+        </div>
+
+
+        <!-- PASSWORD -->
+
+        <div class="field">
+
+          <label for="password">
+            Password
+          </label>
+
+          <div class="input-wrap password-wrap">
+
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required>
+
+            <button
+              type="button"
+              class="toggle-password"
+              id="togglePassword">
+              👁
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- LOGIN -->
+
+        <button
+          type="submit"
+          class="login-btn"
+          id="loginBtn">
+
+          Login to Account
+
+        </button>
+
+
+        <!-- MESSAGE -->
+
+        <div
+          class="message"
+          id="message">
+        </div>
+
+      </form>
+
+
+      <!-- REGISTER -->
+
+      <div class="links">
+
+        <p>
+          Don't have an account?
+        </p>
+
+        <a href="register.html">
+          Create a New Account
+        </a>
+
+      </div>
+
+
+      <!-- ADMIN -->
+
+      <div class="links admin-link">
+
+        <p>
+          Administrator?
+        </p>
+
+        <a href="admin-login.html">
+          Admin Login
+        </a>
+
+      </div>
+
+
+      <!-- SECURITY -->
+
+      <div class="secure-note">
+
+        <span>🔒</span>
+
+        Secure account authentication
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    const API_URL =
+      "https://mlm-platform-production.up.railway.app";
+
+
+    const form =
+      document.getElementById("loginForm");
+
+    const emailInput =
+      document.getElementById("email");
+
+    const passwordInput =
+      document.getElementById("password");
+
+    const loginBtn =
+      document.getElementById("loginBtn");
+
+    const message =
+      document.getElementById("message");
+
+    const togglePassword =
+      document.getElementById("togglePassword");
+
+
+    // SHOW / HIDE PASSWORD
+
+    togglePassword.addEventListener(
+      "click",
+      function() {
+
+        if (
+          passwordInput.type === "password"
+        ) {
+
+          passwordInput.type = "text";
+
+          togglePassword.textContent =
+            "🙈";
+
+        } else {
+
+          passwordInput.type =
+            "password";
+
+          togglePassword.textContent =
+            "👁";
+
+        }
+
+      }
+    );
+
+
+    // MESSAGE
+
+    function showMessage(
+      text,
+      type
+    ) {
+
+      message.textContent = text;
+
+      message.className =
+        "message show " + type;
+
+    }
+
+
+    // LOGIN
+
+    form.addEventListener(
+      "submit",
+      async function(event) {
+
+        event.preventDefault();
+
+
+        const email =
+          emailInput.value.trim();
+
+        const password =
+          passwordInput.value;
+
+
+        if (
+          !email ||
+          !password
+        ) {
+
+          showMessage(
+            "Email এবং password দিন।",
+            "error"
+          );
+
+          return;
+
+        }
+
+
+        loginBtn.disabled = true;
+
+        loginBtn.textContent =
+          "Logging in...";
+
+        message.className =
+          "message";
+
+
+        try {
+
+          const response =
+            await fetch(
+              API_URL +
+              "/api/auth/login",
+              {
+                method: "POST",
+
+                headers: {
+                  "Content-Type":
+                    "application/json",
+
+                  "Accept":
+                    "application/json"
+                },
+
+                body: JSON.stringify({
+                  email: email,
+                  password: password
+                })
+              }
+            );
+
+
+          let data = null;
+
+
+          try {
+
+            data =
+              await response.json();
+
+          } catch (error) {
+
+            data = null;
+
+          }
+
+
+          if (
+            response.ok &&
+            data &&
+            data.success &&
+            data.token
+          ) {
+
+            localStorage.setItem(
+              "token",
+              data.token
+            );
+
+
+            if (data.user) {
+
+              localStorage.setItem(
+                "user",
+                JSON.stringify(data.user)
+              );
+
+            }
+
+
+            window.location.href =
+              "dashboard.html";
+
+
+          } else {
+
+            showMessage(
+              data &&
+              data.message
+                ? data.message
+                : "Login failed.",
+              "error"
+            );
+
+
+            loginBtn.disabled = false;
+
+            loginBtn.textContent =
+              "Login to Account";
+
+          }
+
+        } catch (error) {
+
+          console.error(
+            "LOGIN ERROR:",
+            error
+          );
+
+
+          showMessage(
+            "Server-এর সাথে connection করা যাচ্ছে না।",
+            "error"
+          );
+
+
+          loginBtn.disabled = false;
+
+          loginBtn.textContent =
+            "Login to Account";
+
+        }
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
