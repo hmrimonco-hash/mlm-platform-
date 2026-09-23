@@ -168,13 +168,14 @@ async function createTables() {
     `);
     
     /* =========================
-       PROFILE REQUESTS
+       PROFILE REQUESTS (WITH HISTORY & DIFF)
     ========================= */
 
     await db.query(`
       CREATE TABLE IF NOT EXISTS profile_requests (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL,
+        old_data JSON NULL,
         requested_data JSON NOT NULL,
         status ENUM('pending','approved','rejected') DEFAULT 'pending',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -233,7 +234,7 @@ function authenticateToken(req, res, next) {
     return res.status(401).json({ success: false, message: "Authentication required" });
   }
 
-  const token = authHeader.split(" ")[1];
+  const token = authHeader.split(" ");
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
@@ -401,7 +402,7 @@ app.get("/api/auth/me", authenticateToken, async (req, res) => {
 
 
 /* =========================
-   UPDATE PROFILE (PENDING SYSTEM)
+   UPDATE PROFILE (PENDING WITH OLD VS NEW)
 ========================= */
 
 app.put("/api/auth/profile", authenticateToken, async (req, res) => {
@@ -414,13 +415,11 @@ app.put("/api/auth/profile", authenticateToken, async (req, res) => {
       return res.status(400).json({ success: false, message: "Email is required" });
     }
 
-    // Email duplicate check
     const [emailUsers] = await db.query("SELECT id FROM users WHERE email = ? AND id != ?", [email, userId]);
     if (emailUsers.length > 0) {
       return res.status(409).json({ success: false, message: "This email is already used by another account" });
     }
 
-    // Check if there is already a pending request
     const [existing] = await db.query(
       "SELECT id FROM profile_requests WHERE user_id = ? AND status = 'pending'",
       [userId]
@@ -430,10 +429,14 @@ app.put("/api/auth/profile", authenticateToken, async (req, res) => {
       return res.status(400).json({ success: false, message: "আপনার একটি রিকোয়েস্ট আগেই Pending আছে। অ্যাডমিন অ্যাপ্রুভ করা পর্যন্ত অপেক্ষা করুন।" });
     }
 
-    // Create a new pending request
+    const [currentUsers] = await db.query(
+      "SELECT name, father_name, phone, email, nid, address, nominee_name, nominee_number, nominee_nid FROM users WHERE id = ?",
+      [userId]
+    );
+
     await db.query(
-      "INSERT INTO profile_requests (user_id, requested_data) VALUES (?, ?)",
-      [userId, JSON.stringify(requestedData)]
+      "INSERT INTO profile_requests (user_id, old_data, requested_data) VALUES (?, ?, ?)",
+      [userId, JSON.stringify(currentUsers[0] || {}), JSON.stringify(requestedData)]
     );
 
     res.json({ success: true, message: "Profile update request sent to admin for approval." });
@@ -463,22 +466,39 @@ app.get("/api/auth/profile-status", authenticateToken, async (req, res) => {
 
 
 /* =========================
-   ADMIN: GET PROFILE REQUESTS
+   ADMIN: GET PROFILE REQUESTS (WITH DIFF/HISTORY)
 ========================= */
 
 app.get("/api/admin/profile-requests", authenticateToken, requireAdmin, async (req, res) => {
   try {
     const [requests] = await db.query(`
-      SELECT p.id, p.user_id, p.requested_data, p.created_at, 
+      SELECT p.id, p.user_id, p.old_data, p.requested_data, p.status, p.created_at, 
              u.name as current_name, u.phone as current_phone 
       FROM profile_requests p
       JOIN users u ON p.user_id = u.id
-      WHERE p.status = 'pending'
       ORDER BY p.created_at DESC
     `);
     res.json({ success: true, requests });
   } catch (error) {
     res.status(500).json({ success: false, message: "Failed to load requests" });
+  }
+});
+
+
+/* =========================
+   ADMIN: USER MANAGEMENT LIST
+========================= */
+
+app.get("/api/admin/users", authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const [users] = await db.query(`
+      SELECT id, name, email, phone, role, referral_code, wallet_balance, created_at 
+      FROM users 
+      ORDER BY id DESC
+    `);
+    res.json({ success: true, users });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to load users" });
   }
 });
 
@@ -500,7 +520,6 @@ app.put("/api/admin/profile-requests/:id", authenticateToken, requireAdmin, asyn
     if (action === 'approve') {
       const newData = typeof reqData.requested_data === 'string' ? JSON.parse(reqData.requested_data) : reqData.requested_data;
 
-      // Update the main users table
       await db.query(`
         UPDATE users SET 
           name = ?, father_name = ?, phone = ?, email = ?, nid = ?, address = ?, 
@@ -514,7 +533,6 @@ app.put("/api/admin/profile-requests/:id", authenticateToken, requireAdmin, asyn
 
       await db.query("UPDATE profile_requests SET status = 'approved' WHERE id = ?", [requestId]);
       
-      // Add Admin Alert
       await db.query(
         "INSERT INTO admin_alerts (user_id, type, title, message) VALUES (?, ?, ?, ?)",
         [reqData.user_id, "profile_approved", "Profile Approved", "Admin approved a profile update."]
