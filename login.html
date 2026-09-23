@@ -17,7 +17,6 @@
 
     body {
       min-height: 100vh;
-
       background:
         radial-gradient(
           circle at 15% 10%,
@@ -53,7 +52,6 @@
     .brand-icon {
       width: 58px;
       height: 58px;
-
       margin: 0 auto 13px;
 
       border-radius: 17px;
@@ -129,7 +127,6 @@
       color: #9ca7b8;
 
       font-size: 11px;
-
       font-weight: 700;
 
       margin-bottom: 7px;
@@ -141,7 +138,6 @@
 
     .input-wrap input {
       width: 100%;
-
       height: 48px;
 
       padding: 0 14px;
@@ -277,7 +273,6 @@
 
     .links {
       text-align: center;
-
       margin-top: 20px;
     }
 
@@ -333,8 +328,6 @@
       font-size: 12px;
     }
 
-    /* ADMIN MODE */
-
     #adminMode {
       display: none;
     }
@@ -382,8 +375,6 @@
 
   <div class="container">
 
-    <!-- BRAND -->
-
     <div class="brand">
 
       <div class="brand-icon">
@@ -400,8 +391,6 @@
 
     </div>
 
-
-    <!-- LOGIN CARD -->
 
     <div class="card">
 
@@ -628,9 +617,7 @@
 
       <div class="secure-note">
 
-        <span>
-          🔒
-        </span>
+        <span>🔒</span>
 
         Secure account authentication
 
@@ -667,7 +654,6 @@
     const backToUser =
       document.getElementById("backToUser");
 
-
     const form =
       document.getElementById("loginForm");
 
@@ -685,7 +671,6 @@
 
     const togglePassword =
       document.getElementById("togglePassword");
-
 
     const adminForm =
       document.getElementById("adminLoginForm");
@@ -709,7 +694,7 @@
 
 
     // ==========================================
-    // USER LOGIN MODE
+    // MODE SWITCH
     // ==========================================
 
     function showUserLogin() {
@@ -723,10 +708,6 @@
     }
 
 
-    // ==========================================
-    // ADMIN LOGIN MODE
-    // ==========================================
-
     function showAdminLogin() {
 
       userMode.style.display = "none";
@@ -737,10 +718,6 @@
 
     }
 
-
-    // ==========================================
-    // ADMIN SWITCH
-    // ==========================================
 
     openAdmin.addEventListener(
       "click",
@@ -753,10 +730,6 @@
       }
     );
 
-
-    // ==========================================
-    // BACK TO USER
-    // ==========================================
 
     backToUser.addEventListener(
       "click",
@@ -771,7 +744,7 @@
 
 
     // ==========================================
-    // USER PASSWORD TOGGLE
+    // PASSWORD TOGGLE
     // ==========================================
 
     togglePassword.addEventListener(
@@ -783,13 +756,11 @@
         ) {
 
           passwordInput.type = "text";
-
           togglePassword.textContent = "🙈";
 
         } else {
 
           passwordInput.type = "password";
-
           togglePassword.textContent = "👁";
 
         }
@@ -797,10 +768,6 @@
       }
     );
 
-
-    // ==========================================
-    // ADMIN PASSWORD TOGGLE
-    // ==========================================
 
     toggleAdminPassword.addEventListener(
       "click",
@@ -811,13 +778,11 @@
         ) {
 
           adminPassword.type = "text";
-
           toggleAdminPassword.textContent = "🙈";
 
         } else {
 
           adminPassword.type = "password";
-
           toggleAdminPassword.textContent = "👁";
 
         }
@@ -827,7 +792,7 @@
 
 
     // ==========================================
-    // MESSAGE FUNCTIONS
+    // MESSAGE
     // ==========================================
 
     function showMessage(
@@ -849,6 +814,30 @@
       element.textContent = "";
 
       element.className = "message";
+
+    }
+
+
+    // ==========================================
+    // GET DASHBOARD URL
+    // ==========================================
+
+    function getDashboardUrl() {
+
+      return new URL(
+        "dashboard.html",
+        window.location.href
+      ).href;
+
+    }
+
+
+    function getAdminDashboardUrl() {
+
+      return new URL(
+        "admin-dashboard.html",
+        window.location.href
+      ).href;
 
     }
 
@@ -908,36 +897,26 @@
                 },
 
                 body: JSON.stringify({
-                  email: email,
-                  password: password
+                  email,
+                  password
                 })
               }
             );
 
 
-          let data = null;
-
-
-          try {
-
-            data = await response.json();
-
-          } catch (error) {
-
-            data = null;
-
-          }
+          const data =
+            await response.json();
 
 
           console.log(
-            "USER LOGIN:",
+            "USER LOGIN RESPONSE:",
             response.status,
             data
           );
 
 
           // ====================================
-          // SUCCESS
+          // LOGIN SUCCESS
           // ====================================
 
           if (
@@ -948,10 +927,7 @@
           ) {
 
 
-            // ----------------------------------
-            // ADMIN ACCOUNT BLOCK
-            // ----------------------------------
-
+            // ADMIN ACCOUNT
             if (
               data.user &&
               data.user.role === "admin"
@@ -973,10 +949,7 @@
             }
 
 
-            // ----------------------------------
             // CLEAR ADMIN SESSION
-            // ----------------------------------
-
             localStorage.removeItem(
               "adminToken"
             );
@@ -986,19 +959,12 @@
             );
 
 
-            // ----------------------------------
-            // SAVE USER TOKEN
-            // ----------------------------------
-
+            // SAVE USER SESSION
             localStorage.setItem(
               "token",
-              String(data.token)
+              data.token
             );
 
-
-            // ----------------------------------
-            // SAVE USER INFO
-            // ----------------------------------
 
             if (data.user) {
 
@@ -1010,19 +976,16 @@
             }
 
 
-            // ----------------------------------
-            // VERIFY TOKEN WAS SAVED
-            // ----------------------------------
-
-            const savedToken =
+            // VERIFY TOKEN
+            const token =
               localStorage.getItem("token");
 
 
-            if (!savedToken) {
+            if (!token) {
 
               showMessage(
                 message,
-                "Login হয়েছে, কিন্তু session save করা যায়নি। আবার চেষ্টা করুন।",
+                "Login হয়েছে কিন্তু session save হয়নি।",
                 "error"
               );
 
@@ -1036,10 +999,7 @@
             }
 
 
-            // ----------------------------------
-            // SUCCESS MESSAGE
-            // ----------------------------------
-
+            // SUCCESS
             showMessage(
               message,
               "Login successful! Dashboard এ যাচ্ছেন...",
@@ -1047,24 +1007,31 @@
             );
 
 
+            // CREATE EXACT URL
+            const dashboardUrl =
+              getDashboardUrl();
+
+
             console.log(
-              "USER TOKEN SAVED:",
-              savedToken.substring(0, 20) + "..."
+              "CURRENT PAGE:",
+              window.location.href
+            );
+
+            console.log(
+              "DASHBOARD URL:",
+              dashboardUrl
             );
 
 
-            // ----------------------------------
-            // DIRECT REDIRECT
-            // ----------------------------------
+            // ==================================
+            // REDIRECT
+            // ==================================
 
-            window.location.href =
-              "./dashboard.html";
+            window.location.assign(
+              dashboardUrl
+            );
 
           } else {
-
-            // ----------------------------------
-            // LOGIN FAILED
-            // ----------------------------------
 
             showMessage(
               message,
@@ -1160,36 +1127,26 @@
                 },
 
                 body: JSON.stringify({
-                  email: email,
-                  password: password
+                  email,
+                  password
                 })
               }
             );
 
 
-          let data = null;
-
-
-          try {
-
-            data = await response.json();
-
-          } catch (error) {
-
-            data = null;
-
-          }
+          const data =
+            await response.json();
 
 
           console.log(
-            "ADMIN LOGIN:",
+            "ADMIN LOGIN RESPONSE:",
             response.status,
             data
           );
 
 
           // ====================================
-          // SUCCESS
+          // LOGIN SUCCESS
           // ====================================
 
           if (
@@ -1200,10 +1157,7 @@
           ) {
 
 
-            // ----------------------------------
-            // ADMIN ROLE CHECK
-            // ----------------------------------
-
+            // ROLE CHECK
             if (
               !data.user ||
               data.user.role !== "admin"
@@ -1225,22 +1179,15 @@
             }
 
 
-            // ----------------------------------
             // CLEAR USER SESSION
-            // ----------------------------------
-
             localStorage.removeItem("token");
-
             localStorage.removeItem("user");
 
 
-            // ----------------------------------
-            // SAVE ADMIN TOKEN
-            // ----------------------------------
-
+            // SAVE ADMIN SESSION
             localStorage.setItem(
               "adminToken",
-              String(data.token)
+              data.token
             );
 
 
@@ -1250,21 +1197,18 @@
             );
 
 
-            // ----------------------------------
             // VERIFY ADMIN TOKEN
-            // ----------------------------------
-
-            const savedAdminToken =
+            const adminToken =
               localStorage.getItem(
                 "adminToken"
               );
 
 
-            if (!savedAdminToken) {
+            if (!adminToken) {
 
               showMessage(
                 adminMessage,
-                "Admin session save করা যায়নি। আবার চেষ্টা করুন।",
+                "Admin session save করা যায়নি।",
                 "error"
               );
 
@@ -1278,10 +1222,6 @@
             }
 
 
-            // ----------------------------------
-            // SUCCESS
-            // ----------------------------------
-
             showMessage(
               adminMessage,
               "Admin authentication successful. Dashboard এ যাচ্ছেন...",
@@ -1289,18 +1229,26 @@
             );
 
 
+            // CREATE EXACT ADMIN URL
+            const adminDashboardUrl =
+              getAdminDashboardUrl();
+
+
             console.log(
-              "ADMIN TOKEN SAVED:",
-              savedAdminToken.substring(0, 20) + "..."
+              "CURRENT PAGE:",
+              window.location.href
+            );
+
+            console.log(
+              "ADMIN DASHBOARD URL:",
+              adminDashboardUrl
             );
 
 
-            // ----------------------------------
-            // DIRECT REDIRECT
-            // ----------------------------------
-
-            window.location.href =
-              "./admin-dashboard.html";
+            // REDIRECT
+            window.location.assign(
+              adminDashboardUrl
+            );
 
           } else {
 
