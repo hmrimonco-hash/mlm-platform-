@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Admin Dashboard</title>
+<title>Admin Dashboard — Proyjon Marketing LTD</title>
 
 <style>
 *{
@@ -24,6 +24,10 @@ button,input{
   font:inherit;
 }
 
+button{
+  -webkit-tap-highlight-color:transparent;
+}
+
 .header{
   height:70px;
   display:flex;
@@ -32,6 +36,9 @@ button,input{
   padding:0 16px;
   background:#0a0f18;
   border-bottom:1px solid #202938;
+  position:sticky;
+  top:0;
+  z-index:50;
 }
 
 .brand{
@@ -63,15 +70,48 @@ button,input{
   margin-top:3px;
 }
 
+.header-actions{
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+
 .bell{
-  width:40px;
-  height:40px;
+  width:42px;
+  height:42px;
   border:1px solid #273143;
   border-radius:12px;
   background:#101725;
   color:white;
   font-size:18px;
   cursor:pointer;
+  position:relative;
+}
+
+.bell:hover{
+  border-color:#6c63ff;
+}
+
+.badge{
+  position:absolute;
+  top:-5px;
+  right:-5px;
+  min-width:19px;
+  height:19px;
+  padding:0 5px;
+  border-radius:20px;
+  background:#ef4444;
+  color:white;
+  font-size:9px;
+  font-weight:bold;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  border:2px solid #0a0f18;
+}
+
+.badge.show{
+  display:flex;
 }
 
 .container{
@@ -85,7 +125,14 @@ button,input{
   border:1px solid #202938;
   border-radius:20px;
   background:#0e1522;
-  margin-bottom:20px;
+  margin-bottom:18px;
+}
+
+.welcome-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
 }
 
 .welcome h1{
@@ -97,6 +144,49 @@ button,input{
   color:#8d99aa;
   font-size:12px;
   line-height:1.6;
+}
+
+.status-pill{
+  background:#14251b;
+  color:#4ade80;
+  border:1px solid #245237;
+  padding:7px 10px;
+  border-radius:20px;
+  font-size:9px;
+  white-space:nowrap;
+}
+
+.summary{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:16px;
+}
+
+.summary-card{
+  background:#101725;
+  border:1px solid #202938;
+  border-radius:13px;
+  padding:12px;
+}
+
+.summary-label{
+  color:#7f8a9c;
+  font-size:9px;
+}
+
+.summary-number{
+  font-size:20px;
+  font-weight:800;
+  margin-top:5px;
+}
+
+.summary-number.pending{
+  color:#facc15;
+}
+
+.summary-number.unread{
+  color:#f87171;
 }
 
 .grid{
@@ -115,6 +205,11 @@ button,input{
   text-align:left;
   cursor:pointer;
   transition:.15s;
+}
+
+.card:hover{
+  border-color:#35415a;
+  background:#101827;
 }
 
 .card:active{
@@ -138,6 +233,27 @@ button,input{
   margin-top:5px;
 }
 
+.card-alert{
+  position:relative;
+}
+
+.card-badge{
+  position:absolute;
+  top:13px;
+  right:13px;
+  min-width:21px;
+  height:21px;
+  padding:0 6px;
+  border-radius:20px;
+  background:#ef4444;
+  color:white;
+  font-size:9px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+}
+
 .overlay{
   position:fixed;
   inset:0;
@@ -145,7 +261,7 @@ button,input{
   display:none;
   align-items:flex-end;
   justify-content:center;
-  background:rgba(0,0,0,.75);
+  background:rgba(0,0,0,.78);
 }
 
 .overlay.show{
@@ -154,8 +270,8 @@ button,input{
 
 .modal{
   width:100%;
-  max-width:600px;
-  max-height:90vh;
+  max-width:650px;
+  max-height:92vh;
   overflow:auto;
   background:#0b111b;
   border:1px solid #263044;
@@ -167,7 +283,13 @@ button,input{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:20px;
+  margin-bottom:18px;
+  position:sticky;
+  top:-20px;
+  background:#0b111b;
+  padding-top:3px;
+  padding-bottom:12px;
+  z-index:5;
 }
 
 .modal-title{
@@ -222,6 +344,10 @@ button,input{
   color:white;
   text-align:left;
   cursor:pointer;
+}
+
+.action:hover{
+  border-color:#3a4660;
 }
 
 .action:active{
@@ -335,6 +461,11 @@ button,input{
 .error-box{
   color:#fca5a5;
   line-height:1.6;
+  background:#211317;
+  border:1px solid #4b252c;
+  border-radius:13px;
+  padding:13px;
+  font-size:11px;
 }
 
 .logout{
@@ -347,6 +478,297 @@ button,input{
   color:#fca5a5;
   cursor:pointer;
 }
+
+/* =========================================
+   NOTIFICATIONS
+========================================= */
+
+.notification-item{
+  padding:14px;
+  background:#101725;
+  border:1px solid #273143;
+  border-radius:15px;
+  margin-bottom:10px;
+  cursor:pointer;
+}
+
+.notification-item.unread{
+  border-color:#4b438d;
+  background:#12152a;
+}
+
+.notification-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.notification-title{
+  font-size:12px;
+  font-weight:bold;
+}
+
+.notification-message{
+  color:#8b97a7;
+  font-size:10px;
+  line-height:1.6;
+  margin-top:6px;
+}
+
+.notification-time{
+  color:#5f6c7b;
+  font-size:9px;
+  margin-top:8px;
+}
+
+.unread-dot{
+  width:8px;
+  height:8px;
+  background:#ef4444;
+  border-radius:50%;
+  flex-shrink:0;
+  margin-top:4px;
+}
+
+.read-label{
+  color:#64748b;
+  font-size:8px;
+}
+
+/* =========================================
+   PROFILE REQUEST
+========================================= */
+
+.request-card{
+  background:#101725;
+  border:1px solid #303a4d;
+  border-radius:17px;
+  padding:14px;
+  margin-bottom:12px;
+}
+
+.request-card.pending{
+  border-color:#6c63ff;
+}
+
+.request-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.request-user{
+  font-size:13px;
+  font-weight:bold;
+}
+
+.request-email{
+  color:#748091;
+  font-size:9px;
+  margin-top:3px;
+  word-break:break-word;
+}
+
+.status{
+  font-size:8px;
+  padding:5px 8px;
+  border-radius:20px;
+  font-weight:bold;
+  flex-shrink:0;
+}
+
+.status.pending{
+  background:#3d3513;
+  color:#facc15;
+  border:1px solid #635517;
+}
+
+.status.approved{
+  background:#12351f;
+  color:#4ade80;
+  border:1px solid #245b37;
+}
+
+.status.rejected{
+  background:#351619;
+  color:#f87171;
+  border:1px solid #61252b;
+}
+
+.request-time{
+  color:#667383;
+  font-size:9px;
+  margin-top:10px;
+}
+
+.compare-title{
+  color:#aab4c1;
+  font-size:10px;
+  font-weight:bold;
+  margin:14px 0 8px;
+}
+
+.compare-table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+}
+
+.compare-table th{
+  text-align:left;
+  color:#687586;
+  font-size:9px;
+  padding:8px;
+  border-bottom:1px solid #293342;
+}
+
+.compare-table td{
+  vertical-align:top;
+  padding:9px 8px;
+  border-bottom:1px solid #202a38;
+  font-size:10px;
+  line-height:1.5;
+  word-break:break-word;
+}
+
+.compare-table td:first-child{
+  width:27%;
+  color:#778495;
+}
+
+.old-data{
+  color:#f87171;
+  background:rgba(239,68,68,.05);
+}
+
+.new-data{
+  color:#4ade80;
+  background:rgba(34,197,94,.05);
+}
+
+.same-data{
+  color:#9aa6b5;
+}
+
+.change-arrow{
+  color:#64748b;
+  text-align:center;
+  width:18px;
+}
+
+.request-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-top:14px;
+}
+
+.approve{
+  border:0;
+  border-radius:11px;
+  padding:12px;
+  background:#22c55e;
+  color:#06130b;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.reject{
+  border:0;
+  border-radius:11px;
+  padding:12px;
+  background:#ef4444;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.approve:disabled,
+.reject:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.empty{
+  padding:25px 15px;
+  text-align:center;
+  color:#667383;
+  font-size:11px;
+  border:1px dashed #293342;
+  border-radius:14px;
+}
+
+.loading{
+  padding:25px;
+  text-align:center;
+  color:#778495;
+  font-size:11px;
+}
+
+.filter-row{
+  display:flex;
+  gap:7px;
+  margin-bottom:13px;
+}
+
+.filter-btn{
+  flex:1;
+  padding:9px;
+  border-radius:9px;
+  border:1px solid #293342;
+  background:#101725;
+  color:#7f8a9c;
+  font-size:9px;
+  cursor:pointer;
+}
+
+.filter-btn.active{
+  color:#a5a0ff;
+  border-color:#6c63ff;
+  background:#15152c;
+}
+
+/* =========================================
+   USER LIST
+========================================= */
+
+.user-item{
+  background:#101725;
+  border:1px solid #273143;
+  border-radius:14px;
+  padding:13px;
+  margin-bottom:9px;
+}
+
+.user-head{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.user-name{
+  font-size:12px;
+  font-weight:bold;
+}
+
+.user-email{
+  color:#748091;
+  font-size:9px;
+  margin-top:3px;
+}
+
+.user-meta{
+  color:#7f8a9c;
+  font-size:9px;
+  line-height:1.7;
+  margin-top:8px;
+}
+
+/* =========================================
+   TOAST
+========================================= */
 
 .toast{
   position:fixed;
@@ -380,6 +802,10 @@ button,input{
   border-color:#713b3b;
 }
 
+/* =========================================
+   BOTTOM NAV
+========================================= */
+
 .bottom{
   position:fixed;
   bottom:0;
@@ -399,6 +825,7 @@ button,input{
   color:#7f8a9c;
   cursor:pointer;
   font-size:10px;
+  position:relative;
 }
 
 .nav span{
@@ -411,11 +838,56 @@ button,input{
   color:#a5a0ff;
 }
 
+.nav-badge{
+  position:absolute;
+  top:4px;
+  right:calc(50% - 22px);
+  min-width:15px;
+  height:15px;
+  padding:0 4px;
+  background:#ef4444;
+  color:white;
+  border-radius:10px;
+  font-size:8px;
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+
+.nav-badge.show{
+  display:flex;
+}
+
+@media(max-width:600px){
+
+  .welcome-top{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .status-pill{
+    align-self:flex-start;
+  }
+
+}
+
 @media(max-width:380px){
+
   .grid,
   .actions{
     grid-template-columns:1fr;
   }
+
+  .summary{
+    grid-template-columns:1fr;
+  }
+
+  .compare-table td,
+  .compare-table th{
+    padding:7px 5px;
+    font-size:9px;
+  }
+
 }
 </style>
 </head>
@@ -423,101 +895,341 @@ button,input{
 <body>
 
 <header class="header">
+
   <div class="brand">
-    <div class="logo">P</div>
+
+    <div class="logo">
+      P
+    </div>
 
     <div>
-      <div class="name">Proyjon Marketing LTD</div>
-      <div class="sub">আপনার প্রয়োজন আমাদের আয়োজন</div>
+      <div class="name">
+        Proyjon Marketing LTD
+      </div>
+
+      <div class="sub">
+        আপনার প্রয়োজন আমাদের আয়োজন
+      </div>
     </div>
+
   </div>
 
-  <button class="bell" onclick="showComing('Notifications')">
-    🔔
-  </button>
+
+  <div class="header-actions">
+
+    <button
+      class="bell"
+      onclick="openNotifications()"
+      title="Notifications"
+    >
+
+      🔔
+
+      <span
+        id="headerNotificationBadge"
+        class="badge"
+      >
+        0
+      </span>
+
+    </button>
+
+  </div>
+
 </header>
 
 
 <main class="container">
 
-  <section class="welcome">
-    <h1>Admin Dashboard 👋</h1>
+  <!-- WELCOME -->
 
-    <p>
-      Manage users, requests, packages, deposits, withdrawals and system settings.
-    </p>
+  <section class="welcome">
+
+    <div class="welcome-top">
+
+      <div>
+
+        <h1>
+          Admin Dashboard 👋
+        </h1>
+
+        <p>
+          Manage users, requests, packages, deposits,
+          withdrawals and system activities.
+        </p>
+
+      </div>
+
+      <div class="status-pill">
+        ● System Online
+      </div>
+
+    </div>
+
+
+    <div class="summary">
+
+      <div class="summary-card">
+
+        <div class="summary-label">
+          TOTAL USERS
+        </div>
+
+        <div
+          id="totalUsers"
+          class="summary-number"
+        >
+          —
+        </div>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <div class="summary-label">
+          PENDING PROFILE
+        </div>
+
+        <div
+          id="pendingRequests"
+          class="summary-number pending"
+        >
+          0
+        </div>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <div class="summary-label">
+          UNREAD ALERTS
+        </div>
+
+        <div
+          id="unreadAlerts"
+          class="summary-number unread"
+        >
+          0
+        </div>
+
+      </div>
+
+    </div>
+
   </section>
 
 
+  <!-- MAIN CARDS -->
+
   <section class="grid">
 
-    <button class="card" onclick="showComing('New User Requests')">
-      <div class="icon">🆕</div>
-      <div class="title">New User Requests</div>
-      <div class="desc">Review new registration requests.</div>
+    <button
+      class="card"
+      onclick="showComing('New User Requests')"
+    >
+
+      <div class="icon">
+        🆕
+      </div>
+
+      <div class="title">
+        New User Requests
+      </div>
+
+      <div class="desc">
+        Review new registration requests.
+      </div>
+
     </button>
 
 
-    <button class="card" onclick="openUserManagement()">
-      <div class="icon">👥</div>
-      <div class="title">User Management</div>
-      <div class="desc">Create and manage users.</div>
+    <button
+      class="card"
+      onclick="openUserManagement()"
+    >
+
+      <div class="icon">
+        👥
+      </div>
+
+      <div class="title">
+        User Management
+      </div>
+
+      <div class="desc">
+        View and manage registered users.
+      </div>
+
     </button>
 
 
-    <button class="card" onclick="showComing('Tree Management')">
-      <div class="icon">🌳</div>
-      <div class="title">Tree Management</div>
-      <div class="desc">Manage binary tree placement.</div>
+    <button
+      class="card"
+      onclick="showComing('Tree Management')"
+    >
+
+      <div class="icon">
+        🌳
+      </div>
+
+      <div class="title">
+        Tree Management
+      </div>
+
+      <div class="desc">
+        Manage binary tree placement.
+      </div>
+
     </button>
 
 
-    <button class="card" onclick="showComing('Withdraw Requests')">
-      <div class="icon">💸</div>
-      <div class="title">Withdraw Requests</div>
-      <div class="desc">Review withdrawal requests.</div>
+    <button
+      class="card"
+      onclick="showComing('Withdraw Requests')"
+    >
+
+      <div class="icon">
+        💸
+      </div>
+
+      <div class="title">
+        Withdraw Requests
+      </div>
+
+      <div class="desc">
+        Review withdrawal requests.
+      </div>
+
     </button>
 
 
-    <button class="card" onclick="showComing('Purchase Requests')">
-      <div class="icon">🛒</div>
-      <div class="title">Purchase Requests</div>
-      <div class="desc">Manage purchase requests.</div>
+    <button
+      class="card"
+      onclick="showComing('Purchase Requests')"
+    >
+
+      <div class="icon">
+        🛒
+      </div>
+
+      <div class="title">
+        Purchase Requests
+      </div>
+
+      <div class="desc">
+        Manage purchase requests.
+      </div>
+
     </button>
 
 
-    <button class="card" onclick="showComing('Package Management')">
-      <div class="icon">📦</div>
-      <div class="title">Package Management</div>
-      <div class="desc">Create and manage packages.</div>
+    <button
+      class="card"
+      onclick="showComing('Package Management')"
+    >
+
+      <div class="icon">
+        📦
+      </div>
+
+      <div class="title">
+        Package Management
+      </div>
+
+      <div class="desc">
+        Create and manage packages.
+      </div>
+
     </button>
 
 
-    <button class="card" onclick="showComing('Deposit Requests')">
-      <div class="icon">💰</div>
-      <div class="title">Deposit Requests</div>
-      <div class="desc">Review deposit requests.</div>
+    <button
+      class="card"
+      onclick="showComing('Deposit Requests')"
+    >
+
+      <div class="icon">
+        💰
+      </div>
+
+      <div class="title">
+        Deposit Requests
+      </div>
+
+      <div class="desc">
+        Review deposit requests.
+      </div>
+
     </button>
 
 
-    <button class="card" onclick="openProfileRequests()">
-      <div class="icon">📝</div>
-      <div class="title">Profile Update Requests</div>
-      <div class="desc">Approve profile changes.</div>
+    <button
+      class="card card-alert"
+      onclick="openProfileRequests()"
+    >
+
+      <span
+        id="profileRequestBadge"
+        class="card-badge"
+        style="display:none;"
+      >
+        0
+      </span>
+
+      <div class="icon">
+        📝
+      </div>
+
+      <div class="title">
+        Profile Update Requests
+      </div>
+
+      <div class="desc">
+        Compare old & new data and approve or reject changes.
+      </div>
+
     </button>
 
 
-    <button class="card" onclick="openAdmin()">
-      <div class="icon">🔐</div>
-      <div class="title">Admin Account</div>
-      <div class="desc">Profile, password and security.</div>
+    <button
+      class="card"
+      onclick="openAdmin()"
+    >
+
+      <div class="icon">
+        🔐
+      </div>
+
+      <div class="title">
+        Admin Account
+      </div>
+
+      <div class="desc">
+        Profile, password and security.
+      </div>
+
     </button>
 
 
-    <button class="card" onclick="showComing('Notifications')">
-      <div class="icon">🔔</div>
-      <div class="title">Notifications</div>
-      <div class="desc">View system notifications.</div>
+    <button
+      class="card"
+      onclick="openNotifications()"
+    >
+
+      <div class="icon">
+        🔔
+      </div>
+
+      <div class="title">
+        Notifications
+      </div>
+
+      <div class="desc">
+        View profile changes and system alerts.
+      </div>
+
     </button>
 
   </section>
@@ -525,7 +1237,15 @@ button,input{
 </main>
 
 
-<div id="adminOverlay" class="overlay" onclick="closeOutside(event)">
+<!-- =========================================
+     MODAL
+========================================= -->
+
+<div
+  id="adminOverlay"
+  class="overlay"
+  onclick="closeOutside(event)"
+>
 
   <div class="modal">
 
@@ -533,27 +1253,52 @@ button,input{
 
       <div class="modal-title">
 
-        <div class="modal-icon">🔐</div>
+        <div
+          id="modalIcon"
+          class="modal-icon"
+        >
+          🔐
+        </div>
 
         <div>
-          <h2 id="modalHeading">Admin Account</h2>
-          <p>Account and security settings</p>
+
+          <h2 id="modalHeading">
+            Admin Account
+          </h2>
+
+          <p id="modalSubheading">
+            Account and security settings
+          </p>
+
         </div>
 
       </div>
 
-      <button class="close" onclick="closeAdmin()">✕</button>
+
+      <button
+        class="close"
+        onclick="closeAdmin()"
+      >
+        ✕
+      </button>
 
     </div>
 
+
+    <!-- ACCOUNT MENU -->
 
     <div id="accountMenu">
 
       <div class="actions">
 
-        <button class="action" onclick="loadAdminProfile()">
+        <button
+          class="action"
+          onclick="loadAdminProfile()"
+        >
 
-          <div class="action-icon">👤</div>
+          <div class="action-icon">
+            👤
+          </div>
 
           <div class="action-title">
             Admin Profile
@@ -566,9 +1311,14 @@ button,input{
         </button>
 
 
-        <button class="action" onclick="openChangePassword()">
+        <button
+          class="action"
+          onclick="openChangePassword()"
+        >
 
-          <div class="action-icon">🔑</div>
+          <div class="action-icon">
+            🔑
+          </div>
 
           <div class="action-title">
             Change Password
@@ -581,9 +1331,14 @@ button,input{
         </button>
 
 
-        <button class="action" onclick="openAdminReset()">
+        <button
+          class="action"
+          onclick="openAdminReset()"
+        >
 
-          <div class="action-icon">🔐</div>
+          <div class="action-icon">
+            🔐
+          </div>
 
           <div class="action-title">
             Admin Password Reset
@@ -596,9 +1351,14 @@ button,input{
         </button>
 
 
-        <button class="action" onclick="openUserReset()">
+        <button
+          class="action"
+          onclick="openUserReset()"
+        >
 
-          <div class="action-icon">👤</div>
+          <div class="action-icon">
+            👤
+          </div>
 
           <div class="action-title">
             Reset User Password
@@ -613,31 +1373,50 @@ button,input{
       </div>
 
 
-      <button class="logout" onclick="logout()">
+      <button
+        class="logout"
+        onclick="logout()"
+      >
         🚪 Logout
       </button>
 
     </div>
 
 
-    <div id="profileForm" class="form">
+    <!-- ADMIN PROFILE -->
+
+    <div
+      id="profileForm"
+      class="form"
+    >
 
       <div class="form-title">
         👤 Admin Profile
       </div>
 
-      <div id="profileInfo" class="info-box">
+      <div
+        id="profileInfo"
+        class="info-box"
+      >
         Loading...
       </div>
 
-      <button class="secondary" onclick="backToAccount()">
+      <button
+        class="secondary"
+        onclick="backToAccount()"
+      >
         ← Back
       </button>
 
     </div>
 
 
-    <div id="changePasswordForm" class="form">
+    <!-- CHANGE PASSWORD -->
+
+    <div
+      id="changePasswordForm"
+      class="form"
+    >
 
       <div class="form-title">
         🔑 Change Password
@@ -645,7 +1424,9 @@ button,input{
 
       <div class="input-group">
 
-        <label>Current Password</label>
+        <label>
+          Current Password
+        </label>
 
         <input
           id="currentPassword"
@@ -660,7 +1441,9 @@ button,input{
 
       <div class="input-group">
 
-        <label>New Password</label>
+        <label>
+          New Password
+        </label>
 
         <input
           id="newPassword"
@@ -675,7 +1458,9 @@ button,input{
 
       <div class="input-group">
 
-        <label>Confirm New Password</label>
+        <label>
+          Confirm New Password
+        </label>
 
         <input
           id="confirmPassword"
@@ -697,27 +1482,40 @@ button,input{
       </button>
 
 
-      <button class="secondary" onclick="backToAccount()">
+      <button
+        class="secondary"
+        onclick="backToAccount()"
+      >
         ← Back
       </button>
 
     </div>
 
 
-    <div id="adminResetForm" class="form">
+    <!-- ADMIN RESET -->
+
+    <div
+      id="adminResetForm"
+      class="form"
+    >
 
       <div class="form-title">
         🔐 Admin Password Reset
       </div>
 
-      <div class="info-box" style="margin-bottom:12px;">
+      <div
+        class="info-box"
+        style="margin-bottom:12px;"
+      >
         Enter your current password and choose a new password.
       </div>
 
 
       <div class="input-group">
 
-        <label>Current Password</label>
+        <label>
+          Current Password
+        </label>
 
         <input
           id="resetCurrentPassword"
@@ -732,7 +1530,9 @@ button,input{
 
       <div class="input-group">
 
-        <label>New Password</label>
+        <label>
+          New Password
+        </label>
 
         <input
           id="resetNewPassword"
@@ -747,7 +1547,9 @@ button,input{
 
       <div class="input-group">
 
-        <label>Confirm New Password</label>
+        <label>
+          Confirm New Password
+        </label>
 
         <input
           id="resetConfirmPassword"
@@ -769,14 +1571,22 @@ button,input{
       </button>
 
 
-      <button class="secondary" onclick="backToAccount()">
+      <button
+        class="secondary"
+        onclick="backToAccount()"
+      >
         ← Back
       </button>
 
     </div>
 
 
-    <div id="userResetForm" class="form">
+    <!-- USER RESET -->
+
+    <div
+      id="userResetForm"
+      class="form"
+    >
 
       <div class="form-title">
         👤 Reset User Password
@@ -785,7 +1595,9 @@ button,input{
 
       <div class="input-group">
 
-        <label>User ID</label>
+        <label>
+          User ID
+        </label>
 
         <input
           id="resetUserId"
@@ -799,7 +1611,9 @@ button,input{
 
       <div class="input-group">
 
-        <label>New Password</label>
+        <label>
+          New Password
+        </label>
 
         <input
           id="resetUserPassword"
@@ -814,7 +1628,9 @@ button,input{
 
       <div class="input-group">
 
-        <label>Confirm New Password</label>
+        <label>
+          Confirm New Password
+        </label>
 
         <input
           id="resetUserPasswordConfirm"
@@ -836,14 +1652,22 @@ button,input{
       </button>
 
 
-      <button class="secondary" onclick="backToAccount()">
+      <button
+        class="secondary"
+        onclick="backToAccount()"
+      >
         ← Back
       </button>
 
     </div>
 
 
-    <div id="usersForm" class="form">
+    <!-- USERS -->
+
+    <div
+      id="usersForm"
+      class="form"
+    >
 
       <div class="form-title">
         👥 User Management
@@ -864,39 +1688,196 @@ button,input{
     </div>
 
 
-    <div id="profileRequestsForm" class="form"></div>
+    <!-- NOTIFICATIONS -->
+
+    <div
+      id="notificationsForm"
+      class="form"
+    >
+
+      <div class="form-title">
+        🔔 Notifications
+      </div>
+
+
+      <div class="filter-row">
+
+        <button
+          id="allNotificationBtn"
+          class="filter-btn active"
+          onclick="setNotificationFilter('all')"
+        >
+          All
+        </button>
+
+        <button
+          id="unreadNotificationBtn"
+          class="filter-btn"
+          onclick="setNotificationFilter('unread')"
+        >
+          Unread
+        </button>
+
+      </div>
+
+
+      <div id="notificationsList">
+        Loading notifications...
+      </div>
+
+
+      <button
+        class="secondary"
+        style="margin-top:15px;"
+        onclick="backToAccount()"
+      >
+        ← Back
+      </button>
+
+    </div>
+
+
+    <!-- PROFILE REQUESTS -->
+
+    <div
+      id="profileRequestsForm"
+      class="form"
+    >
+
+      <div class="form-title">
+        📝 Profile Update Requests
+      </div>
+
+
+      <div class="filter-row">
+
+        <button
+          id="allRequestBtn"
+          class="filter-btn active"
+          onclick="setRequestFilter('all')"
+        >
+          All
+        </button>
+
+        <button
+          id="pendingRequestBtn"
+          class="filter-btn"
+          onclick="setRequestFilter('pending')"
+        >
+          Pending
+        </button>
+
+        <button
+          id="approvedRequestBtn"
+          class="filter-btn"
+          onclick="setRequestFilter('approved')"
+        >
+          Approved
+        </button>
+
+        <button
+          id="rejectedRequestBtn"
+          class="filter-btn"
+          onclick="setRequestFilter('rejected')"
+        >
+          Rejected
+        </button>
+
+      </div>
+
+
+      <div id="requestList">
+        Loading requests...
+      </div>
+
+
+      <button
+        class="secondary"
+        style="margin-top:15px;"
+        onclick="backToAccount()"
+      >
+        ← Back
+      </button>
+
+    </div>
 
   </div>
 
 </div>
 
 
-<div id="toast" class="toast"></div>
+<div
+  id="toast"
+  class="toast"
+></div>
 
+
+<!-- =========================================
+     BOTTOM NAV
+========================================= -->
 
 <nav class="bottom">
 
-  <button class="nav active" onclick="goHome()">
+  <button
+    class="nav active"
+    onclick="goHome()"
+  >
     <span>⌂</span>
     Home
   </button>
 
-  <button class="nav" onclick="showComing('Users')">
+
+  <button
+    class="nav"
+    onclick="openUserManagement()"
+  >
     <span>👥</span>
     Users
   </button>
 
-  <button class="nav" onclick="showComing('Requests')">
+
+  <button
+    class="nav"
+    onclick="openProfileRequests()"
+  >
+
     <span>📋</span>
+
     Requests
+
+    <span
+      id="bottomRequestBadge"
+      class="nav-badge"
+    >
+      0
+    </span>
+
   </button>
 
-  <button class="nav" onclick="showComing('Alerts')">
+
+  <button
+    class="nav"
+    onclick="openNotifications()"
+  >
+
     <span>🔔</span>
+
     Alerts
+
+    <span
+      id="bottomAlertBadge"
+      class="nav-badge"
+    >
+      0
+    </span>
+
   </button>
 
-  <button class="nav" onclick="openAdmin()">
+
+  <button
+    class="nav"
+    onclick="openAdmin()"
+  >
     <span>⚙️</span>
     Account
   </button>
@@ -915,12 +1896,19 @@ const API_BASE =
 
 
 /* =========================================================
-   ADMIN AUTHENTICATION
+   AUTH
 ========================================================= */
 
 function getToken(){
 
-  return localStorage.getItem("adminToken") || "";
+  /*
+    Admin login must store the JWT as adminToken.
+  */
+
+  return (
+    localStorage.getItem("adminToken") ||
+    ""
+  );
 
 }
 
@@ -928,7 +1916,7 @@ function getToken(){
 function requireAdminToken(){
 
   const token =
-    localStorage.getItem("adminToken");
+    getToken();
 
   if(!token){
 
@@ -936,12 +1924,15 @@ function requireAdminToken(){
       "Admin session পাওয়া যায়নি। আবার Admin Login করুন।"
     );
 
-    window.location.href = "login.html";
+    window.location.href =
+      "login.html";
 
     return false;
+
   }
 
   return true;
+
 }
 
 
@@ -949,14 +1940,19 @@ function requireAdminToken(){
    API REQUEST
 ========================================================= */
 
-async function apiRequest(url, options = {}){
+async function apiRequest(
+  url,
+  options = {}
+){
 
-  const token = getToken();
+  const token =
+    getToken();
 
 
   if(!token){
 
-    window.location.href = "login.html";
+    window.location.href =
+      "login.html";
 
     throw new Error(
       "Admin login session পাওয়া যায়নি।"
@@ -967,13 +1963,16 @@ async function apiRequest(url, options = {}){
 
   const headers = {
 
-    "Content-Type":"application/json",
+    "Content-Type":
+      "application/json",
 
-    "Accept":"application/json",
+    "Accept":
+      "application/json",
 
     ...(options.headers || {}),
 
-    "Authorization":"Bearer " + token
+    "Authorization":
+      "Bearer " + token
 
   };
 
@@ -983,13 +1982,14 @@ async function apiRequest(url, options = {}){
 
   try{
 
-    response = await fetch(
-      API_BASE + url,
-      {
-        ...options,
-        headers
-      }
-    );
+    response =
+      await fetch(
+        API_BASE + url,
+        {
+          ...options,
+          headers
+        }
+      );
 
   }catch(error){
 
@@ -1005,7 +2005,8 @@ async function apiRequest(url, options = {}){
 
   try{
 
-    data = await response.json();
+    data =
+      await response.json();
 
   }catch(error){
 
@@ -1016,20 +2017,17 @@ async function apiRequest(url, options = {}){
 
   if(!response.ok){
 
-    console.log(
-      "API ERROR:",
-      {
-        url:url,
-        status:response.status,
-        response:data
-      }
-    );
+    if(
+      response.status === 401
+    ){
 
+      localStorage.removeItem(
+        "adminToken"
+      );
 
-    if(response.status === 401){
-
-      localStorage.removeItem("adminToken");
-      localStorage.removeItem("adminUser");
+      localStorage.removeItem(
+        "adminUser"
+      );
 
       throw new Error(
         "Admin session invalid বা expired হয়েছে। আবার Admin Login করুন।"
@@ -1038,7 +2036,9 @@ async function apiRequest(url, options = {}){
     }
 
 
-    if(response.status === 403){
+    if(
+      response.status === 403
+    ){
 
       throw new Error(
         "এই account-এর Admin permission নেই।"
@@ -1062,17 +2062,21 @@ async function apiRequest(url, options = {}){
 
 
 /* =========================================================
-   PAGE AUTH CHECK
+   PAGE AUTH
 ========================================================= */
 
 (function(){
 
   const token =
-    localStorage.getItem("adminToken");
+    localStorage.getItem(
+      "adminToken"
+    );
+
 
   if(!token){
 
-    window.location.href = "login.html";
+    window.location.href =
+      "login.html";
 
   }
 
@@ -1080,16 +2084,29 @@ async function apiRequest(url, options = {}){
 
 
 /* =========================================================
-   ADMIN MODAL
+   MODAL
 ========================================================= */
 
-function openAdmin(){
-
-  hideForms();
+function openModal(
+  title,
+  subtitle,
+  icon
+){
 
   document.getElementById(
     "modalHeading"
-  ).textContent = "Admin Account";
+  ).textContent = title;
+
+
+  document.getElementById(
+    "modalSubheading"
+  ).textContent = subtitle;
+
+
+  document.getElementById(
+    "modalIcon"
+  ).textContent = icon;
+
 
   document.getElementById(
     "adminOverlay"
@@ -1112,7 +2129,8 @@ function closeAdmin(){
 function closeOutside(event){
 
   if(
-    event.target.id === "adminOverlay"
+    event.target.id ===
+    "adminOverlay"
   ){
 
     closeAdmin();
@@ -1126,7 +2144,9 @@ document.addEventListener(
   "keydown",
   function(event){
 
-    if(event.key === "Escape"){
+    if(
+      event.key === "Escape"
+    ){
 
       closeAdmin();
 
@@ -1148,24 +2168,30 @@ function hideForms(){
     "adminResetForm",
     "userResetForm",
     "usersForm",
+    "notificationsForm",
     "profileRequestsForm"
-  ].forEach(function(id){
+  ].forEach(
+    function(id){
 
-    const el =
-      document.getElementById(id);
+      const el =
+        document.getElementById(id);
 
-    if(el){
+      if(el){
 
-      el.classList.remove("show");
+        el.classList.remove(
+          "show"
+        );
+
+      }
 
     }
-
-  });
+  );
 
 
   document.getElementById(
     "accountMenu"
-  ).style.display = "block";
+  ).style.display =
+    "block";
 
 }
 
@@ -1178,28 +2204,40 @@ function hideFormsOnly(){
     "adminResetForm",
     "userResetForm",
     "usersForm",
+    "notificationsForm",
     "profileRequestsForm"
-  ].forEach(function(id){
+  ].forEach(
+    function(id){
 
-    const el =
-      document.getElementById(id);
+      const el =
+        document.getElementById(id);
 
-    if(el){
+      if(el){
 
-      el.classList.remove("show");
+        el.classList.remove(
+          "show"
+        );
+
+      }
 
     }
-
-  });
+  );
 
 }
 
 
-function showForm(id,title){
+function showForm(
+  id,
+  title,
+  subtitle,
+  icon
+){
 
   document.getElementById(
     "accountMenu"
-  ).style.display = "none";
+  ).style.display =
+    "none";
+
 
   hideFormsOnly();
 
@@ -1211,7 +2249,20 @@ function showForm(id,title){
 
   document.getElementById(
     "modalHeading"
-  ).textContent = title;
+  ).textContent =
+    title;
+
+
+  document.getElementById(
+    "modalSubheading"
+  ).textContent =
+    subtitle;
+
+
+  document.getElementById(
+    "modalIcon"
+  ).textContent =
+    icon;
 
 }
 
@@ -1220,9 +2271,23 @@ function backToAccount(){
 
   hideForms();
 
+
   document.getElementById(
     "modalHeading"
-  ).textContent = "Admin Account";
+  ).textContent =
+    "Admin Account";
+
+
+  document.getElementById(
+    "modalSubheading"
+  ).textContent =
+    "Account and security settings";
+
+
+  document.getElementById(
+    "modalIcon"
+  ).textContent =
+    "🔐";
 
 }
 
@@ -1235,7 +2300,9 @@ async function loadAdminProfile(){
 
   showForm(
     "profileForm",
-    "Admin Profile"
+    "Admin Profile",
+    "Account information",
+    "👤"
   );
 
 
@@ -1249,89 +2316,82 @@ async function loadAdminProfile(){
     "Loading admin profile...";
 
 
-  if(!requireAdminToken()){
-
-    return;
-
-  }
-
-
   try{
 
-    let data;
-
-
-    try{
-
-      data =
-        await apiRequest(
-          "/api/admin/account"
-        );
-
-    }catch(firstError){
-
-      data =
-        await apiRequest(
-          "/api/auth/me"
-        );
-
-    }
+    const data =
+      await apiRequest(
+        "/api/auth/me"
+      );
 
 
     const user =
-      data.user ||
-      data.admin ||
-      data.data ||
-      data;
+      data.user || {};
 
 
     box.innerHTML = `
 
       <div>
+
         <div class="info-label">
           Name
         </div>
 
         <div class="info-value">
-          ${escapeHtml(user.name || "—")}
+          ${escapeHtml(
+            user.name || "—"
+          )}
         </div>
+
       </div>
 
 
       <div>
-        <div class="info-label">
-          Username
-        </div>
 
-        <div class="info-value">
-          ${escapeHtml(user.username || "—")}
-        </div>
-      </div>
-
-
-      <div>
         <div class="info-label">
           Email
         </div>
 
         <div class="info-value">
-          ${escapeHtml(user.email || "—")}
+          ${escapeHtml(
+            user.email || "—"
+          )}
         </div>
+
       </div>
 
 
       <div>
+
+        <div class="info-label">
+          Phone
+        </div>
+
+        <div class="info-value">
+          ${escapeHtml(
+            user.phone || "—"
+          )}
+        </div>
+
+      </div>
+
+
+      <div>
+
         <div class="info-label">
           Role
         </div>
 
         <div class="info-value">
-          ${escapeHtml(user.role || "admin")}
+          ${escapeHtml(
+            user.role || "admin"
+          )}
         </div>
+
       </div>
 
 
       <div>
+
         <div class="info-label">
           User ID
         </div>
@@ -1339,12 +2399,11 @@ async function loadAdminProfile(){
         <div class="info-value">
           ${escapeHtml(
             String(
-              user.id ||
-              user.user_id ||
-              "—"
+              user.id || "—"
             )
           )}
         </div>
+
       </div>
 
     `;
@@ -1354,15 +2413,9 @@ async function loadAdminProfile(){
     box.innerHTML = `
 
       <div class="error-box">
-
-        ❌ ${escapeHtml(error.message)}
-
-        <br><br>
-
-        <small>
-          প্রথমে Admin Login আবার করে দেখুন।
-        </small>
-
+        ❌ ${escapeHtml(
+          error.message
+        )}
       </div>
 
     `;
@@ -1380,7 +2433,9 @@ function openChangePassword(){
 
   showForm(
     "changePasswordForm",
-    "Change Password"
+    "Change Password",
+    "Update admin password",
+    "🔑"
   );
 
 }
@@ -1390,7 +2445,9 @@ function openAdminReset(){
 
   showForm(
     "adminResetForm",
-    "Admin Password Reset"
+    "Admin Password Reset",
+    "Reset administrator password",
+    "🔐"
   );
 
 }
@@ -1400,7 +2457,9 @@ function openUserReset(){
 
   showForm(
     "userResetForm",
-    "Reset User Password"
+    "Reset User Password",
+    "Change password for a user",
+    "👤"
   );
 
 }
@@ -1426,7 +2485,11 @@ async function changePassword(){
     ).value;
 
 
-  if(!current || !newPass || !confirm){
+  if(
+    !current ||
+    !newPass ||
+    !confirm
+  ){
 
     showToast(
       "সব password field পূরণ করুন।",
@@ -1438,7 +2501,9 @@ async function changePassword(){
   }
 
 
-  if(newPass.length < 6){
+  if(
+    newPass.length < 6
+  ){
 
     showToast(
       "New password কমপক্ষে 6 characters হতে হবে।",
@@ -1450,7 +2515,9 @@ async function changePassword(){
   }
 
 
-  if(newPass !== confirm){
+  if(
+    newPass !== confirm
+  ){
 
     showToast(
       "New password দুটো একই নয়।",
@@ -1468,9 +2535,11 @@ async function changePassword(){
     );
 
 
-  button.disabled = true;
+  button.disabled =
+    true;
 
-  button.textContent = "Changing...";
+  button.textContent =
+    "Changing...";
 
 
   try{
@@ -1481,8 +2550,11 @@ async function changePassword(){
         method:"PUT",
 
         body:JSON.stringify({
-          currentPassword:current,
-          newPassword:newPass
+          currentPassword:
+            current,
+
+          newPassword:
+            newPass
         })
       }
     );
@@ -1511,7 +2583,7 @@ async function changePassword(){
 
     setTimeout(
       backToAccount,
-      1200
+      1000
     );
 
   }catch(error){
@@ -1523,7 +2595,8 @@ async function changePassword(){
 
   }finally{
 
-    button.disabled = false;
+    button.disabled =
+      false;
 
     button.textContent =
       "Change Password";
@@ -1553,7 +2626,11 @@ async function adminResetPassword(){
     ).value;
 
 
-  if(!current || !newPass || !confirm){
+  if(
+    !current ||
+    !newPass ||
+    !confirm
+  ){
 
     showToast(
       "সব field পূরণ করুন।",
@@ -1565,7 +2642,9 @@ async function adminResetPassword(){
   }
 
 
-  if(newPass.length < 6){
+  if(
+    newPass.length < 6
+  ){
 
     showToast(
       "New password কমপক্ষে 6 characters হতে হবে।",
@@ -1577,10 +2656,12 @@ async function adminResetPassword(){
   }
 
 
-  if(newPass !== confirm){
+  if(
+    newPass !== confirm
+  ){
 
     showToast(
-      "New password দুটো একই নয়।",
+      "Password দুটো একই নয়।",
       "error"
     );
 
@@ -1595,7 +2676,8 @@ async function adminResetPassword(){
     );
 
 
-  button.disabled = true;
+  button.disabled =
+    true;
 
   button.textContent =
     "Resetting...";
@@ -1609,8 +2691,11 @@ async function adminResetPassword(){
         method:"PUT",
 
         body:JSON.stringify({
-          currentPassword:current,
-          newPassword:newPass
+          currentPassword:
+            current,
+
+          newPassword:
+            newPass
         })
       }
     );
@@ -1639,7 +2724,7 @@ async function adminResetPassword(){
 
     setTimeout(
       backToAccount,
-      1200
+      1000
     );
 
   }catch(error){
@@ -1651,7 +2736,8 @@ async function adminResetPassword(){
 
   }finally{
 
-    button.disabled = false;
+    button.disabled =
+      false;
 
     button.textContent =
       "Reset Password";
@@ -1662,7 +2748,7 @@ async function adminResetPassword(){
 
 
 /* =========================================================
-   RESET USER PASSWORD
+   USER PASSWORD RESET
 ========================================================= */
 
 async function resetUserPassword(){
@@ -1685,7 +2771,11 @@ async function resetUserPassword(){
     ).value;
 
 
-  if(!userId || !newPass || !confirm){
+  if(
+    !userId ||
+    !newPass ||
+    !confirm
+  ){
 
     showToast(
       "সব field পূরণ করুন।",
@@ -1697,7 +2787,9 @@ async function resetUserPassword(){
   }
 
 
-  if(newPass.length < 6){
+  if(
+    newPass.length < 6
+  ){
 
     showToast(
       "Password কমপক্ষে 6 characters হতে হবে।",
@@ -1709,7 +2801,9 @@ async function resetUserPassword(){
   }
 
 
-  if(newPass !== confirm){
+  if(
+    newPass !== confirm
+  ){
 
     showToast(
       "Password দুটো একই নয়।",
@@ -1727,7 +2821,8 @@ async function resetUserPassword(){
     );
 
 
-  button.disabled = true;
+  button.disabled =
+    true;
 
   button.textContent =
     "Resetting...";
@@ -1737,13 +2832,16 @@ async function resetUserPassword(){
 
     await apiRequest(
       "/api/admin/users/" +
-      encodeURIComponent(userId) +
+      encodeURIComponent(
+        userId
+      ) +
       "/password",
       {
         method:"PUT",
 
         body:JSON.stringify({
-          newPassword:newPass
+          newPassword:
+            newPass
         })
       }
     );
@@ -1778,7 +2876,8 @@ async function resetUserPassword(){
 
   }finally{
 
-    button.disabled = false;
+    button.disabled =
+      false;
 
     button.textContent =
       "Reset User Password";
@@ -1789,10 +2888,1528 @@ async function resetUserPassword(){
 
 
 /* =========================================================
+   USER MANAGEMENT
+========================================================= */
+
+function openUserManagement(){
+
+  openModal(
+    "User Management",
+    "Registered users",
+    "👥"
+  );
+
+
+  showForm(
+    "usersForm",
+    "User Management",
+    "Registered users",
+    "👥"
+  );
+
+
+  loadUsersManagement();
+
+}
+
+
+async function loadUsersManagement(){
+
+  const container =
+    document.getElementById(
+      "usersList"
+    );
+
+
+  container.innerHTML =
+    "<div class='loading'>Loading users...</div>";
+
+
+  try{
+
+    const data =
+      await apiRequest(
+        "/api/admin/users"
+      );
+
+
+    const users =
+      data.users || [];
+
+
+    document.getElementById(
+      "totalUsers"
+    ).textContent =
+      users.length;
+
+
+    if(
+      users.length === 0
+    ){
+
+      container.innerHTML =
+        "<div class='empty'>No users found.</div>";
+
+      return;
+
+    }
+
+
+    container.innerHTML =
+      users.map(
+        function(u){
+
+          return `
+
+            <div class="user-item">
+
+              <div class="user-head">
+
+                <div>
+
+                  <div class="user-name">
+                    ${escapeHtml(
+                      u.name || "Unknown"
+                    )}
+                  </div>
+
+                  <div class="user-email">
+                    ${escapeHtml(
+                      u.email || "—"
+                    )}
+                  </div>
+
+                </div>
+
+                <div
+                  class="status ${u.role === "admin" ? "approved" : "pending"}"
+                >
+                  ${escapeHtml(
+                    u.role || "user"
+                  )}
+                </div>
+
+              </div>
+
+
+              <div class="user-meta">
+
+                ID:
+                ${escapeHtml(
+                  u.id
+                )}
+
+                <br>
+
+                Phone:
+                ${escapeHtml(
+                  u.phone || "N/A"
+                )}
+
+                <br>
+
+                Balance:
+                ৳${escapeHtml(
+                  u.wallet_balance || "0.00"
+                )}
+
+                <br>
+
+                Referral:
+                ${escapeHtml(
+                  u.referral_code || "N/A"
+                )}
+
+              </div>
+
+            </div>
+
+          `;
+
+        }
+      ).join("");
+
+
+  }catch(error){
+
+    container.innerHTML = `
+
+      <div class="error-box">
+        ❌ ${escapeHtml(
+          error.message
+        )}
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+/* =========================================================
+   PROFILE REQUEST FILTER
+========================================================= */
+
+let profileRequests =
+  [];
+
+let requestFilter =
+  "all";
+
+
+function setRequestFilter(
+  filter
+){
+
+  requestFilter =
+    filter;
+
+
+  [
+    "allRequestBtn",
+    "pendingRequestBtn",
+    "approvedRequestBtn",
+    "rejectedRequestBtn"
+  ].forEach(
+    function(id){
+
+      document.getElementById(
+        id
+      ).classList.remove(
+        "active"
+      );
+
+    }
+  );
+
+
+  const map = {
+
+    all:
+      "allRequestBtn",
+
+    pending:
+      "pendingRequestBtn",
+
+    approved:
+      "approvedRequestBtn",
+
+    rejected:
+      "rejectedRequestBtn"
+
+  };
+
+
+  document.getElementById(
+    map[filter]
+  ).classList.add(
+    "active"
+  );
+
+
+  renderProfileRequests();
+
+}
+
+
+/* =========================================================
+   OPEN PROFILE REQUESTS
+========================================================= */
+
+function openProfileRequests(){
+
+  openModal(
+    "Profile Update Requests",
+    "Review old and new profile information",
+    "📝"
+  );
+
+
+  showForm(
+    "profileRequestsForm",
+    "Profile Update Requests",
+    "Review old and new profile information",
+    "📝"
+  );
+
+
+  loadProfileRequests();
+
+}
+
+
+/* =========================================================
+   LOAD PROFILE REQUESTS
+========================================================= */
+
+async function loadProfileRequests(){
+
+  const list =
+    document.getElementById(
+      "requestList"
+    );
+
+
+  list.innerHTML =
+    "<div class='loading'>Loading profile requests...</div>";
+
+
+  try{
+
+    const data =
+      await apiRequest(
+        "/api/admin/profile-requests"
+      );
+
+
+    profileRequests =
+      data.requests || [];
+
+
+    updatePendingCount();
+
+
+    renderProfileRequests();
+
+
+  }catch(error){
+
+    list.innerHTML = `
+
+      <div class="error-box">
+
+        ❌ ${escapeHtml(
+          error.message
+        )}
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+/* =========================================================
+   UPDATE PENDING COUNT
+========================================================= */
+
+function updatePendingCount(){
+
+  const pending =
+    profileRequests.filter(
+      function(r){
+
+        return (
+          r.status ===
+          "pending"
+        );
+
+      }
+    ).length;
+
+
+  document.getElementById(
+    "pendingRequests"
+  ).textContent =
+    pending;
+
+
+  const badge =
+    document.getElementById(
+      "profileRequestBadge"
+    );
+
+
+  if(pending > 0){
+
+    badge.style.display =
+      "flex";
+
+    badge.textContent =
+      pending;
+
+  }else{
+
+    badge.style.display =
+      "none";
+
+  }
+
+
+  const bottomBadge =
+    document.getElementById(
+      "bottomRequestBadge"
+    );
+
+
+  if(pending > 0){
+
+    bottomBadge.classList.add(
+      "show"
+    );
+
+    bottomBadge.textContent =
+      pending;
+
+  }else{
+
+    bottomBadge.classList.remove(
+      "show"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   RENDER PROFILE REQUESTS
+========================================================= */
+
+function renderProfileRequests(){
+
+  const list =
+    document.getElementById(
+      "requestList"
+    );
+
+
+  let filtered =
+    profileRequests;
+
+
+  if(
+    requestFilter !==
+    "all"
+  ){
+
+    filtered =
+      profileRequests.filter(
+        function(r){
+
+          return (
+            r.status ===
+            requestFilter
+          );
+
+        }
+      );
+
+  }
+
+
+  if(
+    filtered.length === 0
+  ){
+
+    list.innerHTML = `
+
+      <div class="empty">
+
+        ${
+          requestFilter === "pending"
+          ? "No pending profile update requests."
+          : "No requests found."
+        }
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  list.innerHTML =
+    filtered.map(
+      function(req){
+
+        return renderSingleRequest(
+          req
+        );
+
+      }
+    ).join("");
+
+}
+
+
+/* =========================================================
+   RENDER SINGLE REQUEST
+========================================================= */
+
+function renderSingleRequest(
+  req
+){
+
+  const oldData =
+    parseJson(
+      req.old_data
+    );
+
+
+  const newData =
+    parseJson(
+      req.requested_data
+    );
+
+
+  const fields = [
+
+    {
+      key:"name",
+      label:"Name"
+    },
+
+    {
+      key:"father_name",
+      label:"Father's Name"
+    },
+
+    {
+      key:"phone",
+      label:"Phone"
+    },
+
+    {
+      key:"email",
+      label:"Email"
+    },
+
+    {
+      key:"nid",
+      label:"NID"
+    },
+
+    {
+      key:"address",
+      label:"Address"
+    },
+
+    {
+      key:"nominee_name",
+      label:"Nominee Name"
+    },
+
+    {
+      key:"nominee_number",
+      label:"Nominee Number"
+    },
+
+    {
+      key:"nominee_nid",
+      label:"Nominee NID"
+    }
+
+  ];
+
+
+  let changedCount =
+    0;
+
+
+  let rows =
+    "";
+
+
+  fields.forEach(
+    function(field){
+
+      const oldValue =
+        normalizeValue(
+          oldData[field.key]
+        );
+
+
+      const newValue =
+        normalizeValue(
+          newData[field.key]
+        );
+
+
+      const changed =
+        oldValue !==
+        newValue;
+
+
+      if(changed){
+
+        changedCount++;
+
+      }
+
+
+      rows += `
+
+        <tr>
+
+          <td>
+            ${escapeHtml(
+              field.label
+            )}
+          </td>
+
+
+          <td
+            class="${
+              changed
+              ? "old-data"
+              : "same-data"
+            }"
+          >
+
+            ${escapeHtml(
+              oldValue
+            )}
+
+          </td>
+
+
+          <td
+            class="change-arrow"
+          >
+            →
+          </td>
+
+
+          <td
+            class="${
+              changed
+              ? "new-data"
+              : "same-data"
+            }"
+          >
+
+            ${escapeHtml(
+              newValue
+            )}
+
+          </td>
+
+        </tr>
+
+      `;
+
+    }
+  );
+
+
+  const isPending =
+    req.status ===
+    "pending";
+
+
+  const statusClass =
+    req.status ===
+    "approved"
+      ? "approved"
+      : req.status ===
+        "rejected"
+        ? "rejected"
+        : "pending";
+
+
+  return `
+
+    <div
+      class="request-card ${
+        isPending
+        ? "pending"
+        : ""
+      }"
+    >
+
+      <div class="request-header">
+
+        <div>
+
+          <div class="request-user">
+
+            👤
+            ${escapeHtml(
+              req.current_name ||
+              "Unknown User"
+            )}
+
+            <span
+              style="
+                color:#64748b;
+                font-size:9px;
+              "
+            >
+              #${escapeHtml(
+                req.user_id
+              )}
+            </span>
+
+          </div>
+
+
+          <div class="request-email">
+
+            ${escapeHtml(
+              req.current_phone ||
+              ""
+            )}
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="status ${statusClass}"
+        >
+          ${escapeHtml(
+            String(
+              req.status ||
+              "pending"
+            ).toUpperCase()
+          )}
+        </div>
+
+      </div>
+
+
+      <div class="request-time">
+
+        🕐
+        ${formatDate(
+          req.created_at
+        )}
+
+      </div>
+
+
+      <div class="compare-title">
+
+        OLD DATA
+        <span
+          style="
+            color:#64748b;
+            margin:0 4px;
+          "
+        >
+          →
+        </span>
+        NEW DATA
+
+        <span
+          style="
+            float:right;
+            color:${
+              changedCount > 0
+              ? "#facc15"
+              : "#64748b"
+            };
+          "
+        >
+
+          ${changedCount}
+          field(s) changed
+
+        </span>
+
+      </div>
+
+
+      <div
+        style="
+          overflow-x:auto;
+        "
+      >
+
+        <table class="compare-table">
+
+          <thead>
+
+            <tr>
+
+              <th>
+                Field
+              </th>
+
+              <th>
+                Old
+              </th>
+
+              <th>
+              </th>
+
+              <th>
+                New
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            ${rows}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+
+      ${
+        isPending
+        ? `
+
+          <div class="request-actions">
+
+            <button
+              id="approve-${Number(req.id)}"
+              class="approve"
+              onclick="
+                handleProfileReq(
+                  ${Number(req.id)},
+                  'approve'
+                )
+              "
+            >
+              ✓ Approve
+            </button>
+
+
+            <button
+              id="reject-${Number(req.id)}"
+              class="reject"
+              onclick="
+                handleProfileReq(
+                  ${Number(req.id)},
+                  'reject'
+                )
+              "
+            >
+              ✕ Reject
+            </button>
+
+          </div>
+
+        `
+        : ""
+      }
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   APPROVE / REJECT
+========================================================= */
+
+async function handleProfileReq(
+  id,
+  action
+){
+
+  const actionText =
+    action === "approve"
+      ? "APPROVE"
+      : "REJECT";
+
+
+  const confirmed =
+    confirm(
+      `Are you sure you want to ${actionText} this profile update request?`
+    );
+
+
+  if(!confirmed){
+
+    return;
+
+  }
+
+
+  const approveButton =
+    document.getElementById(
+      "approve-" + id
+    );
+
+
+  const rejectButton =
+    document.getElementById(
+      "reject-" + id
+    );
+
+
+  if(approveButton){
+
+    approveButton.disabled =
+      true;
+
+  }
+
+
+  if(rejectButton){
+
+    rejectButton.disabled =
+      true;
+
+  }
+
+
+  try{
+
+    const data =
+      await apiRequest(
+        "/api/admin/profile-requests/" +
+        encodeURIComponent(id),
+        {
+          method:"PUT",
+
+          body:JSON.stringify({
+            action:action
+          })
+        }
+      );
+
+
+    showToast(
+      data.message ||
+      (
+        action === "approve"
+        ? "Profile approved successfully."
+        : "Profile request rejected."
+      ),
+      "success"
+    );
+
+
+    await loadProfileRequests();
+
+    await loadNotifications();
+
+  }catch(error){
+
+    showToast(
+      error.message,
+      "error"
+    );
+
+
+    if(approveButton){
+
+      approveButton.disabled =
+        false;
+
+    }
+
+
+    if(rejectButton){
+
+      rejectButton.disabled =
+        false;
+
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
+
+let notifications =
+  [];
+
+let notificationFilter =
+  "all";
+
+
+function setNotificationFilter(
+  filter
+){
+
+  notificationFilter =
+    filter;
+
+
+  document.getElementById(
+    "allNotificationBtn"
+  ).classList.remove(
+    "active"
+  );
+
+
+  document.getElementById(
+    "unreadNotificationBtn"
+  ).classList.remove(
+    "active"
+  );
+
+
+  if(
+    filter === "unread"
+  ){
+
+    document.getElementById(
+      "unreadNotificationBtn"
+    ).classList.add(
+      "active"
+    );
+
+  }else{
+
+    document.getElementById(
+      "allNotificationBtn"
+    ).classList.add(
+      "active"
+    );
+
+  }
+
+
+  renderNotifications();
+
+}
+
+
+function openNotifications(){
+
+  showForm(
+    "notificationsForm",
+    "Notifications",
+    "System alerts and profile updates",
+    "🔔"
+  );
+
+
+  document.getElementById(
+    "adminOverlay"
+  ).classList.add(
+    "show"
+  );
+
+
+  loadNotifications();
+
+}
+
+
+async function loadNotifications(){
+
+  const list =
+    document.getElementById(
+      "notificationsList"
+    );
+
+
+  list.innerHTML =
+    "<div class='loading'>Loading notifications...</div>";
+
+
+  try{
+
+    const data =
+      await apiRequest(
+        "/api/admin/alerts"
+      );
+
+
+    notifications =
+      data.alerts || [];
+
+
+    renderNotifications();
+
+
+    updateAlertCounts();
+
+
+  }catch(error){
+
+    list.innerHTML = `
+
+      <div class="error-box">
+
+        ❌ ${escapeHtml(
+          error.message
+        )}
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+/* =========================================================
+   RENDER NOTIFICATIONS
+========================================================= */
+
+function renderNotifications(){
+
+  const list =
+    document.getElementById(
+      "notificationsList"
+    );
+
+
+  let filtered =
+    notifications;
+
+
+  if(
+    notificationFilter ===
+    "unread"
+  ){
+
+    filtered =
+      notifications.filter(
+        function(n){
+
+          return (
+            n.status ===
+            "unread"
+          );
+
+        }
+      );
+
+  }
+
+
+  if(
+    filtered.length === 0
+  ){
+
+    list.innerHTML = `
+
+      <div class="empty">
+
+        ${
+          notificationFilter === "unread"
+          ? "No unread notifications."
+          : "No notifications yet."
+        }
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  list.innerHTML =
+    filtered.map(
+      function(n){
+
+        const unread =
+          n.status ===
+          "unread";
+
+
+        return `
+
+          <div
+            class="
+              notification-item
+              ${unread ? "unread" : ""}
+            "
+            onclick="
+              openNotification(
+                ${Number(n.id)}
+              )
+            "
+          >
+
+            <div
+              class="notification-top"
+            >
+
+              <div>
+
+                <div
+                  class="notification-title"
+                >
+
+                  ${escapeHtml(
+                    n.title ||
+                    "Notification"
+                  )}
+
+                </div>
+
+
+                <div
+                  class="notification-message"
+                >
+
+                  ${escapeHtml(
+                    n.message ||
+                    ""
+                  )}
+
+                </div>
+
+              </div>
+
+
+              ${
+                unread
+                ? `
+                  <span
+                    class="unread-dot"
+                  ></span>
+                `
+                : `
+                  <span
+                    class="read-label"
+                  >
+                    READ
+                  </span>
+                `
+              }
+
+            </div>
+
+
+            <div
+              class="notification-time"
+            >
+
+              🕐
+              ${formatDate(
+                n.created_at
+              )}
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+    ).join("");
+
+}
+
+
+/* =========================================================
+   OPEN NOTIFICATION
+========================================================= */
+
+async function openNotification(
+  id
+){
+
+  const notification =
+    notifications.find(
+      function(n){
+
+        return Number(n.id) ===
+          Number(id);
+
+      }
+    );
+
+
+  if(!notification){
+
+    return;
+
+  }
+
+
+  if(
+    notification.status ===
+    "unread"
+  ){
+
+    try{
+
+      await apiRequest(
+        "/api/admin/alerts/" +
+        encodeURIComponent(id) +
+        "/read",
+        {
+          method:"PUT"
+        }
+      );
+
+
+      notification.status =
+        "read";
+
+
+      updateAlertCounts();
+
+
+    }catch(error){
+
+      console.error(
+        "Read notification error:",
+        error
+      );
+
+    }
+
+  }
+
+
+  if(
+    notification.type ===
+    "profile_photo_update" ||
+    notification.type ===
+    "profile_update"
+  ){
+
+    openProfileRequests();
+
+    return;
+
+  }
+
+
+  if(
+    notification.type ===
+    "profile_approved"
+  ){
+
+    openProfileRequests();
+
+    return;
+
+  }
+
+
+  showToast(
+    notification.message ||
+    "Notification opened."
+  );
+
+
+  renderNotifications();
+
+}
+
+
+/* =========================================================
+   ALERT COUNTS
+========================================================= */
+
+function updateAlertCounts(){
+
+  const unread =
+    notifications.filter(
+      function(n){
+
+        return (
+          n.status ===
+          "unread"
+        );
+
+      }
+    ).length;
+
+
+  document.getElementById(
+    "unreadAlerts"
+  ).textContent =
+    unread;
+
+
+  const headerBadge =
+    document.getElementById(
+      "headerNotificationBadge"
+    );
+
+
+  if(unread > 0){
+
+    headerBadge.classList.add(
+      "show"
+    );
+
+    headerBadge.textContent =
+      unread > 99
+        ? "99+"
+        : unread;
+
+  }else{
+
+    headerBadge.classList.remove(
+      "show"
+    );
+
+  }
+
+
+  const bottomBadge =
+    document.getElementById(
+      "bottomAlertBadge"
+    );
+
+
+  if(unread > 0){
+
+    bottomBadge.classList.add(
+      "show"
+    );
+
+    bottomBadge.textContent =
+      unread > 99
+        ? "99+"
+        : unread;
+
+  }else{
+
+    bottomBadge.classList.remove(
+      "show"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   DATE
+========================================================= */
+
+function formatDate(
+  value
+){
+
+  if(!value){
+
+    return "Unknown time";
+
+  }
+
+
+  const date =
+    new Date(value);
+
+
+  if(
+    Number.isNaN(
+      date.getTime()
+    )
+  ){
+
+    return String(value);
+
+  }
+
+
+  return date.toLocaleString(
+    "en-BD",
+    {
+      year:"numeric",
+      month:"short",
+      day:"numeric",
+      hour:"2-digit",
+      minute:"2-digit"
+    }
+  );
+
+}
+
+
+/* =========================================================
+   JSON
+========================================================= */
+
+function parseJson(
+  value
+){
+
+  if(!value){
+
+    return {};
+
+  }
+
+
+  if(
+    typeof value ===
+    "object"
+  ){
+
+    return value;
+
+  }
+
+
+  try{
+
+    return JSON.parse(
+      value
+    );
+
+  }catch(error){
+
+    return {};
+
+  }
+
+}
+
+
+/* =========================================================
+   NORMALIZE
+========================================================= */
+
+function normalizeValue(
+  value
+){
+
+  if(
+    value === null ||
+    value === undefined ||
+    value === ""
+  ){
+
+    return "Not provided";
+
+  }
+
+
+  if(
+    typeof value ===
+    "object"
+  ){
+
+    return JSON.stringify(
+      value
+    );
+
+  }
+
+
+  return String(value);
+
+}
+
+
+/* =========================================================
    HTML ESCAPE
 ========================================================= */
 
-function escapeHtml(value){
+function escapeHtml(
+  value
+){
 
   return String(value)
 
@@ -1828,16 +4445,10 @@ function escapeHtml(value){
    TOAST
 ========================================================= */
 
-function showComing(name){
-
-  showToast(
-    name + " module will be connected next."
-  );
-
-}
-
-
-function showToast(message,type){
+function showToast(
+  message,
+  type
+){
 
   const toast =
     document.getElementById(
@@ -1851,7 +4462,10 @@ function showToast(message,type){
 
   toast.className =
     "toast show " +
-    (type || "");
+    (
+      type ||
+      ""
+    );
 
 
   setTimeout(
@@ -1861,8 +4475,66 @@ function showToast(message,type){
         "toast";
 
     },
-    2500
+    2600
   );
+
+}
+
+
+/* =========================================================
+   COMING SOON
+========================================================= */
+
+function showComing(
+  name
+){
+
+  showToast(
+    name +
+    " module will be connected next."
+  );
+
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+function logout(){
+
+  const confirmed =
+    confirm(
+      "আপনি কি Admin Logout করতে চান?"
+    );
+
+
+  if(!confirmed){
+
+    return;
+
+  }
+
+
+  localStorage.removeItem(
+    "token"
+  );
+
+  localStorage.removeItem(
+    "adminToken"
+  );
+
+  localStorage.removeItem(
+    "user"
+  );
+
+  localStorage.removeItem(
+    "adminUser"
+  );
+
+
+  window.location.href =
+    "login.html";
 
 }
 
@@ -1884,581 +4556,86 @@ function goHome(){
 
 
 /* =========================================================
-   LOGOUT
+   INITIAL DATA
 ========================================================= */
 
-function logout(){
-
-  localStorage.removeItem("token");
-
-  localStorage.removeItem("adminToken");
-
-  localStorage.removeItem("user");
-
-  localStorage.removeItem("adminUser");
-
-  window.location.href =
-    "login.html";
-
-}
-
-
-/* =========================================================
-   USER MANAGEMENT
-========================================================= */
-
-function openUserManagement(){
-
-  document.getElementById(
-    "adminOverlay"
-  ).classList.add("show");
-
-
-  showForm(
-    "usersForm",
-    "User Management"
-  );
-
-
-  loadUsersManagement();
-
-}
-
-
-async function loadUsersManagement(){
-
-  const container =
-    document.getElementById(
-      "usersList"
-    );
-
-
-  container.innerHTML =
-    "Loading users...";
-
+async function loadDashboardCounts(){
 
   try{
 
-    const data =
+    const usersData =
       await apiRequest(
         "/api/admin/users"
       );
 
 
-    if(
-      !data.users ||
-      data.users.length === 0
-    ){
-
-      container.innerHTML =
-        "<div class='info-box'>No users found.</div>";
-
-      return;
-
-    }
+    const users =
+      usersData.users ||
+      [];
 
 
-    container.innerHTML =
-      data.users.map(
-        function(u){
-
-          return `
-
-            <div
-              class="info-box"
-              style="margin-bottom:10px;"
-            >
-
-              <div class="info-label">
-
-                ID: ${escapeHtml(u.id)}
-
-                |
-
-                Role: ${escapeHtml(u.role)}
-
-              </div>
-
-
-              <div class="info-value">
-
-                ${escapeHtml(u.name)}
-
-                (${escapeHtml(u.email)})
-
-              </div>
-
-
-              <div class="info-label">
-
-                Phone:
-                ${escapeHtml(u.phone || "N/A")}
-
-                |
-
-                Balance:
-                ৳${escapeHtml(u.wallet_balance)}
-
-              </div>
-
-
-              <div class="info-label">
-
-                Ref Code:
-                ${escapeHtml(
-                  u.referral_code || "N/A"
-                )}
-
-              </div>
-
-            </div>
-
-          `;
-
-        }
-      ).join("");
-
-  }catch(err){
-
-    container.innerHTML = `
-
-      <div class="error-box">
-
-        ${escapeHtml(err.message)}
-
-      </div>
-
-    `;
-
-  }
-
-}
-
-
-/* =========================================================
-   PROFILE REQUESTS
-========================================================= */
-
-function openProfileRequests(){
-
-  document.getElementById(
-    "adminOverlay"
-  ).classList.add("show");
-
-
-  showForm(
-    "profileRequestsForm",
-    "Profile Update History & Requests"
-  );
-
-
-  loadProfileRequests();
-
-}
-
-
-async function loadProfileRequests(){
-
-  const box =
     document.getElementById(
-      "profileRequestsForm"
+      "totalUsers"
+    ).textContent =
+      users.length;
+
+
+  }catch(error){
+
+    console.error(
+      "Users count error:",
+      error
     );
 
-
-  box.innerHTML = `
-
-    <div class="form-title">
-
-      📝 Profile Update History & Requests
-
-    </div>
-
-
-    <div id="reqList">
-      Loading requests...
-    </div>
-
-
-    <button
-      class="secondary"
-      style="margin-top:15px;"
-      onclick="backToAccount()"
-    >
-      ← Back
-    </button>
-
-  `;
+  }
 
 
   try{
 
-    const data =
+    const requestData =
       await apiRequest(
         "/api/admin/profile-requests"
       );
 
 
-    const reqList =
-      document.getElementById(
-        "reqList"
-      );
+    profileRequests =
+      requestData.requests ||
+      [];
 
 
-    if(
-      !data.requests ||
-      data.requests.length === 0
-    ){
-
-      reqList.innerHTML =
-        "<div class='info-box'>No profile update requests/history found.</div>";
-
-      return;
-
-    }
-
-
-    reqList.innerHTML =
-      data.requests.map(
-        function(req){
-
-          let oldData = {};
-
-          let newData = {};
-
-
-          try{
-
-            oldData =
-              typeof req.old_data === "string"
-              ? JSON.parse(
-                  req.old_data || "{}"
-                )
-              : (
-                  req.old_data || {}
-                );
-
-          }catch(e){
-
-            oldData = {};
-
-          }
-
-
-          try{
-
-            newData =
-              typeof req.requested_data === "string"
-              ? JSON.parse(
-                  req.requested_data || "{}"
-                )
-              : (
-                  req.requested_data || {}
-                );
-
-          }catch(e){
-
-            newData = {};
-
-          }
-
-
-          const fields = [
-            "name",
-            "father_name",
-            "phone",
-            "email",
-            "nid",
-            "address",
-            "nominee_name",
-            "nominee_number",
-            "nominee_nid"
-          ];
-
-
-          let diffHtml = "";
-
-
-          fields.forEach(
-            function(f){
-
-              const oldVal =
-                oldData[f] || "N/A";
-
-
-              const newVal =
-                newData[f] || "N/A";
-
-
-              if(
-                oldVal !== newVal
-              ){
-
-                diffHtml += `
-
-                  <div
-                    style="
-                      font-size:11px;
-                      margin-bottom:4px;
-                    "
-                  >
-
-                    <span
-                      style="
-                        color:#94a3b8;
-                        text-transform:capitalize;
-                      "
-                    >
-
-                      ${escapeHtml(
-                        f.replace("_"," ")
-                      )}:
-
-                    </span>
-
-
-                    <span
-                      style="
-                        color:#ef4444;
-                        text-decoration:line-through;
-                      "
-                    >
-
-                      ${escapeHtml(oldVal)}
-
-                    </span>
-
-
-                    ➔
-
-
-                    <span
-                      style="
-                        color:#22c55e;
-                        font-weight:bold;
-                      "
-                    >
-
-                      ${escapeHtml(newVal)}
-
-                    </span>
-
-                  </div>
-
-                `;
-
-              }
-
-            }
-          );
-
-
-          const isPending =
-            req.status === "pending";
-
-
-          return `
-
-            <div
-              class="info-box"
-              style="
-                margin-bottom:12px;
-                border:1px solid
-                ${isPending
-                  ? "#6c63ff"
-                  : "#273143"};
-              "
-            >
-
-              <div
-                style="
-                  display:flex;
-                  justify-content:space-between;
-                  align-items:center;
-                "
-              >
-
-                <div
-                  class="info-label"
-                  style="
-                    color:#a5a0ff;
-                    font-weight:bold;
-                    font-size:12px;
-                  "
-                >
-
-                  User:
-                  ${escapeHtml(
-                    req.current_name
-                  )}
-
-                  (ID:
-                  ${escapeHtml(
-                    req.user_id
-                  )})
-
-                </div>
-
-
-                <span
-                  style="
-                    font-size:10px;
-                    padding:2px 8px;
-                    border-radius:10px;
-                    background:
-                    ${
-                      isPending
-                      ? "#3b82f633"
-                      : (
-                        req.status === "approved"
-                        ? "#22c55e33"
-                        : "#ef444433"
-                      )
-                    };
-
-                    color:
-                    ${
-                      isPending
-                      ? "#60a5fa"
-                      : (
-                        req.status === "approved"
-                        ? "#4ade80"
-                        : "#f87171"
-                      )
-                    };
-                  "
-                >
-
-                  ${escapeHtml(
-                    String(
-                      req.status || ""
-                    ).toUpperCase()
-                  )}
-
-                </span>
-
-              </div>
-
-
-              <hr
-                style="
-                  border:0;
-                  border-top:1px solid #273143;
-                  margin:8px 0;
-                "
-              >
-
-
-              <div
-                style="
-                  background:#070b12;
-                  padding:8px;
-                  border-radius:8px;
-                "
-              >
-
-                ${
-                  diffHtml ||
-                  `
-                    <div
-                      style="
-                        color:#64748b;
-                        font-size:11px;
-                      "
-                    >
-                      No visible text changes detected in fields.
-                    </div>
-                  `
-                }
-
-              </div>
-
-
-              ${
-                isPending
-                ? `
-
-                  <div
-                    style="
-                      display:flex;
-                      gap:10px;
-                      margin-top:15px;
-                    "
-                  >
-
-                    <button
-                      class="primary"
-                      style="
-                        background:#22c55e;
-                        margin:0;
-                        padding:10px;
-                        font-size:12px;
-                      "
-                      onclick="
-                        handleProfileReq(
-                          ${Number(req.id)},
-                          'approve'
-                        )
-                      "
-                    >
-                      ✓ Approve
-                    </button>
-
-
-                    <button
-                      class="primary"
-                      style="
-                        background:#ef4444;
-                        margin:0;
-                        padding:10px;
-                        font-size:12px;
-                      "
-                      onclick="
-                        handleProfileReq(
-                          ${Number(req.id)},
-                          'reject'
-                        )
-                      "
-                    >
-                      ✕ Reject
-                    </button>
-
-                  </div>
-
-                `
-                : ""
-              }
-
-            </div>
-
-          `;
-
-        }
-      ).join("");
-
+    updatePendingCount();
 
   }catch(error){
 
-    const reqList =
-      document.getElementById(
-        "reqList"
+    console.error(
+      "Profile request count error:",
+      error
+    );
+
+  }
+
+
+  try{
+
+    const alertData =
+      await apiRequest(
+        "/api/admin/alerts"
       );
 
 
-    if(reqList){
+    notifications =
+      alertData.alerts ||
+      [];
 
-      reqList.innerHTML = `
 
-        <div class="error-box">
+    updateAlertCounts();
 
-          ${escapeHtml(
-            error.message
-          )}
+  }catch(error){
 
-        </div>
-
-      `;
-
-    }
+    console.error(
+      "Alert count error:",
+      error
+    );
 
   }
 
@@ -2466,58 +4643,74 @@ async function loadProfileRequests(){
 
 
 /* =========================================================
-   APPROVE / REJECT PROFILE REQUEST
+   AUTO REFRESH
 ========================================================= */
 
-async function handleProfileReq(
-  id,
-  action
-){
-
-  if(
-    !confirm(
-      `Are you sure you want to ${action} this request?`
-    )
-  ){
-
-    return;
-
-  }
+loadDashboardCounts();
 
 
-  try{
+/*
+  Refresh notification and pending
+  counts every 20 seconds.
+*/
 
-    await apiRequest(
-      `/api/admin/profile-requests/${id}`,
-      {
-        method:"PUT",
+setInterval(
+  async function(){
 
-        body:JSON.stringify({
-          action:action
-        })
-      }
-    );
+    try{
 
-
-    showToast(
-      `Request ${action}d successfully.`,
-      "success"
-    );
+      const requestData =
+        await apiRequest(
+          "/api/admin/profile-requests"
+        );
 
 
-    loadProfileRequests();
+      profileRequests =
+        requestData.requests ||
+        [];
 
 
-  }catch(error){
+      updatePendingCount();
 
-    showToast(
-      error.message,
-      "error"
-    );
 
-  }
+    }catch(error){
 
-}
+      console.error(
+        "Auto request refresh:",
+        error
+      );
+
+    }
+
+
+    try{
+
+      const alertData =
+        await apiRequest(
+          "/api/admin/alerts"
+        );
+
+
+      notifications =
+        alertData.alerts ||
+        [];
+
+
+      updateAlertCounts();
+
+
+    }catch(error){
+
+      console.error(
+        "Auto alert refresh:",
+        error
+      );
+
+    }
+
+  },
+  20000
+);
 
 </script>
 
