@@ -21,12 +21,12 @@
       background:
         radial-gradient(
           circle at 15% 10%,
-          rgba(124,58,237,.20),
+          rgba(124, 58, 237, .20),
           transparent 35%
         ),
         radial-gradient(
           circle at 85% 90%,
-          rgba(37,99,235,.16),
+          rgba(37, 99, 235, .16),
           transparent 35%
         ),
         #070b14;
@@ -71,7 +71,7 @@
 
       box-shadow:
         0 12px 35px
-        rgba(99,102,241,.30);
+        rgba(99, 102, 241, .30);
 
       font-size: 27px;
       font-weight: 900;
@@ -89,7 +89,7 @@
     }
 
     .card {
-      background: rgba(13,19,30,.92);
+      background: rgba(13, 19, 30, .92);
 
       border: 1px solid #202a39;
 
@@ -99,7 +99,7 @@
 
       box-shadow:
         0 25px 70px
-        rgba(0,0,0,.40);
+        rgba(0, 0, 0, .40);
 
       backdrop-filter: blur(18px);
     }
@@ -166,7 +166,7 @@
 
       box-shadow:
         0 0 0 3px
-        rgba(109,92,231,.12);
+        rgba(109, 92, 231, .12);
     }
 
     .password-wrap input {
@@ -223,7 +223,7 @@
 
       box-shadow:
         0 12px 30px
-        rgba(79,70,229,.22);
+        rgba(79, 70, 229, .22);
 
       transition: .2s;
     }
@@ -258,19 +258,19 @@
     }
 
     .message.error {
-      background: rgba(239,68,68,.10);
+      background: rgba(239, 68, 68, .10);
 
       border: 1px solid
-        rgba(239,68,68,.20);
+        rgba(239, 68, 68, .20);
 
       color: #fca5a5;
     }
 
     .message.success {
-      background: rgba(34,197,94,.10);
+      background: rgba(34, 197, 94, .10);
 
       border: 1px solid
-        rgba(34,197,94,.20);
+        rgba(34, 197, 94, .20);
 
       color: #86efac;
     }
@@ -350,9 +350,10 @@
 
       border-radius: 20px;
 
-      background: rgba(124,58,237,.10);
+      background: rgba(124, 58, 237, .10);
 
-      border: 1px solid rgba(124,58,237,.20);
+      border: 1px solid
+        rgba(124, 58, 237, .20);
 
       color: #c4b5fd;
 
@@ -376,7 +377,6 @@
     }
   </style>
 </head>
-
 
 <body>
 
@@ -405,10 +405,7 @@
 
     <div class="card">
 
-
-      <!-- ========================= -->
       <!-- USER LOGIN -->
-      <!-- ========================= -->
 
       <div id="userMode">
 
@@ -426,8 +423,6 @@
 
 
         <form id="loginForm">
-
-          <!-- EMAIL -->
 
           <div class="field">
 
@@ -450,8 +445,6 @@
           </div>
 
 
-          <!-- PASSWORD -->
-
           <div class="field">
 
             <label for="password">
@@ -472,17 +465,13 @@
                 type="button"
                 class="toggle-password"
                 id="togglePassword">
-
                 👁
-
               </button>
 
             </div>
 
           </div>
 
-
-          <!-- LOGIN BUTTON -->
 
           <button
             type="submit"
@@ -494,8 +483,6 @@
           </button>
 
 
-          <!-- MESSAGE -->
-
           <div
             class="message"
             id="message">
@@ -503,8 +490,6 @@
 
         </form>
 
-
-        <!-- REGISTER -->
 
         <div class="links">
 
@@ -518,8 +503,6 @@
 
         </div>
 
-
-        <!-- ADMIN -->
 
         <div class="links admin-link">
 
@@ -540,9 +523,7 @@
       </div>
 
 
-      <!-- ========================= -->
       <!-- ADMIN LOGIN -->
-      <!-- ========================= -->
 
       <div id="adminMode">
 
@@ -565,8 +546,6 @@
 
         <form id="adminLoginForm">
 
-          <!-- ADMIN EMAIL -->
-
           <div class="field">
 
             <label for="adminEmail">
@@ -587,8 +566,6 @@
           </div>
 
 
-          <!-- ADMIN PASSWORD -->
-
           <div class="field">
 
             <label for="adminPassword">
@@ -608,17 +585,13 @@
                 type="button"
                 class="toggle-password"
                 id="toggleAdminPassword">
-
                 👁
-
               </button>
 
             </div>
 
           </div>
 
-
-          <!-- ADMIN LOGIN -->
 
           <button
             type="submit"
@@ -630,8 +603,6 @@
           </button>
 
 
-          <!-- ADMIN MESSAGE -->
-
           <div
             class="message"
             id="adminMessage">
@@ -639,8 +610,6 @@
 
         </form>
 
-
-        <!-- BACK -->
 
         <div class="links back-link">
 
@@ -656,8 +625,6 @@
 
       </div>
 
-
-      <!-- SECURITY -->
 
       <div class="secure-note">
 
@@ -677,7 +644,7 @@
   <script>
 
     // ==========================================
-    // API URL
+    // API
     // ==========================================
 
     const API_URL =
@@ -721,29 +688,19 @@
 
 
     const adminForm =
-      document.getElementById(
-        "adminLoginForm"
-      );
+      document.getElementById("adminLoginForm");
 
     const adminEmail =
-      document.getElementById(
-        "adminEmail"
-      );
+      document.getElementById("adminEmail");
 
     const adminPassword =
-      document.getElementById(
-        "adminPassword"
-      );
+      document.getElementById("adminPassword");
 
     const adminLoginBtn =
-      document.getElementById(
-        "adminLoginBtn"
-      );
+      document.getElementById("adminLoginBtn");
 
     const adminMessage =
-      document.getElementById(
-        "adminMessage"
-      );
+      document.getElementById("adminMessage");
 
     const toggleAdminPassword =
       document.getElementById(
@@ -752,16 +709,13 @@
 
 
     // ==========================================
-    // SHOW USER LOGIN
+    // USER LOGIN MODE
     // ==========================================
 
     function showUserLogin() {
 
-      userMode.style.display =
-        "block";
-
-      adminMode.style.display =
-        "none";
+      userMode.style.display = "block";
+      adminMode.style.display = "none";
 
       clearMessage(message);
       clearMessage(adminMessage);
@@ -770,16 +724,13 @@
 
 
     // ==========================================
-    // SHOW ADMIN LOGIN
+    // ADMIN LOGIN MODE
     // ==========================================
 
     function showAdminLogin() {
 
-      userMode.style.display =
-        "none";
-
-      adminMode.style.display =
-        "block";
+      userMode.style.display = "none";
+      adminMode.style.display = "block";
 
       clearMessage(message);
       clearMessage(adminMessage);
@@ -788,7 +739,7 @@
 
 
     // ==========================================
-    // SWITCH TO ADMIN
+    // ADMIN SWITCH
     // ==========================================
 
     openAdmin.addEventListener(
@@ -804,7 +755,7 @@
 
 
     // ==========================================
-    // SWITCH TO USER
+    // BACK TO USER
     // ==========================================
 
     backToUser.addEventListener(
@@ -820,7 +771,7 @@
 
 
     // ==========================================
-    // PASSWORD SHOW / HIDE
+    // USER PASSWORD TOGGLE
     // ==========================================
 
     togglePassword.addEventListener(
@@ -828,52 +779,18 @@
       function() {
 
         if (
-          passwordInput.type ===
-          "password"
+          passwordInput.type === "password"
         ) {
 
-          passwordInput.type =
-            "text";
+          passwordInput.type = "text";
 
-          togglePassword.textContent =
-            "🙈";
+          togglePassword.textContent = "🙈";
 
         } else {
 
-          passwordInput.type =
-            "password";
+          passwordInput.type = "password";
 
-          togglePassword.textContent =
-            "👁";
-
-        }
-
-      }
-    );
-
-
-    toggleAdminPassword.addEventListener(
-      "click",
-      function() {
-
-        if (
-          adminPassword.type ===
-          "password"
-        ) {
-
-          adminPassword.type =
-            "text";
-
-          toggleAdminPassword.textContent =
-            "🙈";
-
-        } else {
-
-          adminPassword.type =
-            "password";
-
-          toggleAdminPassword.textContent =
-            "👁";
+          togglePassword.textContent = "👁";
 
         }
 
@@ -882,7 +799,35 @@
 
 
     // ==========================================
-    // MESSAGE
+    // ADMIN PASSWORD TOGGLE
+    // ==========================================
+
+    toggleAdminPassword.addEventListener(
+      "click",
+      function() {
+
+        if (
+          adminPassword.type === "password"
+        ) {
+
+          adminPassword.type = "text";
+
+          toggleAdminPassword.textContent = "🙈";
+
+        } else {
+
+          adminPassword.type = "password";
+
+          toggleAdminPassword.textContent = "👁";
+
+        }
+
+      }
+    );
+
+
+    // ==========================================
+    // MESSAGE FUNCTIONS
     // ==========================================
 
     function showMessage(
@@ -891,8 +836,7 @@
       type
     ) {
 
-      element.textContent =
-        text;
+      element.textContent = text;
 
       element.className =
         "message show " + type;
@@ -900,15 +844,11 @@
     }
 
 
-    function clearMessage(
-      element
-    ) {
+    function clearMessage(element) {
 
-      element.textContent =
-        "";
+      element.textContent = "";
 
-      element.className =
-        "message";
+      element.className = "message";
 
     }
 
@@ -923,7 +863,6 @@
 
         event.preventDefault();
 
-
         const email =
           emailInput.value.trim();
 
@@ -931,10 +870,7 @@
           passwordInput.value;
 
 
-        if (
-          !email ||
-          !password
-        ) {
+        if (!email || !password) {
 
           showMessage(
             message,
@@ -947,24 +883,19 @@
         }
 
 
-        loginBtn.disabled =
-          true;
+        loginBtn.disabled = true;
 
         loginBtn.textContent =
           "Logging in...";
 
-
-        clearMessage(
-          message
-        );
+        clearMessage(message);
 
 
         try {
 
           const response =
             await fetch(
-              API_URL +
-              "/api/auth/login",
+              API_URL + "/api/auth/login",
               {
                 method: "POST",
 
@@ -989,10 +920,9 @@
 
           try {
 
-            data =
-              await response.json();
+            data = await response.json();
 
-          } catch (jsonError) {
+          } catch (error) {
 
             data = null;
 
@@ -1000,15 +930,15 @@
 
 
           console.log(
-            "USER LOGIN RESPONSE:",
+            "USER LOGIN:",
             response.status,
             data
           );
 
 
-          // ========================================
-          // LOGIN SUCCESS
-          // ========================================
+          // ====================================
+          // SUCCESS
+          // ====================================
 
           if (
             response.ok &&
@@ -1018,9 +948,9 @@
           ) {
 
 
-            // ----------------------------------------
-            // MAKE SURE THIS IS NOT ADMIN LOGIN
-            // ----------------------------------------
+            // ----------------------------------
+            // ADMIN ACCOUNT BLOCK
+            // ----------------------------------
 
             if (
               data.user &&
@@ -1033,22 +963,19 @@
                 "error"
               );
 
-
-              loginBtn.disabled =
-                false;
+              loginBtn.disabled = false;
 
               loginBtn.textContent =
                 "Login to Account";
-
 
               return;
 
             }
 
 
-            // ----------------------------------------
-            // CLEAR OLD SESSIONS
-            // ----------------------------------------
+            // ----------------------------------
+            // CLEAR ADMIN SESSION
+            // ----------------------------------
 
             localStorage.removeItem(
               "adminToken"
@@ -1059,37 +986,59 @@
             );
 
 
-            // ----------------------------------------
+            // ----------------------------------
             // SAVE USER TOKEN
-            // ----------------------------------------
+            // ----------------------------------
 
             localStorage.setItem(
               "token",
-              data.token
+              String(data.token)
             );
 
 
-            // ----------------------------------------
+            // ----------------------------------
             // SAVE USER INFO
-            // ----------------------------------------
+            // ----------------------------------
 
-            if (
-              data.user
-            ) {
+            if (data.user) {
 
               localStorage.setItem(
                 "user",
-                JSON.stringify(
-                  data.user
-                )
+                JSON.stringify(data.user)
               );
 
             }
 
 
-            // ----------------------------------------
+            // ----------------------------------
+            // VERIFY TOKEN WAS SAVED
+            // ----------------------------------
+
+            const savedToken =
+              localStorage.getItem("token");
+
+
+            if (!savedToken) {
+
+              showMessage(
+                message,
+                "Login হয়েছে, কিন্তু session save করা যায়নি। আবার চেষ্টা করুন।",
+                "error"
+              );
+
+              loginBtn.disabled = false;
+
+              loginBtn.textContent =
+                "Login to Account";
+
+              return;
+
+            }
+
+
+            // ----------------------------------
             // SUCCESS MESSAGE
-            // ----------------------------------------
+            // ----------------------------------
 
             showMessage(
               message,
@@ -1098,57 +1047,46 @@
             );
 
 
-            // ----------------------------------------
-            // REDIRECT
-            // ----------------------------------------
-
-            setTimeout(
-              function() {
-
-                window.location.replace(
-                  "dashboard.html"
-                );
-
-              },
-              300
+            console.log(
+              "USER TOKEN SAVED:",
+              savedToken.substring(0, 20) + "..."
             );
 
 
-            return;
+            // ----------------------------------
+            // DIRECT REDIRECT
+            // ----------------------------------
+
+            window.location.href =
+              "./dashboard.html";
+
+          } else {
+
+            // ----------------------------------
+            // LOGIN FAILED
+            // ----------------------------------
+
+            showMessage(
+              message,
+              data && data.message
+                ? data.message
+                : "Email অথবা password ভুল।",
+              "error"
+            );
+
+            loginBtn.disabled = false;
+
+            loginBtn.textContent =
+              "Login to Account";
 
           }
 
-
-          // ========================================
-          // LOGIN FAILED
-          // ========================================
-
-          showMessage(
-            message,
-            data &&
-            data.message
-              ? data.message
-              : "Email অথবা password ভুল।",
-            "error"
-          );
-
-
-          loginBtn.disabled =
-            false;
-
-          loginBtn.textContent =
-            "Login to Account";
-
-        }
-
-
-        catch (error) {
+        } catch (error) {
 
           console.error(
             "USER LOGIN ERROR:",
             error
           );
-
 
           showMessage(
             message,
@@ -1156,9 +1094,7 @@
             "error"
           );
 
-
-          loginBtn.disabled =
-            false;
+          loginBtn.disabled = false;
 
           loginBtn.textContent =
             "Login to Account";
@@ -1179,7 +1115,6 @@
 
         event.preventDefault();
 
-
         const email =
           adminEmail.value.trim();
 
@@ -1187,10 +1122,7 @@
           adminPassword.value;
 
 
-        if (
-          !email ||
-          !password
-        ) {
+        if (!email || !password) {
 
           showMessage(
             adminMessage,
@@ -1203,24 +1135,19 @@
         }
 
 
-        adminLoginBtn.disabled =
-          true;
+        adminLoginBtn.disabled = true;
 
         adminLoginBtn.textContent =
           "Checking access...";
 
-
-        clearMessage(
-          adminMessage
-        );
+        clearMessage(adminMessage);
 
 
         try {
 
           const response =
             await fetch(
-              API_URL +
-              "/api/auth/login",
+              API_URL + "/api/auth/login",
               {
                 method: "POST",
 
@@ -1245,10 +1172,9 @@
 
           try {
 
-            data =
-              await response.json();
+            data = await response.json();
 
-          } catch (jsonError) {
+          } catch (error) {
 
             data = null;
 
@@ -1256,15 +1182,15 @@
 
 
           console.log(
-            "ADMIN LOGIN RESPONSE:",
+            "ADMIN LOGIN:",
             response.status,
             data
           );
 
 
-          // ========================================
-          // LOGIN SUCCESS
-          // ========================================
+          // ====================================
+          // SUCCESS
+          // ====================================
 
           if (
             response.ok &&
@@ -1274,9 +1200,9 @@
           ) {
 
 
-            // ======================================
+            // ----------------------------------
             // ADMIN ROLE CHECK
-            // ======================================
+            // ----------------------------------
 
             if (
               !data.user ||
@@ -1289,112 +1215,116 @@
                 "error"
               );
 
-
-              adminLoginBtn.disabled =
-                false;
+              adminLoginBtn.disabled = false;
 
               adminLoginBtn.textContent =
                 "Login as Administrator";
-
 
               return;
 
             }
 
 
-            // ======================================
+            // ----------------------------------
             // CLEAR USER SESSION
-            // ======================================
+            // ----------------------------------
 
-            localStorage.removeItem(
-              "token"
-            );
+            localStorage.removeItem("token");
 
-            localStorage.removeItem(
-              "user"
-            );
+            localStorage.removeItem("user");
 
 
-            // ======================================
-            // SAVE ADMIN SESSION
-            // ======================================
+            // ----------------------------------
+            // SAVE ADMIN TOKEN
+            // ----------------------------------
 
             localStorage.setItem(
               "adminToken",
-              data.token
+              String(data.token)
             );
 
 
             localStorage.setItem(
               "adminUser",
-              JSON.stringify(
-                data.user
-              )
+              JSON.stringify(data.user)
             );
 
 
-            // ======================================
+            // ----------------------------------
+            // VERIFY ADMIN TOKEN
+            // ----------------------------------
+
+            const savedAdminToken =
+              localStorage.getItem(
+                "adminToken"
+              );
+
+
+            if (!savedAdminToken) {
+
+              showMessage(
+                adminMessage,
+                "Admin session save করা যায়নি। আবার চেষ্টা করুন।",
+                "error"
+              );
+
+              adminLoginBtn.disabled = false;
+
+              adminLoginBtn.textContent =
+                "Login as Administrator";
+
+              return;
+
+            }
+
+
+            // ----------------------------------
             // SUCCESS
-            // ======================================
+            // ----------------------------------
 
             showMessage(
               adminMessage,
-              "Admin authentication successful.",
+              "Admin authentication successful. Dashboard এ যাচ্ছেন...",
               "success"
             );
 
 
-            // ======================================
-            // REDIRECT
-            // ======================================
-
-            setTimeout(
-              function() {
-
-                window.location.replace(
-                  "admin-dashboard.html"
-                );
-
-              },
-              300
+            console.log(
+              "ADMIN TOKEN SAVED:",
+              savedAdminToken.substring(0, 20) + "..."
             );
 
 
-            return;
+            // ----------------------------------
+            // DIRECT REDIRECT
+            // ----------------------------------
+
+            window.location.href =
+              "./admin-dashboard.html";
+
+          } else {
+
+            showMessage(
+              adminMessage,
+              data && data.message
+                ? data.message
+                : "Admin login failed.",
+              "error"
+            );
+
+            adminLoginBtn.disabled = false;
+
+            adminLoginBtn.textContent =
+              "Login as Administrator";
 
           }
 
-
-          // ========================================
-          // ADMIN LOGIN FAILED
-          // ========================================
-
-          showMessage(
-            adminMessage,
-            data &&
-            data.message
-              ? data.message
-              : "Admin login failed.",
-            "error"
-          );
-
-
-          adminLoginBtn.disabled =
-            false;
-
-          adminLoginBtn.textContent =
-            "Login as Administrator";
-
-        }
-
-
-        catch (error) {
+        } catch (error) {
 
           console.error(
             "ADMIN LOGIN ERROR:",
             error
           );
-
 
           showMessage(
             adminMessage,
@@ -1402,9 +1332,7 @@
             "error"
           );
 
-
-          adminLoginBtn.disabled =
-            false;
+          adminLoginBtn.disabled = false;
 
           adminLoginBtn.textContent =
             "Login as Administrator";
