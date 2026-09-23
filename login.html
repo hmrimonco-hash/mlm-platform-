@@ -295,6 +295,8 @@
       font-size: 11px;
 
       font-weight: 700;
+
+      cursor: pointer;
     }
 
     .links a:hover {
@@ -303,6 +305,10 @@
 
     .admin-link {
       margin-top: 16px;
+    }
+
+    .back-link {
+      margin-top: 18px;
     }
 
     .secure-note {
@@ -323,6 +329,36 @@
 
     .secure-note span {
       font-size: 12px;
+    }
+
+    /* ADMIN MODE */
+
+    #adminMode {
+      display: none;
+    }
+
+    .admin-badge {
+      display: inline-flex;
+
+      align-items: center;
+
+      gap: 6px;
+
+      padding: 6px 10px;
+
+      border-radius: 20px;
+
+      background: rgba(124,58,237,.10);
+
+      border: 1px solid rgba(124,58,237,.20);
+
+      color: #c4b5fd;
+
+      font-size: 9px;
+
+      font-weight: 800;
+
+      margin-bottom: 12px;
     }
 
     @media (max-width: 380px) {
@@ -366,122 +402,242 @@
 
     <div class="card">
 
-      <div class="card-title">
 
-        <h2>
-          Welcome Back
-        </h2>
+      <!-- ========================= -->
+      <!-- USER LOGIN -->
+      <!-- ========================= -->
 
-        <p>
-          Login to your account
-        </p>
+      <div id="userMode">
+
+        <div class="card-title">
+
+          <h2>
+            Welcome Back
+          </h2>
+
+          <p>
+            Login to your account
+          </p>
+
+        </div>
+
+
+        <form id="loginForm">
+
+          <!-- EMAIL -->
+
+          <div class="field">
+
+            <label for="email">
+              Email Address
+            </label>
+
+            <div class="input-wrap">
+
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                autocomplete="email"
+                required>
+
+            </div>
+
+          </div>
+
+
+          <!-- PASSWORD -->
+
+          <div class="field">
+
+            <label for="password">
+              Password
+            </label>
+
+            <div class="input-wrap password-wrap">
+
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required>
+
+              <button
+                type="button"
+                class="toggle-password"
+                id="togglePassword">
+                👁
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- LOGIN -->
+
+          <button
+            type="submit"
+            class="login-btn"
+            id="loginBtn">
+
+            Login to Account
+
+          </button>
+
+
+          <!-- MESSAGE -->
+
+          <div
+            class="message"
+            id="message">
+          </div>
+
+        </form>
+
+
+        <!-- REGISTER -->
+
+        <div class="links">
+
+          <p>
+            Don't have an account?
+          </p>
+
+          <a href="register.html">
+            Create a New Account
+          </a>
+
+        </div>
+
+
+        <!-- ADMIN -->
+
+        <div class="links admin-link">
+
+          <p>
+            Administrator?
+          </p>
+
+          <a id="openAdmin">
+            Admin Login
+          </a>
+
+        </div>
 
       </div>
 
 
-      <form id="loginForm">
+      <!-- ========================= -->
+      <!-- ADMIN LOGIN -->
+      <!-- ========================= -->
 
-        <!-- EMAIL -->
+      <div id="adminMode">
 
-        <div class="field">
+        <div class="card-title">
 
-          <label for="email">
-            Email Address
-          </label>
+          <div class="admin-badge">
+            👑 Administrator Access
+          </div>
 
-          <div class="input-wrap">
+          <h2>
+            Admin Login
+          </h2>
 
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Enter your email"
-              autocomplete="email"
-              required>
+          <p>
+            Login to administration panel
+          </p>
+
+        </div>
+
+
+        <form id="adminLoginForm">
+
+          <!-- ADMIN EMAIL -->
+
+          <div class="field">
+
+            <label for="adminEmail">
+              Admin Email
+            </label>
+
+            <div class="input-wrap">
+
+              <input
+                type="email"
+                id="adminEmail"
+                placeholder="Enter admin email"
+                autocomplete="username"
+                required>
+
+            </div>
 
           </div>
 
-        </div>
 
+          <!-- ADMIN PASSWORD -->
 
-        <!-- PASSWORD -->
+          <div class="field">
 
-        <div class="field">
+            <label for="adminPassword">
+              Password
+            </label>
 
-          <label for="password">
-            Password
-          </label>
+            <div class="input-wrap password-wrap">
 
-          <div class="input-wrap password-wrap">
+              <input
+                type="password"
+                id="adminPassword"
+                placeholder="Enter admin password"
+                autocomplete="current-password"
+                required>
 
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Enter your password"
-              autocomplete="current-password"
-              required>
+              <button
+                type="button"
+                class="toggle-password"
+                id="toggleAdminPassword">
+                👁
+              </button>
 
-            <button
-              type="button"
-              class="toggle-password"
-              id="togglePassword">
-              👁
-            </button>
+            </div>
 
           </div>
 
+
+          <!-- ADMIN LOGIN -->
+
+          <button
+            type="submit"
+            class="login-btn"
+            id="adminLoginBtn">
+
+            Login as Administrator
+
+          </button>
+
+
+          <!-- ADMIN MESSAGE -->
+
+          <div
+            class="message"
+            id="adminMessage">
+          </div>
+
+        </form>
+
+
+        <!-- BACK -->
+
+        <div class="links back-link">
+
+          <a id="backToUser">
+            ← Back to User Login
+          </a>
+
         </div>
-
-
-        <!-- LOGIN -->
-
-        <button
-          type="submit"
-          class="login-btn"
-          id="loginBtn">
-
-          Login to Account
-
-        </button>
-
-
-        <!-- MESSAGE -->
-
-        <div
-          class="message"
-          id="message">
-        </div>
-
-      </form>
-
-
-      <!-- REGISTER -->
-
-      <div class="links">
-
-        <p>
-          Don't have an account?
-        </p>
-
-        <a href="register.html">
-          Create a New Account
-        </a>
-
-      </div>
-
-
-      <!-- ADMIN -->
-
-      <div class="links admin-link">
-
-        <p>
-          Administrator?
-        </p>
-
-        <a href="admin-login.html">
-          Admin Login
-        </a>
 
       </div>
 
@@ -503,8 +659,29 @@
 
   <script>
 
+    /* =========================
+       API
+    ========================= */
+
     const API_URL =
       "https://mlm-platform-production.up.railway.app";
+
+
+    /* =========================
+       USER ELEMENTS
+    ========================= */
+
+    const userMode =
+      document.getElementById("userMode");
+
+    const adminMode =
+      document.getElementById("adminMode");
+
+    const openAdmin =
+      document.getElementById("openAdmin");
+
+    const backToUser =
+      document.getElementById("backToUser");
 
 
     const form =
@@ -526,17 +703,108 @@
       document.getElementById("togglePassword");
 
 
-    // SHOW / HIDE PASSWORD
+    /* =========================
+       ADMIN ELEMENTS
+    ========================= */
+
+    const adminForm =
+      document.getElementById(
+        "adminLoginForm"
+      );
+
+    const adminEmail =
+      document.getElementById(
+        "adminEmail"
+      );
+
+    const adminPassword =
+      document.getElementById(
+        "adminPassword"
+      );
+
+    const adminLoginBtn =
+      document.getElementById(
+        "adminLoginBtn"
+      );
+
+    const adminMessage =
+      document.getElementById(
+        "adminMessage"
+      );
+
+    const toggleAdminPassword =
+      document.getElementById(
+        "toggleAdminPassword"
+      );
+
+
+    /* =========================
+       USER / ADMIN SWITCH
+    ========================= */
+
+    openAdmin.addEventListener(
+      "click",
+      function(event) {
+
+        event.preventDefault();
+
+        userMode.style.display =
+          "none";
+
+        adminMode.style.display =
+          "block";
+
+        clearMessage(
+          message
+        );
+
+        clearMessage(
+          adminMessage
+        );
+
+      }
+    );
+
+
+    backToUser.addEventListener(
+      "click",
+      function(event) {
+
+        event.preventDefault();
+
+        adminMode.style.display =
+          "none";
+
+        userMode.style.display =
+          "block";
+
+        clearMessage(
+          message
+        );
+
+        clearMessage(
+          adminMessage
+        );
+
+      }
+    );
+
+
+    /* =========================
+       PASSWORD TOGGLE
+    ========================= */
 
     togglePassword.addEventListener(
       "click",
       function() {
 
         if (
-          passwordInput.type === "password"
+          passwordInput.type ===
+          "password"
         ) {
 
-          passwordInput.type = "text";
+          passwordInput.type =
+            "text";
 
           togglePassword.textContent =
             "🙈";
@@ -555,22 +823,70 @@
     );
 
 
-    // MESSAGE
+    toggleAdminPassword.addEventListener(
+      "click",
+      function() {
+
+        if (
+          adminPassword.type ===
+          "password"
+        ) {
+
+          adminPassword.type =
+            "text";
+
+          toggleAdminPassword.textContent =
+            "🙈";
+
+        } else {
+
+          adminPassword.type =
+            "password";
+
+          toggleAdminPassword.textContent =
+            "👁";
+
+        }
+
+      }
+    );
+
+
+    /* =========================
+       MESSAGE
+    ========================= */
 
     function showMessage(
+      element,
       text,
       type
     ) {
 
-      message.textContent = text;
+      element.textContent =
+        text;
 
-      message.className =
+      element.className =
         "message show " + type;
 
     }
 
 
-    // LOGIN
+    function clearMessage(
+      element
+    ) {
+
+      element.textContent =
+        "";
+
+      element.className =
+        "message";
+
+    }
+
+
+    /* =========================
+       USER LOGIN
+    ========================= */
 
     form.addEventListener(
       "submit",
@@ -592,6 +908,7 @@
         ) {
 
           showMessage(
+            message,
             "Email এবং password দিন।",
             "error"
           );
@@ -601,13 +918,15 @@
         }
 
 
-        loginBtn.disabled = true;
+        loginBtn.disabled =
+          true;
 
         loginBtn.textContent =
           "Logging in...";
 
-        message.className =
-          "message";
+        clearMessage(
+          message
+        );
 
 
         try {
@@ -657,6 +976,8 @@
             data.token
           ) {
 
+            /* USER TOKEN */
+
             localStorage.setItem(
               "token",
               data.token
@@ -667,10 +988,19 @@
 
               localStorage.setItem(
                 "user",
-                JSON.stringify(data.user)
+                JSON.stringify(
+                  data.user
+                )
               );
 
             }
+
+
+            /* REMOVE OLD ADMIN TOKEN */
+
+            localStorage.removeItem(
+              "adminToken"
+            );
 
 
             window.location.href =
@@ -680,6 +1010,7 @@
           } else {
 
             showMessage(
+              message,
               data &&
               data.message
                 ? data.message
@@ -688,7 +1019,8 @@
             );
 
 
-            loginBtn.disabled = false;
+            loginBtn.disabled =
+              false;
 
             loginBtn.textContent =
               "Login to Account";
@@ -698,21 +1030,253 @@
         } catch (error) {
 
           console.error(
-            "LOGIN ERROR:",
+            "USER LOGIN ERROR:",
             error
           );
 
 
           showMessage(
+            message,
             "Server-এর সাথে connection করা যাচ্ছে না।",
             "error"
           );
 
 
-          loginBtn.disabled = false;
+          loginBtn.disabled =
+            false;
 
           loginBtn.textContent =
             "Login to Account";
+
+        }
+
+      }
+    );
+
+
+    /* =========================
+       ADMIN LOGIN
+    ========================= */
+
+    adminForm.addEventListener(
+      "submit",
+      async function(event) {
+
+        event.preventDefault();
+
+
+        const email =
+          adminEmail.value.trim();
+
+        const password =
+          adminPassword.value;
+
+
+        if (
+          !email ||
+          !password
+        ) {
+
+          showMessage(
+            adminMessage,
+            "Admin email এবং password দিন।",
+            "error"
+          );
+
+          return;
+
+        }
+
+
+        adminLoginBtn.disabled =
+          true;
+
+        adminLoginBtn.textContent =
+          "Checking access...";
+
+        clearMessage(
+          adminMessage
+        );
+
+
+        try {
+
+          /*
+            Same authentication endpoint
+          */
+
+          const response =
+            await fetch(
+              API_URL +
+              "/api/auth/login",
+              {
+                method: "POST",
+
+                headers: {
+                  "Content-Type":
+                    "application/json",
+
+                  "Accept":
+                    "application/json"
+                },
+
+                body: JSON.stringify({
+                  email: email,
+                  password: password
+                })
+              }
+            );
+
+
+          let data = null;
+
+
+          try {
+
+            data =
+              await response.json();
+
+          } catch (error) {
+
+            data = null;
+
+          }
+
+
+          /*
+            LOGIN SUCCESS
+          */
+
+          if (
+            response.ok &&
+            data &&
+            data.success &&
+            data.token
+          ) {
+
+
+            /*
+              IMPORTANT:
+              Admin role check
+            */
+
+            if (
+              !data.user ||
+              data.user.role !==
+              "admin"
+            ) {
+
+              showMessage(
+                adminMessage,
+                "এই account-এর Admin access নেই।",
+                "error"
+              );
+
+
+              adminLoginBtn.disabled =
+                false;
+
+              adminLoginBtn.textContent =
+                "Login as Administrator";
+
+              return;
+
+            }
+
+
+            /*
+              SAVE ADMIN TOKEN
+            */
+
+            localStorage.setItem(
+              "adminToken",
+              data.token
+            );
+
+
+            localStorage.setItem(
+              "adminUser",
+              JSON.stringify(
+                data.user
+              )
+            );
+
+
+            /*
+              REMOVE NORMAL TOKEN
+            */
+
+            localStorage.removeItem(
+              "token"
+            );
+
+            localStorage.removeItem(
+              "user"
+            );
+
+
+            showMessage(
+              adminMessage,
+              "Admin authentication successful.",
+              "success"
+            );
+
+
+            /*
+              GO ADMIN DASHBOARD
+            */
+
+            setTimeout(
+              function() {
+
+                window.location.href =
+                  "admin-dashboard.html";
+
+              },
+              500
+            );
+
+
+          } else {
+
+            showMessage(
+              adminMessage,
+              data &&
+              data.message
+                ? data.message
+                : "Admin login failed.",
+              "error"
+            );
+
+
+            adminLoginBtn.disabled =
+              false;
+
+            adminLoginBtn.textContent =
+              "Login as Administrator";
+
+          }
+
+        } catch (error) {
+
+          console.error(
+            "ADMIN LOGIN ERROR:",
+            error
+          );
+
+
+          showMessage(
+            adminMessage,
+            "Server-এর সাথে connection করা যাচ্ছে না।",
+            "error"
+          );
+
+
+          adminLoginBtn.disabled =
+            false;
+
+          adminLoginBtn.textContent =
+            "Login as Administrator";
 
         }
 
