@@ -606,7 +606,7 @@
   </div>
 
 
-  <!-- Bottom Navigation -->
+  <!-- Bottom Navigation (Updated with Logout) -->
 
   <div class="bottom-nav">
 
@@ -633,6 +633,11 @@
     <button class="nav-item" onclick="goAccount()">
       <span class="nav-icon">👤</span>
       Account
+    </button>
+
+    <button class="nav-item" onclick="logoutUser()" style="color: #fca5a5;">
+      <span class="nav-icon">🚪</span>
+      Logout
     </button>
 
   </div>
@@ -683,11 +688,6 @@
       const token =
         localStorage.getItem("token");
 
-
-      /* IMPORTANT TEST */
-
-      
-
       if (!token) {
 
         showError(
@@ -737,18 +737,6 @@
           data = null;
 
         }
-
-
-        console.log(
-          "AUTH STATUS:",
-          response.status
-        );
-        
-
-        console.log(
-          "AUTH RESPONSE:",
-          data
-        );
 
 
         if (
@@ -939,6 +927,13 @@
       window.location.href =
         "account.html";
 
+    }
+
+
+    function logoutUser() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      window.location.href = "login.html";
     }
 
 
