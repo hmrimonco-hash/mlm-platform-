@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Dashboard</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  background:#070b12;
+  color:#f4f7fb;
+  font-family:Arial,sans-serif;
+  min-height:100vh;
+  padding-bottom:80px;
+}
+
+button{
+  font:inherit;
+}
+
+.header{
+  height:70px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 16px;
+  background:#0a0f18;
+  border-bottom:1px solid #202938;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.logo{
+  width:40px;
+  height:40px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#6c63ff;
+  font-weight:900;
+  font-size:20px;
+}
+
+.name{
+  font-size:14px;
+  font-weight:800;
+}
+
+.sub{
+  color:#8994a5;
+  font-size:10px;
+  margin-top:3px;
+}
+
+.bell{
+  width:40px;
+  height:40px;
+  border:1px solid #273143;
+  border-radius:12px;
+  background:#101725;
+  color:white;
+  font-size:18px;
+  cursor:pointer;
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:20px 15px;
+}
+
+.welcome{
+  padding:22px;
+  border:1px solid #202938;
+  border-radius:20px;
+  background:#0e1522;
+  margin-bottom:20px;
+}
+
+.welcome h1{
+  font-size:23px;
+  margin-bottom:8px;
+}
+
+.welcome p{
+  color:#8d99aa;
+  font-size:12px;
+  line-height:1.6;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:11px;
+}
+
+.card{
+  min-height:110px;
+  padding:16px;
+  border:1px solid #202938;
+  border-radius:18px;
+  background:#0e1522;
+  color:white;
+  text-align:left;
+  cursor:pointer;
+  transition:.15s;
+}
+
+.card:active{
+  transform:scale(.97);
+}
+
+.icon{
+  font-size:22px;
+  margin-bottom:12px;
+}
+
+.title{
+  font-size:13px;
+  font-weight:bold;
+}
+
+.desc{
+  color:#7f8a9c;
+  font-size:10px;
+  line-height:1.4;
+  margin-top:5px;
+}
+
+/* MODAL */
+
+.overlay{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  background:rgba(0,0,0,.75);
+  padding:0;
+}
+
+.overlay.show{
+  display:flex;
+}
+
+.modal{
+  width:100%;
+  max-width:600px;
+  max-height:88vh;
+  overflow:auto;
+  background:#0b111b;
+  border:1px solid #263044;
+  border-radius:24px 24px 0 0;
+  padding:20px;
+  animation:up .2s ease;
+}
+
+@keyframes up{
+  from{
+    transform:translateY(40px);
+    opacity:0;
+  }
+  to{
+    transform:translateY(0);
+    opacity:1;
+  }
+}
+
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.modal-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.modal-icon{
+  width:42px;
+  height:42px;
+  border-radius:13px;
+  background:#151b36;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+}
+
+.modal-title h2{
+  font-size:17px;
+}
+
+.modal-title p{
+  color:#7f8a9c;
+  font-size:10px;
+  margin-top:3px;
+}
+
+.close{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  border:1px solid #273143;
+  background:#111827;
+  color:white;
+  cursor:pointer;
+  font-size:18px;
+}
+
+.actions{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+
+.action{
+  padding:15px;
+  background:#111827;
+  border:1px solid #222d40;
+  border-radius:16px;
+  color:white;
+  text-align:left;
+  cursor:pointer;
+}
+
+.action:active{
+  transform:scale(.98);
+}
+
+.action-icon{
+  font-size:20px;
+  margin-bottom:8px;
+}
+
+.action-title{
+  font-size:12px;
+  font-weight:bold;
+}
+
+.action-desc{
+  color:#7f8a9c;
+  font-size:9px;
+  line-height:1.4;
+  margin-top:4px;
+}
+
+.logout{
+  width:100%;
+  margin-top:12px;
+  padding:13px;
+  border-radius:14px;
+  border:1px solid rgba(239,68,68,.25);
+  background:rgba(239,68,68,.08);
+  color:#fca5a5;
+  cursor:pointer;
+}
+
+/* TOAST */
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:90px;
+  transform:translate(-50%,20px);
+  z-index:200;
+  opacity:0;
+  pointer-events:none;
+  background:#172033;
+  border:1px solid #29364c;
+  color:white;
+  padding:12px 16px;
+  border-radius:12px;
+  font-size:11px;
+  transition:.2s;
+  text-align:center;
+  max-width:90%;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+
+/* NAV */
+
+.bottom{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:68px;
+  z-index:50;
+  background:#0a0f18;
+  border-top:1px solid #202938;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+}
+
+.nav{
+  border:0;
+  background:none;
+  color:#7f8a9c;
+  cursor:pointer;
+  font-size:10px;
+}
+
+.nav span{
+  display:block;
+  font-size:18px;
+  margin-bottom:3px;
+}
+
+.nav.active{
+  color:#a5a0ff;
+}
+
+@media(max-width:380px){
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .actions{
+    grid-template-columns:1fr;
+  }
+
+}
+</style>
+</head>
+
+
+<body>
+
+<header class="header">
+
+  <div class="brand">
+
+    <div class="logo">P</div>
+
+    <div>
+      <div class="name">
+        Proyjon Marketing LTD
+      </div>
+
+      <div class="sub">
+        আপনার প্রয়োজন আমাদের আয়োজন
+      </div>
+    </div>
+
+  </div>
+
+  <button class="bell" onclick="showComing('Notifications')">
+    🔔
+  </button>
+
+</header>
+
+
+<main class="container">
+
+  <section class="welcome">
+
+    <h1>
+      Admin Dashboard 👋
+    </h1>
+
+    <p>
+      Manage users, requests, packages, deposits,
+      withdrawals and system settings.
+    </p>
+
+  </section>
+
+
+  <section class="grid">
+
+    <button class="card"
+            onclick="showComing('New User Requests')">
+
+      <div class="icon">🆕</div>
+      <div class="title">New User Requests</div>
+      <div class="desc">
+        Review new registration requests.
+      </div>
+
+    </button>
+
+
+    <button class="card"
+            onclick="showComing('User Management')">
+
+      <div class="icon">👥</div>
+      <div class="title">User Management</div>
+      <div class="desc">
+        Create and manage users.
+      </div>
+
+    </button>
+
+
+    <button class="card"
+            onclick="showComing('Tree Management')">
+
+      <div class="icon">🌳</div>
+      <div class="title">Tree Management</div>
+      <div class="desc">
+        Manage binary tree placement.
+      </div>
+
+    </button>
+
+
+    <button class="card"
+            onclick="showComing('Withdraw Requests')">
+
+      <div class="icon">💸</div>
+      <div class="title">Withdraw Requests</div>
+      <div class="desc">
+        Review withdrawal requests.
+      </div>
+
+    </button>
+
+
+    <button class="card"
+            onclick="showComing('Purchase Requests')">
+
+      <div class="icon">🛒</div>
+      <div class="title">Purchase Requests</div>
+      <div class="desc">
+        Manage purchase requests.
+      </div>
+
+    </button>
+
+
+    <button class="card"
+            onclick="showComing('Package Management')">
+
+      <div class="icon">📦</div>
+      <div class="title">Package Management</div>
+      <div class="desc">
+        Create and manage packages.
+      </div>
+
+    </button>
+
+
+    <button class="card"
+            onclick="showComing('Deposit Requests')">
+
+      <div class="icon">💰</div>
+      <div class="title">Deposit Requests</div>
+      <div class="desc">
+        Review deposit requests.
+      </div>
+
+    </button>
+
+
+    <button class="card"
+            onclick="showComing('Profile Update Requests')">
+
+      <div class="icon">📝</div>
+      <div class="title">Profile Update Requests</div>
+      <div class="desc">
+        Approve profile changes.
+      </div>
+
+    </button>
+
+
+    <!-- ADMIN ACCOUNT -->
+
+    <button class="card"
+            onclick="openAdmin()">
+
+      <div class="icon">🔐</div>
+      <div class="title">Admin Account</div>
+      <div class="desc">
+        Profile, password and security.
+      </div>
+
+    </button>
+
+
+    <button class="card"
+            onclick="showComing('Notifications')">
+
+      <div class="icon">🔔</div>
+      <div class="title">Notifications</div>
+      <div class="desc">
+        View system notifications.
+      </div>
+
+    </button>
+
+  </section>
+
+</main>
+
+
+<!-- ADMIN MODAL -->
+
+<div id="adminOverlay"
+     class="overlay"
+     onclick="closeOutside(event)">
+
+  <div class="modal">
+
+    <div class="modal-head">
+
+      <div class="modal-title">
+
+        <div class="modal-icon">
+          🔐
+        </div>
+
+        <div>
+          <h2>Admin Account</h2>
+          <p>
+            Account and security settings
+          </p>
+        </div>
+
+      </div>
+
+      <button class="close"
+              onclick="closeAdmin()">
+        ✕
+      </button>
+
+    </div>
+
+
+    <div class="actions">
+
+      <button class="action"
+              onclick="showComing('Admin Profile')">
+
+        <div class="action-icon">👤</div>
+
+        <div class="action-title">
+          Admin Profile
+        </div>
+
+        <div class="action-desc">
+          View admin account information.
+        </div>
+
+      </button>
+
+
+      <button class="action"
+              onclick="showComing('Change Password')">
+
+        <div class="action-icon">🔑</div>
+
+        <div class="action-title">
+          Change Password
+        </div>
+
+        <div class="action-desc">
+          Change your current password.
+        </div>
+
+      </button>
+
+
+      <button class="action"
+              onclick="showComing('Admin Password Reset')">
+
+        <div class="action-icon">🔐</div>
+
+        <div class="action-title">
+          Admin Password Reset
+        </div>
+
+        <div class="action-desc">
+          Reset an administrator password.
+        </div>
+
+      </button>
+
+
+      <button class="action"
+              onclick="showComing('User Password Reset')">
+
+        <div class="action-icon">👤</div>
+
+        <div class="action-title">
+          Reset User Password
+        </div>
+
+        <div class="action-desc">
+          Reset password for a selected user.
+        </div>
+
+      </button>
+
+    </div>
+
+
+    <button class="logout"
+            onclick="logout()">
+
+      🚪 Logout
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div id="toast" class="toast"></div>
+
+
+<!-- BOTTOM NAV -->
+
+<nav class="bottom">
+
+  <button class="nav active"
+          onclick="goHome()">
+
+    <span>⌂</span>
+    Home
+
+  </button>
+
+
+  <button class="nav"
+          onclick="showComing('Users')">
+
+    <span>👥</span>
+    Users
+
+  </button>
+
+
+  <button class="nav"
+          onclick="showComing('Requests')">
+
+    <span>📋</span>
+    Requests
+
+  </button>
+
+
+  <button class="nav"
+          onclick="showComing('Alerts')">
+
+    <span>🔔</span>
+    Alerts
+
+  </button>
+
+
+  <button class="nav"
+          onclick="openAdmin()">
+
+    <span>⚙️</span>
+    Account
+
+  </button>
+
+</nav>
+
+
+<script>
+
+function openAdmin(){
+
+  document
+    .getElementById("adminOverlay")
+    .classList.add("show");
+
+}
+
+
+function closeAdmin(){
+
+  document
+    .getElementById("adminOverlay")
+    .classList.remove("show");
+
+}
+
+
+function closeOutside(event){
+
+  if(event.target.id === "adminOverlay"){
+    closeAdmin();
+  }
+
+}
+
+
+document.addEventListener(
+  "keydown",
+  function(event){
+
+    if(event.key === "Escape"){
+      closeAdmin();
+    }
+
+  }
+);
+
+
+function showComing(name){
+
+  showToast(
+    name + " module will be connected next."
+  );
+
+}
+
+
+function showToast(message){
+
+  const toast =
+    document.getElementById("toast");
+
+  toast.textContent =
+    message;
+
+  toast.classList.add("show");
+
+
+  setTimeout(function(){
+
+    toast.classList.remove("show");
+
+  },2500);
+
+}
+
+
+function goHome(){
+
+  closeAdmin();
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+function logout(){
+
+  localStorage.removeItem("token");
+
+  localStorage.removeItem("adminToken");
+
+  window.location.href =
+    "admin-login.html";
+
+}
+
+</script>
+
+</body>
+</html>
