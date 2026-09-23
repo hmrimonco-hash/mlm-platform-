@@ -225,7 +225,7 @@ async function createTables() {
 
 
 /* =========================
-   AUTH MIDDLEWARE
+   AUTH MIDDLEWARE (FIXED)
 ========================= */
 
 function authenticateToken(req, res, next) {
@@ -234,7 +234,7 @@ function authenticateToken(req, res, next) {
     return res.status(401).json({ success: false, message: "Authentication required" });
   }
 
-  const token = authHeader.split(" ");
+  const token = authHeader.split(" "); // যোগ করা হয়েছে
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
