@@ -407,7 +407,7 @@ button,input{font:inherit}
       <div class="desc">Review new registration requests.</div>
     </button>
 
-    <button class="card" onclick="showComing('User Management')">
+    <button class="card" onclick="openUserManagement()">
       <div class="icon">👥</div>
       <div class="title">User Management</div>
       <div class="desc">Create and manage users.</div>
@@ -567,6 +567,13 @@ button,input{font:inherit}
       <button class="secondary" onclick="backToAccount()">← Back</button>
     </div>
 
+    <!-- User Management Form Container -->
+    <div id="usersForm" class="form">
+      <div class="form-title">👥 User Management</div>
+      <div id="usersList">Loading users...</div>
+      <button class="secondary" style="margin-top:15px;" onclick="backToAccount()">← Back</button>
+    </div>
+
     <!-- Profile Requests Form Container -->
     <div id="profileRequestsForm" class="form">
       <!-- Content populated by JavaScript -->
@@ -661,7 +668,7 @@ document.addEventListener("keydown", function(event){
 });
 
 function hideForms(){
-  ["profileForm", "changePasswordForm", "adminResetForm", "userResetForm", "profileRequestsForm"].forEach(function(id){
+  ["profileForm", "changePasswordForm", "adminResetForm", "userResetForm", "usersForm", "profileRequestsForm"].forEach(function(id){
     const el = document.getElementById(id);
     if(el) el.classList.remove("show");
   });
@@ -669,7 +676,7 @@ function hideForms(){
 }
 
 function hideFormsOnly(){
-  ["profileForm", "changePasswordForm", "adminResetForm", "userResetForm", "profileRequestsForm"].forEach(function(id){
+  ["profileForm", "changePasswordForm", "adminResetForm", "userResetForm", "usersForm", "profileRequestsForm"].forEach(function(id){
     const el = document.getElementById(id);
     if(el) el.classList.remove("show");
   });
@@ -864,22 +871,53 @@ function goHome(){
   window.scrollTo({ top:0, behavior:"smooth" });
 }
 
-// লগআউট ফাংশন আপডেট করা হয়েছে
 function logout(){
   localStorage.removeItem("token");
   localStorage.removeItem("adminToken");
   localStorage.removeItem("user");
   localStorage.removeItem("adminUser");
-  window.location.href = "login.html"; // লগইন পেজে যাবে
+  window.location.href = "login.html";
 }
 
 
 /* =========================
-   PROFILE REQUESTS ADMIN
+   USER MANAGEMENT ADMIN
+========================= */
+function openUserManagement() {
+  document.getElementById("adminOverlay").classList.add("show");
+  showForm("usersForm", "User Management");
+  loadUsersManagement();
+}
+
+async function loadUsersManagement() {
+  const container = document.getElementById("usersList");
+  container.innerHTML = "Loading users...";
+  try {
+    const data = await apiRequest("/api/admin/users");
+    if (!data.users || data.users.length === 0) {
+      container.innerHTML = "<div class='info-box'>No users found.</div>";
+      return;
+    }
+    container.innerHTML = data.users.map(u => `
+      <div class="info-box" style="margin-bottom: 10px;">
+        <div class="info-label">ID: ${u.id} | Role: ${u.role}</div>
+        <div class="info-value">${escapeHtml(u.name)} (${escapeHtml(u.email)})</div>
+        <div class="info-label">Phone: ${escapeHtml(u.phone || 'N/A')} | Balance: ৳${u.wallet_balance}</div>
+        <div class="info-label">Ref Code: ${u.referral_code || 'N/A'}</div>
+      </div>
+    `).join("");
+  } catch (err) {
+    container.innerHTML = `<div class='error-box'>${escapeHtml(err.message)}</div>`;
+  }
+}
+
+
+/* =========================
+   PROFILE REQUESTS ADMIN (WITH DIFF)
 ========================= */
 function openProfileRequests() {
   document.getElementById("adminOverlay").classList.add("show");
-  showForm("profileRequestsForm", "Profile Update Requests");
+  showForm("profileRequestsForm", "Profile Update History & Requests");
   loadProfileRequests();
 }
 
@@ -887,7 +925,7 @@ async function loadProfileRequests() {
   const box = document.getElementById("profileRequestsForm");
   
   box.innerHTML = `
-    <div class="form-title">📝 Pending Profile Updates</div>
+    <div class="form-title">📝 Profile Update History & Requests</div>
     <div id="reqList">Loading requests...</div>
     <button class="secondary" style="margin-top:15px;" onclick="backToAccount()">← Back</button>
   `;
@@ -897,25 +935,49 @@ async function loadProfileRequests() {
     const reqList = document.getElementById("reqList");
     
     if (!data.requests || data.requests.length === 0) {
-      reqList.innerHTML = "<div class='info-box'>No pending profile requests.</div>";
+      reqList.innerHTML = "<div class='info-box'>No profile update requests/history found.</div>";
       return;
     }
 
     reqList.innerHTML = data.requests.map(req => {
+      const oldData = typeof req.old_data === 'string' ? JSON.parse(req.old_data || '{}') : (req.old_data || {});
       const newData = typeof req.requested_data === 'string' ? JSON.parse(req.requested_data) : req.requested_data;
+      
+      const fields = ['name', 'father_name', 'phone', 'email', 'nid', 'address', 'nominee_name', 'nominee_number', 'nominee_nid'];
+      let diffHtml = '';
+      fields.forEach(f => {
+        const oldVal = oldData[f] || 'N/A';
+        const newVal = newData[f] || 'N/A';
+        if (oldVal !== newVal) {
+          diffHtml += `<div style="font-size:11px; margin-bottom:4px;">
+            <span style="color:#94a3b8; text-transform:capitalize;">${f.replace('_',' ')}:</span> 
+            <span style="color:#ef4444; text-decoration:line-through;">${escapeHtml(oldVal)}</span> ➔ 
+            <span style="color:#22c55e; font-weight:bold;">${escapeHtml(newVal)}</span>
+          </div>`;
+        }
+      });
+
+      const isPending = req.status === 'pending';
+
       return `
-        <div class="info-box" style="margin-bottom: 12px; border: 1px solid #6c63ff;">
-          <div class="info-label" style="color: #a5a0ff; font-weight: bold; font-size: 12px;">User: ${escapeHtml(req.current_name)} (ID: ${escapeHtml(req.user_id)})</div>
-          <hr style="border: 0; border-top: 1px solid #273143; margin: 8px 0;">
-          <div class="info-label">New Name: <span class="info-value">${escapeHtml(newData.name || '-')}</span></div>
-          <div class="info-label">New Phone: <span class="info-value">${escapeHtml(newData.phone || '-')}</span></div>
-          <div class="info-label">New Email: <span class="info-value">${escapeHtml(newData.email || '-')}</span></div>
-          <div class="info-label">New Address: <span class="info-value">${escapeHtml(newData.address || '-')}</span></div>
-          
-          <div style="display: flex; gap: 10px; margin-top: 15px;">
-            <button class="primary" style="background: #22c55e; margin: 0; padding: 10px; font-size: 12px;" onclick="handleProfileReq(${req.id}, 'approve')">✓ Approve</button>
-            <button class="primary" style="background: #ef4444; margin: 0; padding: 10px; font-size: 12px;" onclick="handleProfileReq(${req.id}, 'reject')">✕ Reject</button>
+        <div class="info-box" style="margin-bottom: 12px; border: 1px solid ${isPending ? '#6c63ff' : '#273143'};">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="info-label" style="color: #a5a0ff; font-weight: bold; font-size: 12px;">User: ${escapeHtml(req.current_name)} (ID: ${escapeHtml(req.user_id)})</div>
+            <span style="font-size:10px; padding:2px 8px; border-radius:10px; background:${isPending?'#3b82f633':(req.status==='approved'?'#22c55e33':'#ef444433')}; color:${isPending?'#60a5fa':(req.status==='approved'?'#4ade80':'#f87171')}">
+              ${req.status.toUpperCase()}
+            </span>
           </div>
+          <hr style="border: 0; border-top: 1px solid #273143; margin: 8px 0;">
+          <div style="background:#070b12; padding:8px; border-radius:8px;">
+            ${diffHtml || '<div style="color:#64748b; font-size:11px;">No visible text changes detected in fields.</div>'}
+          </div>
+          
+          ${isPending ? `
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+              <button class="primary" style="background: #22c55e; margin: 0; padding: 10px; font-size: 12px;" onclick="handleProfileReq(${req.id}, 'approve')">✓ Approve</button>
+              <button class="primary" style="background: #ef4444; margin: 0; padding: 10px; font-size: 12px;" onclick="handleProfileReq(${req.id}, 'reject')">✕ Reject</button>
+            </div>
+          ` : ''}
         </div>
       `;
     }).join("");
