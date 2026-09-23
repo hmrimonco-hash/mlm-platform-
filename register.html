@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Register - Proyjon Marketing LTD</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top right, #243b7a 0%, transparent 35%),
+        radial-gradient(circle at bottom left, #182848 0%, transparent 40%),
+        #080d1c;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .register-card {
+      width: 100%;
+      max-width: 430px;
+      padding: 30px 25px;
+      border-radius: 24px;
+      background: rgba(20, 28, 52, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(15px);
+    }
+
+    .brand-icon {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 16px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #3157d5, #673ab7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: bold;
+      box-shadow: 0 12px 30px rgba(49, 87, 213, 0.30);
+    }
+
+    .brand {
+      text-align: center;
+    }
+
+    .brand h1 {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .brand p {
+      margin-top: 7px;
+      color: #aeb8d0;
+      font-size: 13px;
+    }
+
+    .title {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 19px;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      margin-top: 7px;
+      text-align: center;
+      color: #8995b2;
+      font-size: 13px;
+    }
+
+    .form {
+      margin-top: 23px;
+    }
+
+    .field {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      color: #dbe2f4;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .input-box {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      opacity: 0.75;
+    }
+
+    input {
+      width: 100%;
+      height: 49px;
+      padding: 0 43px;
+      border-radius: 12px;
+      border: 1px solid #303b59;
+      background: #10182c;
+      color: #ffffff;
+      font-size: 14px;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    input::placeholder {
+      color: #68748f;
+    }
+
+    input:focus {
+      border-color: #5576e8;
+      box-shadow: 0 0 0 3px rgba(85, 118, 232, 0.12);
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      color: #8490aa;
+      font-size: 17px;
+      cursor: pointer;
+    }
+
+    .register-btn {
+      width: 100%;
+      height: 52px;
+      margin-top: 5px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #3157d5, #673ab7);
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(49, 87, 213, 0.25);
+      transition: 0.2s;
+    }
+
+    .register-btn:active {
+      transform: scale(0.98);
+    }
+
+    .register-btn:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .message {
+      display: none;
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .message.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      color: #ff9b9b;
+    }
+
+    .message.success {
+      display: block;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.25);
+      color: #8ef0ad;
+    }
+
+    .login-link {
+      margin-top: 21px;
+      text-align: center;
+      color: #8995b2;
+      font-size: 13px;
+    }
+
+    .login-link a {
+      color: #8299e9;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .login-link a:hover {
+      color: #a9b9ff;
+    }
+
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      color: #65708a;
+      font-size: 11px;
+    }
+
+    @media (max-height: 700px) {
+      body {
+        align-items: flex-start;
+      }
+
+      .register-card {
+        margin-top: 15px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .register-card {
+        padding: 25px 18px;
+      }
+
+      .brand h1 {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="register-card">
+
+    <div class="brand-icon">
+      ✦
+    </div>
+
+    <div class="brand">
+      <h1>Proyjon Marketing LTD</h1>
+      <p>আপনার প্রয়োজন আমাদের আয়োজন</p>
+    </div>
+
+    <div class="title">
+      Create Your Account
+    </div>
+
+    <div class="subtitle">
+      Join Proyjon Marketing LTD
+    </div>
+
+
+    <form class="form" id="registerForm">
+
+      <div class="field">
+
+        <label for="name">
+          Full Name
+        </label>
+
+        <div class="input-box">
+
+          <span class="input-icon">👤</span>
+
+          <input
+            type="text"
+            id="name"
+            placeholder="Enter your full name"
+            autocomplete="name"
+            required
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="field">
+
+        <label for="email">
+          Email
+        </label>
+
+        <div class="input-box">
+
+          <span class="input-icon">✉️</span>
+
+          <input
+            type="email"
+            id="email"
+            placeholder="Enter your email"
+            autocomplete="email"
+            required
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="field">
+
+        <label for="phone">
+          Phone Number
+        </label>
+
+        <div class="input-box">
+
+          <span class="input-icon">📱</span>
+
+          <input
+            type="tel"
+            id="phone"
+            placeholder="01XXXXXXXXX"
+            autocomplete="tel"
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="field">
+
+        <label for="password">
+          Password
+        </label>
+
+        <div class="input-box">
+
+          <span class="input-icon">🔑</span>
+
+          <input
+            type="password"
+            id="password"
+            placeholder="Minimum 6 characters"
+            minlength="6"
+            autocomplete="new-password"
+            required
+          >
+
+          <button
+            type="button"
+            class="password-toggle"
+            id="togglePassword"
+          >
+            👁️
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="field">
+
+        <label for="referral_code">
+          Referral Code
+          <span style="color:#68748f;">(Optional)</span>
+        </label>
+
+        <div class="input-box">
+
+          <span class="input-icon">🔗</span>
+
+          <input
+            type="text"
+            id="referral_code"
+            placeholder="Enter referral code"
+          >
+
+        </div>
+
+      </div>
+
+
+      <button
+        type="submit"
+        class="register-btn"
+        id="registerBtn"
+      >
+        Create Account
+      </button>
+
+    </form>
+
+
+    <div
+      class="message"
+      id="message"
+    ></div>
+
+
+    <div class="login-link">
+      Already have an account?
+      <a href="login.html">Login here</a>
+    </div>
+
+
+    <div class="footer">
+      © 2026 Proyjon Marketing LTD
+    </div>
+
+  </div>
+
+
+  <script>
+
+    const API_URL =
+      "https://mlm-platform-production.up.railway.app";
+
+
+    const form =
+      document.getElementById("registerForm");
+
+    const button =
+      document.getElementById("registerBtn");
+
+    const message =
+      document.getElementById("message");
+
+    const password =
+      document.getElementById("password");
+
+    const togglePassword =
+      document.getElementById("togglePassword");
+
+
+    // Show / Hide password
+
+    togglePassword.addEventListener(
+      "click",
+      function() {
+
+        if (password.type === "password") {
+
+          password.type = "text";
+
+          togglePassword.textContent = "🙈";
+
+        } else {
+
+          password.type = "password";
+
+          togglePassword.textContent = "👁️";
+
+        }
+
+      }
+    );
+
+
+    // Registration
+
+    form.addEventListener(
+      "submit",
+      async function(event) {
+
+        event.preventDefault();
+
+
+        message.className = "message";
+        message.textContent = "";
+        message.style.display = "none";
+
+
+        button.disabled = true;
+        button.textContent = "Creating Account...";
+
+
+        const name =
+          document.getElementById("name")
+            .value.trim();
+
+        const email =
+          document.getElementById("email")
+            .value.trim();
+
+        const phone =
+          document.getElementById("phone")
+            .value.trim();
+
+        const referral_code =
+          document.getElementById("referral_code")
+            .value.trim();
+
+
+        try {
+
+          const response = await fetch(
+            API_URL + "/api/auth/register",
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type": "application/json"
+              },
+
+              body: JSON.stringify({
+
+                name: name,
+
+                email: email,
+
+                phone: phone || null,
+
+                password: password.value,
+
+                referral_code:
+                  referral_code || null
+
+              })
+            }
+          );
+
+
+          const data =
+            await response.json();
+
+
+          if (data.success) {
+
+            message.className =
+              "message success";
+
+            message.textContent =
+              "✓ Registration successful! Your account has been created.";
+
+            form.reset();
+
+            setTimeout(function() {
+
+              window.location.href =
+                "login.html";
+
+            }, 1500);
+
+
+          } else {
+
+            message.className =
+              "message error";
+
+            message.textContent =
+              data.message ||
+              "Registration failed.";
+
+          }
+
+
+        } catch (error) {
+
+          console.error(error);
+
+          message.className =
+            "message error";
+
+          message.textContent =
+            "Server-এর সাথে connection করা যাচ্ছে না।";
+
+
+        } finally {
+
+          button.disabled = false;
+          button.textContent = "Create Account";
+
+        }
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
