@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Admin Dashboard</title>
-
-<style>
+<title>Admin Dashboard</title><style>
 *{
   box-sizing:border-box;
   margin:0;
@@ -20,7 +17,7 @@ body{
   padding-bottom:80px;
 }
 
-button{
+button,input{
   font:inherit;
 }
 
@@ -138,8 +135,6 @@ button{
   margin-top:5px;
 }
 
-/* MODAL */
-
 .overlay{
   position:fixed;
   inset:0;
@@ -148,7 +143,6 @@ button{
   align-items:flex-end;
   justify-content:center;
   background:rgba(0,0,0,.75);
-  padding:0;
 }
 
 .overlay.show{
@@ -158,7 +152,7 @@ button{
 .modal{
   width:100%;
   max-width:600px;
-  max-height:88vh;
+  max-height:90vh;
   overflow:auto;
   background:#0b111b;
   border:1px solid #263044;
@@ -260,6 +254,88 @@ button{
   margin-top:4px;
 }
 
+.form{
+  display:none;
+}
+
+.form.show{
+  display:block;
+}
+
+.form-title{
+  font-size:15px;
+  font-weight:bold;
+  margin-bottom:14px;
+}
+
+.input-group{
+  margin-bottom:11px;
+}
+
+.input-group label{
+  display:block;
+  color:#8994a5;
+  font-size:10px;
+  margin-bottom:6px;
+}
+
+.input{
+  width:100%;
+  padding:13px;
+  border-radius:12px;
+  border:1px solid #273143;
+  outline:none;
+  background:#101725;
+  color:white;
+}
+
+.input:focus{
+  border-color:#6c63ff;
+}
+
+.primary{
+  width:100%;
+  padding:13px;
+  border:0;
+  border-radius:13px;
+  background:#6c63ff;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+  margin-top:5px;
+}
+
+.secondary{
+  width:100%;
+  padding:12px;
+  border:1px solid #273143;
+  border-radius:13px;
+  background:#101725;
+  color:#cbd5e1;
+  cursor:pointer;
+  margin-top:9px;
+}
+
+.info-box{
+  background:#101725;
+  border:1px solid #273143;
+  border-radius:15px;
+  padding:15px;
+  line-height:1.8;
+  font-size:12px;
+}
+
+.info-label{
+  color:#7f8a9c;
+  font-size:10px;
+}
+
+.info-value{
+  color:#fff;
+  font-weight:bold;
+  word-break:break-word;
+}
+
 .logout{
   width:100%;
   margin-top:12px;
@@ -270,8 +346,6 @@ button{
   color:#fca5a5;
   cursor:pointer;
 }
-
-/* TOAST */
 
 .toast{
   position:fixed;
@@ -297,7 +371,13 @@ button{
   transform:translate(-50%,0);
 }
 
-/* NAV */
+.toast.success{
+  border-color:#245c43;
+}
+
+.toast.error{
+  border-color:#713b3b;
+}
 
 .bottom{
   position:fixed;
@@ -341,353 +421,430 @@ button{
   }
 
 }
-</style>
-</head>
+</style></head><body><header class="header">  <div class="brand"><div class="logo">P</div>
+
+<div>
+  <div class="name">Proyjon Marketing LTD</div>
+  <div class="sub">আপনার প্রয়োজন আমাদের আয়োজন</div>
+</div>
+
+  </div>  <button class="bell" onclick="showComing('Notifications')">
+    🔔
+  </button></header><main class="container">  <section class="welcome"><h1>Admin Dashboard 👋</h1>
+
+<p>
+  Manage users, requests, packages, deposits,
+  withdrawals and system settings.
+</p>
+
+  </section>  <section class="grid"><button class="card" onclick="showComing('New User Requests')">
+  <div class="icon">🆕</div>
+  <div class="title">New User Requests</div>
+  <div class="desc">Review new registration requests.</div>
+</button>
+
+<button class="card" onclick="showComing('User Management')">
+  <div class="icon">👥</div>
+  <div class="title">User Management</div>
+  <div class="desc">Create and manage users.</div>
+</button>
+
+<button class="card" onclick="showComing('Tree Management')">
+  <div class="icon">🌳</div>
+  <div class="title">Tree Management</div>
+  <div class="desc">Manage binary tree placement.</div>
+</button>
+
+<button class="card" onclick="showComing('Withdraw Requests')">
+  <div class="icon">💸</div>
+  <div class="title">Withdraw Requests</div>
+  <div class="desc">Review withdrawal requests.</div>
+</button>
+
+<button class="card" onclick="showComing('Purchase Requests')">
+  <div class="icon">🛒</div>
+  <div class="title">Purchase Requests</div>
+  <div class="desc">Manage purchase requests.</div>
+</button>
+
+<button class="card" onclick="showComing('Package Management')">
+  <div class="icon">📦</div>
+  <div class="title">Package Management</div>
+  <div class="desc">Create and manage packages.</div>
+</button>
+
+<button class="card" onclick="showComing('Deposit Requests')">
+  <div class="icon">💰</div>
+  <div class="title">Deposit Requests</div>
+  <div class="desc">Review deposit requests.</div>
+</button>
+
+<button class="card" onclick="showComing('Profile Update Requests')">
+  <div class="icon">📝</div>
+  <div class="title">Profile Update Requests</div>
+  <div class="desc">Approve profile changes.</div>
+</button>
 
 
-<body>
+<button class="card" onclick="openAdmin()">
+  <div class="icon">🔐</div>
+  <div class="title">Admin Account</div>
+  <div class="desc">Profile, password and security.</div>
+</button>
 
-<header class="header">
 
-  <div class="brand">
+<button class="card" onclick="showComing('Notifications')">
+  <div class="icon">🔔</div>
+  <div class="title">Notifications</div>
+  <div class="desc">View system notifications.</div>
+</button>
 
-    <div class="logo">P</div>
+  </section></main><!-- ADMIN MODAL --><div id="adminOverlay"
+     class="overlay"
+     onclick="closeOutside(event)">  <div class="modal"><div class="modal-head">
+
+  <div class="modal-title">
+
+    <div class="modal-icon">🔐</div>
 
     <div>
-      <div class="name">
-        Proyjon Marketing LTD
-      </div>
-
-      <div class="sub">
-        আপনার প্রয়োজন আমাদের আয়োজন
-      </div>
+      <h2 id="modalHeading">Admin Account</h2>
+      <p>Account and security settings</p>
     </div>
 
   </div>
 
-  <button class="bell" onclick="showComing('Notifications')">
-    🔔
-  </button>
-
-</header>
-
-
-<main class="container">
-
-  <section class="welcome">
-
-    <h1>
-      Admin Dashboard 👋
-    </h1>
-
-    <p>
-      Manage users, requests, packages, deposits,
-      withdrawals and system settings.
-    </p>
-
-  </section>
-
-
-  <section class="grid">
-
-    <button class="card"
-            onclick="showComing('New User Requests')">
-
-      <div class="icon">🆕</div>
-      <div class="title">New User Requests</div>
-      <div class="desc">
-        Review new registration requests.
-      </div>
-
-    </button>
-
-
-    <button class="card"
-            onclick="showComing('User Management')">
-
-      <div class="icon">👥</div>
-      <div class="title">User Management</div>
-      <div class="desc">
-        Create and manage users.
-      </div>
-
-    </button>
-
-
-    <button class="card"
-            onclick="showComing('Tree Management')">
-
-      <div class="icon">🌳</div>
-      <div class="title">Tree Management</div>
-      <div class="desc">
-        Manage binary tree placement.
-      </div>
-
-    </button>
-
-
-    <button class="card"
-            onclick="showComing('Withdraw Requests')">
-
-      <div class="icon">💸</div>
-      <div class="title">Withdraw Requests</div>
-      <div class="desc">
-        Review withdrawal requests.
-      </div>
-
-    </button>
-
-
-    <button class="card"
-            onclick="showComing('Purchase Requests')">
-
-      <div class="icon">🛒</div>
-      <div class="title">Purchase Requests</div>
-      <div class="desc">
-        Manage purchase requests.
-      </div>
-
-    </button>
-
-
-    <button class="card"
-            onclick="showComing('Package Management')">
-
-      <div class="icon">📦</div>
-      <div class="title">Package Management</div>
-      <div class="desc">
-        Create and manage packages.
-      </div>
-
-    </button>
-
-
-    <button class="card"
-            onclick="showComing('Deposit Requests')">
-
-      <div class="icon">💰</div>
-      <div class="title">Deposit Requests</div>
-      <div class="desc">
-        Review deposit requests.
-      </div>
-
-    </button>
-
-
-    <button class="card"
-            onclick="showComing('Profile Update Requests')">
-
-      <div class="icon">📝</div>
-      <div class="title">Profile Update Requests</div>
-      <div class="desc">
-        Approve profile changes.
-      </div>
-
-    </button>
-
-
-    <!-- ADMIN ACCOUNT -->
-
-    <button class="card"
-            onclick="openAdmin()">
-
-      <div class="icon">🔐</div>
-      <div class="title">Admin Account</div>
-      <div class="desc">
-        Profile, password and security.
-      </div>
-
-    </button>
-
-
-    <button class="card"
-            onclick="showComing('Notifications')">
-
-      <div class="icon">🔔</div>
-      <div class="title">Notifications</div>
-      <div class="desc">
-        View system notifications.
-      </div>
-
-    </button>
-
-  </section>
-
-</main>
-
-
-<!-- ADMIN MODAL -->
-
-<div id="adminOverlay"
-     class="overlay"
-     onclick="closeOutside(event)">
-
-  <div class="modal">
-
-    <div class="modal-head">
-
-      <div class="modal-title">
-
-        <div class="modal-icon">
-          🔐
-        </div>
-
-        <div>
-          <h2>Admin Account</h2>
-          <p>
-            Account and security settings
-          </p>
-        </div>
-
-      </div>
-
-      <button class="close"
-              onclick="closeAdmin()">
-        ✕
-      </button>
-
-    </div>
-
-
-    <div class="actions">
-
-      <button class="action"
-              onclick="showComing('Admin Profile')">
-
-        <div class="action-icon">👤</div>
-
-        <div class="action-title">
-          Admin Profile
-        </div>
-
-        <div class="action-desc">
-          View admin account information.
-        </div>
-
-      </button>
-
-
-      <button class="action"
-              onclick="showComing('Change Password')">
-
-        <div class="action-icon">🔑</div>
-
-        <div class="action-title">
-          Change Password
-        </div>
-
-        <div class="action-desc">
-          Change your current password.
-        </div>
-
-      </button>
-
-
-      <button class="action"
-              onclick="showComing('Admin Password Reset')">
-
-        <div class="action-icon">🔐</div>
-
-        <div class="action-title">
-          Admin Password Reset
-        </div>
-
-        <div class="action-desc">
-          Reset an administrator password.
-        </div>
-
-      </button>
-
-
-      <button class="action"
-              onclick="showComing('User Password Reset')">
-
-        <div class="action-icon">👤</div>
-
-        <div class="action-title">
-          Reset User Password
-        </div>
-
-        <div class="action-desc">
-          Reset password for a selected user.
-        </div>
-
-      </button>
-
-    </div>
-
-
-    <button class="logout"
-            onclick="logout()">
-
-      🚪 Logout
-
-    </button>
-
-  </div>
+  <button class="close" onclick="closeAdmin()">✕</button>
 
 </div>
 
 
-<!-- TOAST -->
+<!-- MAIN ACCOUNT MENU -->
 
-<div id="toast" class="toast"></div>
+<div id="accountMenu">
+
+  <div class="actions">
+
+    <button class="action" onclick="loadAdminProfile()">
+
+      <div class="action-icon">👤</div>
+
+      <div class="action-title">
+        Admin Profile
+      </div>
+
+      <div class="action-desc">
+        View admin account information.
+      </div>
+
+    </button>
 
 
-<!-- BOTTOM NAV -->
+    <button class="action" onclick="openChangePassword()">
 
-<nav class="bottom">
+      <div class="action-icon">🔑</div>
 
-  <button class="nav active"
-          onclick="goHome()">
+      <div class="action-title">
+        Change Password
+      </div>
 
+      <div class="action-desc">
+        Change your current password.
+      </div>
+
+    </button>
+
+
+    <button class="action" onclick="openAdminReset()">
+
+      <div class="action-icon">🔐</div>
+
+      <div class="action-title">
+        Admin Password Reset
+      </div>
+
+      <div class="action-desc">
+        Reset your administrator password.
+      </div>
+
+    </button>
+
+
+    <button class="action" onclick="openUserReset()">
+
+      <div class="action-icon">👤</div>
+
+      <div class="action-title">
+        Reset User Password
+      </div>
+
+      <div class="action-desc">
+        Reset password for a selected user.
+      </div>
+
+    </button>
+
+  </div>
+
+
+  <button class="logout" onclick="logout()">
+    🚪 Logout
+  </button>
+
+</div>
+
+
+<!-- ADMIN PROFILE -->
+
+<div id="profileForm" class="form">
+
+  <div class="form-title">
+    👤 Admin Profile
+  </div>
+
+  <div id="profileInfo" class="info-box">
+    Loading...
+  </div>
+
+  <button class="secondary" onclick="backToAccount()">
+    ← Back
+  </button>
+
+</div>
+
+
+<!-- CHANGE PASSWORD -->
+
+<div id="changePasswordForm" class="form">
+
+  <div class="form-title">
+    🔑 Change Password
+  </div>
+
+  <div class="input-group">
+    <label>Current Password</label>
+    <input
+      id="currentPassword"
+      class="input"
+      type="password"
+      autocomplete="current-password"
+      placeholder="Enter current password">
+  </div>
+
+  <div class="input-group">
+    <label>New Password</label>
+    <input
+      id="newPassword"
+      class="input"
+      type="password"
+      autocomplete="new-password"
+      placeholder="Minimum 6 characters">
+  </div>
+
+  <div class="input-group">
+    <label>Confirm New Password</label>
+    <input
+      id="confirmPassword"
+      class="input"
+      type="password"
+      autocomplete="new-password"
+      placeholder="Confirm new password">
+  </div>
+
+  <button class="primary" onclick="changePassword()">
+    Change Password
+  </button>
+
+  <button class="secondary" onclick="backToAccount()">
+    ← Back
+  </button>
+
+</div>
+
+
+<!-- ADMIN RESET -->
+
+<div id="adminResetForm" class="form">
+
+  <div class="form-title">
+    🔐 Admin Password Reset
+  </div>
+
+  <div class="info-box" style="margin-bottom:12px;">
+    For security, enter your current password before setting a new
+    administrator password.
+  </div>
+
+  <div class="input-group">
+    <label>Current Password</label>
+    <input
+      id="resetCurrentPassword"
+      class="input"
+      type="password"
+      autocomplete="current-password"
+      placeholder="Current password">
+  </div>
+
+  <div class="input-group">
+    <label>New Password</label>
+    <input
+      id="resetNewPassword"
+      class="input"
+      type="password"
+      autocomplete="new-password"
+      placeholder="New password">
+  </div>
+
+  <div class="input-group">
+    <label>Confirm New Password</label>
+    <input
+      id="resetConfirmPassword"
+      class="input"
+      type="password"
+      autocomplete="new-password"
+      placeholder="Confirm password">
+  </div>
+
+  <button class="primary" onclick="adminResetPassword()">
+    Reset Password
+  </button>
+
+  <button class="secondary" onclick="backToAccount()">
+    ← Back
+  </button>
+
+</div>
+
+
+<!-- USER RESET -->
+
+<div id="userResetForm" class="form">
+
+  <div class="form-title">
+    👤 Reset User Password
+  </div>
+
+  <div class="input-group">
+    <label>User ID</label>
+    <input
+      id="resetUserId"
+      class="input"
+      type="number"
+      placeholder="Enter user ID">
+  </div>
+
+  <div class="input-group">
+    <label>New Password</label>
+    <input
+      id="resetUserPassword"
+      class="input"
+      type="password"
+      autocomplete="new-password"
+      placeholder="New password">
+  </div>
+
+  <div class="input-group">
+    <label>Confirm New Password</label>
+    <input
+      id="resetUserPasswordConfirm"
+      class="input"
+      type="password"
+      autocomplete="new-password"
+      placeholder="Confirm password">
+  </div>
+
+  <button class="primary" onclick="resetUserPassword()">
+    Reset User Password
+  </button>
+
+  <button class="secondary" onclick="backToAccount()">
+    ← Back
+  </button>
+
+</div>
+
+  </div></div><div id="toast" class="toast"></div><nav class="bottom">  <button class="nav active" onclick="goHome()">
     <span>⌂</span>
     Home
-
-  </button>
-
-
-  <button class="nav"
-          onclick="showComing('Users')">
-
+  </button>  <button class="nav" onclick="showComing('Users')">
     <span>👥</span>
     Users
-
-  </button>
-
-
-  <button class="nav"
-          onclick="showComing('Requests')">
-
+  </button>  <button class="nav" onclick="showComing('Requests')">
     <span>📋</span>
     Requests
-
-  </button>
-
-
-  <button class="nav"
-          onclick="showComing('Alerts')">
-
+  </button>  <button class="nav" onclick="showComing('Alerts')">
     <span>🔔</span>
     Alerts
-
-  </button>
-
-
-  <button class="nav"
-          onclick="openAdmin()">
-
+  </button>  <button class="nav" onclick="openAdmin()">
     <span>⚙️</span>
     Account
+  </button></nav><script>
 
-  </button>
+const API_BASE = "";
 
-</nav>
+function getToken(){
+
+  return (
+    localStorage.getItem("adminToken") ||
+    localStorage.getItem("token") ||
+    ""
+  );
+
+}
 
 
-<script>
+async function apiRequest(url, options = {}){
+
+  const token = getToken();
+
+  const headers = {
+    "Content-Type":"application/json",
+    ...(options.headers || {})
+  };
+
+  if(token){
+    headers.Authorization = "Bearer " + token;
+  }
+
+  const response = await fetch(API_BASE + url, {
+    ...options,
+    headers
+  });
+
+  let data = {};
+
+  try{
+    data = await response.json();
+  }catch(e){
+    data = {};
+  }
+
+  if(!response.ok){
+
+    throw new Error(
+      data.message ||
+      data.error ||
+      "Request failed"
+    );
+
+  }
+
+  return data;
+
+}
+
 
 function openAdmin(){
+
+  hideForms();
+
+  document
+    .getElementById("accountMenu")
+    .style.display = "block";
+
+  document
+    .getElementById("modalHeading")
+    .textContent = "Admin Account";
 
   document
     .getElementById("adminOverlay")
@@ -701,6 +858,8 @@ function closeAdmin(){
   document
     .getElementById("adminOverlay")
     .classList.remove("show");
+
+  hideForms();
 
 }
 
@@ -726,6 +885,434 @@ document.addEventListener(
 );
 
 
+function hideForms(){
+
+  const forms = [
+    "profileForm",
+    "changePasswordForm",
+    "adminResetForm",
+    "userResetForm"
+  ];
+
+  forms.forEach(function(id){
+
+    document
+      .getElementById(id)
+      .classList.remove("show");
+
+  });
+
+  document
+    .getElementById("accountMenu")
+    .style.display = "block";
+
+}
+
+
+function showForm(id, title){
+
+  document
+    .getElementById("accountMenu")
+    .style.display = "none";
+
+  hideFormsOnly();
+
+  document
+    .getElementById(id)
+    .classList.add("show");
+
+  document
+    .getElementById("modalHeading")
+    .textContent = title;
+
+}
+
+
+function hideFormsOnly(){
+
+  [
+    "profileForm",
+    "changePasswordForm",
+    "adminResetForm",
+    "userResetForm"
+  ].forEach(function(id){
+
+    document
+      .getElementById(id)
+      .classList.remove("show");
+
+  });
+
+}
+
+
+function backToAccount(){
+
+  hideForms();
+
+  document
+    .getElementById("modalHeading")
+    .textContent = "Admin Account";
+
+}
+
+
+async function loadAdminProfile(){
+
+  showForm(
+    "profileForm",
+    "Admin Profile"
+  );
+
+  const box =
+    document.getElementById("profileInfo");
+
+  box.textContent = "Loading...";
+
+  try{
+
+    const data =
+      await apiRequest("/api/admin/account");
+
+    const user =
+      data.user ||
+      data.admin ||
+      data;
+
+    box.innerHTML = `
+      <div>
+        <div class="info-label">Name</div>
+        <div class="info-value">
+          ${escapeHtml(user.name || "—")}
+        </div>
+      </div>
+
+      <div>
+        <div class="info-label">Username</div>
+        <div class="info-value">
+          ${escapeHtml(user.username || "—")}
+        </div>
+      </div>
+
+      <div>
+        <div class="info-label">Email</div>
+        <div class="info-value">
+          ${escapeHtml(user.email || "—")}
+        </div>
+      </div>
+
+      <div>
+        <div class="info-label">Role</div>
+        <div class="info-value">
+          ${escapeHtml(user.role || "admin")}
+        </div>
+      </div>
+
+      <div>
+        <div class="info-label">User ID</div>
+        <div class="info-value">
+          ${escapeHtml(String(user.id || "—"))}
+        </div>
+      </div>
+    `;
+
+  }catch(error){
+
+    box.innerHTML =
+      `<div style="color:#fca5a5;">
+        ${escapeHtml(error.message)}
+      </div>`;
+
+  }
+
+}
+
+
+function openChangePassword(){
+
+  showForm(
+    "changePasswordForm",
+    "Change Password"
+  );
+
+}
+
+
+function openAdminReset(){
+
+  showForm(
+    "adminResetForm",
+    "Admin Password Reset"
+  );
+
+}
+
+
+function openUserReset(){
+
+  showForm(
+    "userResetForm",
+    "Reset User Password"
+  );
+
+}
+
+
+async function changePassword(){
+
+  const current =
+    document.getElementById("currentPassword").value;
+
+  const newPass =
+    document.getElementById("newPassword").value;
+
+  const confirm =
+    document.getElementById("confirmPassword").value;
+
+  if(!current || !newPass || !confirm){
+
+    showToast(
+      "সব password field পূরণ করুন।",
+      "error"
+    );
+
+    return;
+
+  }
+
+  if(newPass.length < 6){
+
+    showToast(
+      "New password কমপক্ষে 6 characters হতে হবে।",
+      "error"
+    );
+
+    return;
+
+  }
+
+  if(newPass !== confirm){
+
+    showToast(
+      "New password দুটো একই নয়।",
+      "error"
+    );
+
+    return;
+
+  }
+
+  try{
+
+    await apiRequest(
+      "/api/admin/account/password",
+      {
+        method:"PUT",
+        body:JSON.stringify({
+          currentPassword:current,
+          newPassword:newPass
+        })
+      }
+    );
+
+    showToast(
+      "Password successfully changed.",
+      "success"
+    );
+
+    document.getElementById("currentPassword").value = "";
+    document.getElementById("newPassword").value = "";
+    document.getElementById("confirmPassword").value = "";
+
+    setTimeout(function(){
+      backToAccount();
+    },1200);
+
+  }catch(error){
+
+    showToast(
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+async function adminResetPassword(){
+
+  const current =
+    document.getElementById("resetCurrentPassword").value;
+
+  const newPass =
+    document.getElementById("resetNewPassword").value;
+
+  const confirm =
+    document.getElementById("resetConfirmPassword").value;
+
+  if(!current || !newPass || !confirm){
+
+    showToast(
+      "সব field পূরণ করুন।",
+      "error"
+    );
+
+    return;
+
+  }
+
+  if(newPass.length < 6){
+
+    showToast(
+      "New password কমপক্ষে 6 characters হতে হবে।",
+      "error"
+    );
+
+    return;
+
+  }
+
+  if(newPass !== confirm){
+
+    showToast(
+      "New password দুটো একই নয়।",
+      "error"
+    );
+
+    return;
+
+  }
+
+  try{
+
+    await apiRequest(
+      "/api/admin/account/password",
+      {
+        method:"PUT",
+        body:JSON.stringify({
+          currentPassword:current,
+          newPassword:newPass
+        })
+      }
+    );
+
+    showToast(
+      "Admin password reset successful.",
+      "success"
+    );
+
+    document.getElementById("resetCurrentPassword").value = "";
+    document.getElementById("resetNewPassword").value = "";
+    document.getElementById("resetConfirmPassword").value = "";
+
+    setTimeout(function(){
+      backToAccount();
+    },1200);
+
+  }catch(error){
+
+    showToast(
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+async function resetUserPassword(){
+
+  const userId =
+    document.getElementById("resetUserId").value.trim();
+
+  const newPass =
+    document.getElementById("resetUserPassword").value;
+
+  const confirm =
+    document.getElementById("resetUserPasswordConfirm").value;
+
+  if(!userId || !newPass || !confirm){
+
+    showToast(
+      "সব field পূরণ করুন।",
+      "error"
+    );
+
+    return;
+
+  }
+
+  if(newPass.length < 6){
+
+    showToast(
+      "Password কমপক্ষে 6 characters হতে হবে।",
+      "error"
+    );
+
+    return;
+
+  }
+
+  if(newPass !== confirm){
+
+    showToast(
+      "Password দুটো একই নয়।",
+      "error"
+    );
+
+    return;
+
+  }
+
+  try{
+
+    await apiRequest(
+      "/api/admin/users/" +
+      encodeURIComponent(userId) +
+      "/password",
+      {
+        method:"PUT",
+        body:JSON.stringify({
+          newPassword:newPass
+        })
+      }
+    );
+
+    showToast(
+      "User password reset successful.",
+      "success"
+    );
+
+    document.getElementById("resetUserId").value = "";
+    document.getElementById("resetUserPassword").value = "";
+    document.getElementById("resetUserPasswordConfirm").value = "";
+
+  }catch(error){
+
+    showToast(
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+function escapeHtml(value){
+
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
 function showComing(name){
 
   showToast(
@@ -735,7 +1322,7 @@ function showComing(name){
 }
 
 
-function showToast(message){
+function showToast(message,type){
 
   const toast =
     document.getElementById("toast");
@@ -743,12 +1330,14 @@ function showToast(message){
   toast.textContent =
     message;
 
-  toast.classList.add("show");
-
+  toast.className =
+    "toast show " +
+    (type || "");
 
   setTimeout(function(){
 
-    toast.classList.remove("show");
+    toast.className =
+      "toast";
 
   },2500);
 
@@ -778,7 +1367,5 @@ function logout(){
 
 }
 
-</script>
-
-</body>
+</script></body>
 </html>
