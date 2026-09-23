@@ -28,12 +28,16 @@
       margin: auto;
     }
 
+    /* =========================
+       HEADER
+    ========================= */
+
     .header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
 
     .header h2 {
@@ -59,9 +63,138 @@
     }
 
     .edit-btn:disabled {
-      opacity: 0.7;
+      opacity: .65;
       cursor: not-allowed;
     }
+
+    /* =========================
+       PROFILE PHOTO
+    ========================= */
+
+    .photo-card {
+      background: #101c2c;
+      border: 1px solid #25374e;
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .photo-wrapper {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 15px;
+    }
+
+    .profile-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #18263a;
+      border: 3px solid #34465f;
+      display: block;
+    }
+
+    .photo-camera {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 3px solid #101c2c;
+      background: #22c55e;
+      color: #07101d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .photo-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .photo-subtitle {
+      color: #8190a4;
+      font-size: 11px;
+      margin-bottom: 16px;
+    }
+
+    .photo-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .photo-btn {
+      border: 1px solid #34465f;
+      background: #18263a;
+      color: #fff;
+      padding: 9px 13px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .photo-btn:hover {
+      background: #22344d;
+    }
+
+    .photo-btn.remove {
+      background: #35151a;
+      border-color: #693039;
+      color: #ffb8c0;
+    }
+
+    #photoInput {
+      display: none;
+    }
+
+    /* =========================
+       MESSAGE
+    ========================= */
+
+    .error-box,
+    .success-box,
+    .pending-box {
+      display: none;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 15px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .error-box {
+      background: #35151a;
+      border: 1px solid #693039;
+      color: #ffb8c0;
+    }
+
+    .success-box {
+      background: #143525;
+      border: 1px solid #256943;
+      color: #b8ffda;
+    }
+
+    .pending-box {
+      background: #302713;
+      border: 1px solid #66521f;
+      color: #ffe5a3;
+    }
+
+    /* =========================
+       PROFILE
+    ========================= */
 
     .profile-card {
       background: #101c2c;
@@ -126,37 +259,8 @@
     }
 
     .save-btn:disabled {
-      opacity: 0.6;
+      opacity: .6;
       cursor: not-allowed;
-    }
-
-    .error-box,
-    .success-box,
-    .pending-box {
-      display: none;
-      border-radius: 14px;
-      padding: 12px;
-      margin-bottom: 15px;
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    .error-box {
-      background: #35151a;
-      border: 1px solid #693039;
-      color: #ffb8c0;
-    }
-
-    .success-box {
-      background: #143525;
-      border: 1px solid #256943;
-      color: #b8ffda;
-    }
-
-    .pending-box {
-      background: #302713;
-      border: 1px solid #66521f;
-      color: #ffe5a3;
     }
 
     .loading {
@@ -171,12 +275,9 @@
     }
 
     @media (max-width: 480px) {
+
       body {
         padding: 15px;
-      }
-
-      .header {
-        align-items: center;
       }
 
       .header h2 {
@@ -189,894 +290,1706 @@
         font-size: 11px;
       }
 
+      .photo-card,
       .profile-card {
         padding: 17px;
       }
+
     }
   </style>
 </head>
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <!-- HEADER -->
-    <div class="header">
-      <button class="back-btn" onclick="goBack()">← Back</button>
+  <!-- HEADER -->
+  <div class="header">
 
-      <h2>My Account</h2>
-
-      <button
-        class="edit-btn"
-        id="editToggleBtn"
-        onclick="toggleEdit()"
-        disabled
-      >
-        ✎ Edit Information
-      </button>
-    </div>
-
-
-    <!-- MESSAGES -->
-
-    <div id="errorBox" class="error-box"></div>
-
-    <div id="successBox" class="success-box"></div>
-
-    <div id="pendingBox" class="pending-box">
-      ⏳ Your profile update is currently waiting for admin approval.
-      You cannot submit another update until the current request is reviewed.
-    </div>
-
-
-    <!-- LOADING -->
-
-    <div id="loadingBox" class="loading">
-      Loading account information...
-    </div>
-
-
-    <!-- PROFILE VIEW -->
-
-    <div
-      class="profile-card hidden"
-      id="profileView"
+    <button
+      class="back-btn"
+      onclick="goBack()"
     >
+      ← Back
+    </button>
 
-      <div class="info-group">
-        <div class="info-label">Name</div>
-        <div class="info-value" id="viewName">-</div>
-      </div>
+    <h2>My Account</h2>
 
-      <div class="info-group">
-        <div class="info-label">Father's Name</div>
-        <div class="info-value" id="viewFather">-</div>
-      </div>
-
-      <div class="info-group">
-        <div class="info-label">Phone</div>
-        <div class="info-value" id="viewPhone">-</div>
-      </div>
-
-      <div class="info-group">
-        <div class="info-label">Email</div>
-        <div class="info-value" id="viewEmail">-</div>
-      </div>
-
-      <div class="info-group">
-        <div class="info-label">NID</div>
-        <div class="info-value" id="viewNid">-</div>
-      </div>
-
-      <div class="info-group">
-        <div class="info-label">Address</div>
-        <div class="info-value" id="viewAddress">-</div>
-      </div>
-
-      <div class="info-group">
-        <div class="info-label">Nominee Name</div>
-        <div class="info-value" id="viewNomineeName">-</div>
-      </div>
-
-      <div class="info-group">
-        <div class="info-label">Nominee Number</div>
-        <div class="info-value" id="viewNomineeNum">-</div>
-      </div>
-
-      <div class="info-group">
-        <div class="info-label">Nominee NID</div>
-        <div class="info-value" id="viewNomineeNid">-</div>
-      </div>
-
-    </div>
-
-
-    <!-- EDIT FORM -->
-
-    <form
-      class="profile-card hidden"
-      id="profileForm"
-      onsubmit="handleUpdate(event)"
+    <button
+      class="edit-btn"
+      id="editToggleBtn"
+      onclick="toggleEdit()"
+      disabled
     >
-
-      <div class="info-group">
-        <label class="info-label">Name</label>
-
-        <input
-          type="text"
-          id="inpName"
-          class="input"
-          required
-        >
-      </div>
-
-
-      <div class="info-group">
-        <label class="info-label">Father's Name</label>
-
-        <input
-          type="text"
-          id="inpFather"
-          class="input"
-        >
-      </div>
-
-
-      <div class="info-group">
-        <label class="info-label">Phone</label>
-
-        <input
-          type="text"
-          id="inpPhone"
-          class="input"
-        >
-      </div>
-
-
-      <div class="info-group">
-        <label class="info-label">Email</label>
-
-        <input
-          type="email"
-          id="inpEmail"
-          class="input"
-          required
-        >
-      </div>
-
-
-      <div class="info-group">
-        <label class="info-label">NID</label>
-
-        <input
-          type="text"
-          id="inpNid"
-          class="input"
-        >
-      </div>
-
-
-      <div class="info-group">
-        <label class="info-label">Address</label>
-
-        <input
-          type="text"
-          id="inpAddress"
-          class="input"
-        >
-      </div>
-
-
-      <div class="info-group">
-        <label class="info-label">Nominee Name</label>
-
-        <input
-          type="text"
-          id="inpNomineeName"
-          class="input"
-        >
-      </div>
-
-
-      <div class="info-group">
-        <label class="info-label">Nominee Number</label>
-
-        <input
-          type="text"
-          id="inpNomineeNum"
-          class="input"
-        >
-      </div>
-
-
-      <div class="info-group">
-        <label class="info-label">Nominee NID</label>
-
-        <input
-          type="text"
-          id="inpNomineeNid"
-          class="input"
-        >
-      </div>
-
-
-      <button
-        type="submit"
-        class="save-btn"
-        id="saveBtn"
-      >
-        Submit for Approval
-      </button>
-
-    </form>
+      ✎ Edit Information
+    </button>
 
   </div>
 
 
-  <script>
+  <!-- MESSAGES -->
 
-    /* =========================================
-       CONFIG
-    ========================================= */
+  <div
+    id="errorBox"
+    class="error-box"
+  ></div>
 
-    const API_URL =
-      "https://mlm-platform-production.up.railway.app";
+  <div
+    id="successBox"
+    class="success-box"
+  ></div>
 
-
-    /* =========================================
-       SESSION
-    ========================================= */
-
-    const token =
-      localStorage.getItem("token");
-
-
-    let isEditing = false;
-    let profileLoaded = false;
-    let profilePending = false;
+  <div
+    id="pendingBox"
+    class="pending-box"
+  >
+    ⏳ Your profile update is currently waiting
+    for admin approval.
+  </div>
 
 
-    /* =========================================
-       AUTH CHECK
-    ========================================= */
+  <!-- PROFILE PHOTO -->
 
-    if (!token) {
+  <div class="photo-card">
 
-      window.location.href = "login.html";
+    <div class="photo-wrapper">
+
+      <img
+        id="profilePhoto"
+        class="profile-photo"
+        alt="Profile Picture"
+      >
+
+      <label
+        for="photoInput"
+        class="photo-camera"
+        title="Change Profile Photo"
+      >
+        📷
+      </label>
+
+    </div>
+
+    <div class="photo-title">
+      Profile Picture
+    </div>
+
+    <div class="photo-subtitle">
+      JPG, PNG or WEBP • Maximum 5MB
+    </div>
+
+    <div class="photo-buttons">
+
+      <label
+        for="photoInput"
+        class="photo-btn"
+      >
+        📷 Add / Change Photo
+      </label>
+
+      <button
+        type="button"
+        class="photo-btn remove"
+        id="removePhotoBtn"
+        onclick="removeProfilePhoto()"
+      >
+        🗑 Remove
+      </button>
+
+    </div>
+
+    <input
+      type="file"
+      id="photoInput"
+      accept="image/jpeg,image/png,image/webp"
+      onchange="handlePhotoSelect(event)"
+    >
+
+  </div>
+
+
+  <!-- LOADING -->
+
+  <div
+    id="loadingBox"
+    class="loading"
+  >
+    Loading account information...
+  </div>
+
+
+  <!-- PROFILE VIEW -->
+
+  <div
+    class="profile-card hidden"
+    id="profileView"
+  >
+
+    <div class="info-group">
+      <div class="info-label">Name</div>
+      <div
+        class="info-value"
+        id="viewName"
+      >
+        -
+      </div>
+    </div>
+
+    <div class="info-group">
+      <div class="info-label">Father's Name</div>
+      <div
+        class="info-value"
+        id="viewFather"
+      >
+        -
+      </div>
+    </div>
+
+    <div class="info-group">
+      <div class="info-label">Phone</div>
+      <div
+        class="info-value"
+        id="viewPhone"
+      >
+        -
+      </div>
+    </div>
+
+    <div class="info-group">
+      <div class="info-label">Email</div>
+      <div
+        class="info-value"
+        id="viewEmail"
+      >
+        -
+      </div>
+    </div>
+
+    <div class="info-group">
+      <div class="info-label">NID</div>
+      <div
+        class="info-value"
+        id="viewNid"
+      >
+        -
+      </div>
+    </div>
+
+    <div class="info-group">
+      <div class="info-label">Address</div>
+      <div
+        class="info-value"
+        id="viewAddress"
+      >
+        -
+      </div>
+    </div>
+
+    <div class="info-group">
+      <div class="info-label">Nominee Name</div>
+      <div
+        class="info-value"
+        id="viewNomineeName"
+      >
+        -
+      </div>
+    </div>
+
+    <div class="info-group">
+      <div class="info-label">Nominee Number</div>
+      <div
+        class="info-value"
+        id="viewNomineeNum"
+      >
+        -
+      </div>
+    </div>
+
+    <div class="info-group">
+      <div class="info-label">Nominee NID</div>
+      <div
+        class="info-value"
+        id="viewNomineeNid"
+      >
+        -
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- EDIT FORM -->
+
+  <form
+    class="profile-card hidden"
+    id="profileForm"
+    onsubmit="handleUpdate(event)"
+  >
+
+    <div class="info-group">
+      <label class="info-label">
+        Name
+      </label>
+
+      <input
+        type="text"
+        id="inpName"
+        class="input"
+        required
+      >
+    </div>
+
+
+    <div class="info-group">
+      <label class="info-label">
+        Father's Name
+      </label>
+
+      <input
+        type="text"
+        id="inpFather"
+        class="input"
+      >
+    </div>
+
+
+    <div class="info-group">
+      <label class="info-label">
+        Phone
+      </label>
+
+      <input
+        type="text"
+        id="inpPhone"
+        class="input"
+      >
+    </div>
+
+
+    <div class="info-group">
+      <label class="info-label">
+        Email
+      </label>
+
+      <input
+        type="email"
+        id="inpEmail"
+        class="input"
+        required
+      >
+    </div>
+
+
+    <div class="info-group">
+      <label class="info-label">
+        NID
+      </label>
+
+      <input
+        type="text"
+        id="inpNid"
+        class="input"
+      >
+    </div>
+
+
+    <div class="info-group">
+      <label class="info-label">
+        Address
+      </label>
+
+      <input
+        type="text"
+        id="inpAddress"
+        class="input"
+      >
+    </div>
+
+
+    <div class="info-group">
+      <label class="info-label">
+        Nominee Name
+      </label>
+
+      <input
+        type="text"
+        id="inpNomineeName"
+        class="input"
+      >
+    </div>
+
+
+    <div class="info-group">
+      <label class="info-label">
+        Nominee Number
+      </label>
+
+      <input
+        type="text"
+        id="inpNomineeNum"
+        class="input"
+      >
+    </div>
+
+
+    <div class="info-group">
+      <label class="info-label">
+        Nominee NID
+      </label>
+
+      <input
+        type="text"
+        id="inpNomineeNid"
+        class="input"
+      >
+    </div>
+
+
+    <button
+      type="submit"
+      class="save-btn"
+      id="saveBtn"
+    >
+      Submit for Approval
+    </button>
+
+  </form>
+
+</div>
+
+
+<script>
+
+  /* =========================================
+     CONFIG
+  ========================================= */
+
+  const API_URL =
+    "https://mlm-platform-production.up.railway.app";
+
+
+  const token =
+    localStorage.getItem("token");
+
+
+  let isEditing = false;
+  let profileLoaded = false;
+  let profilePending = false;
+
+
+  /* =========================================
+     DEFAULT AVATAR
+  ========================================= */
+
+  const DEFAULT_AVATAR =
+    "data:image/svg+xml;charset=UTF-8," +
+    encodeURIComponent(`
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="300"
+        height="300"
+        viewBox="0 0 300 300"
+      >
+        <rect
+          width="300"
+          height="300"
+          rx="150"
+          fill="#18263a"
+        />
+
+        <circle
+          cx="150"
+          cy="115"
+          r="55"
+          fill="#8190a4"
+        />
+
+        <path
+          d="M55 270c10-58 45-88 95-88s85 30 95 88"
+          fill="#8190a4"
+        />
+      </svg>
+    `);
+
+
+  /* =========================================
+     AUTH CHECK
+  ========================================= */
+
+  if (!token) {
+
+    window.location.href =
+      "login.html";
+
+  }
+
+
+  /* =========================================
+     MESSAGES
+  ========================================= */
+
+  function showError(message) {
+
+    const box =
+      document.getElementById("errorBox");
+
+    box.textContent =
+      message || "Something went wrong.";
+
+    box.style.display =
+      "block";
+
+    document.getElementById("successBox")
+      .style.display = "none";
+
+  }
+
+
+  function showSuccess(message) {
+
+    const box =
+      document.getElementById("successBox");
+
+    box.textContent =
+      message || "Successful.";
+
+    box.style.display =
+      "block";
+
+    document.getElementById("errorBox")
+      .style.display = "none";
+
+  }
+
+
+  function hideMessages() {
+
+    document.getElementById("errorBox")
+      .style.display = "none";
+
+    document.getElementById("successBox")
+      .style.display = "none";
+
+  }
+
+
+  /* =========================================
+     BACK
+  ========================================= */
+
+  function goBack() {
+
+    if (document.referrer) {
+
+      history.back();
+
+    } else {
+
+      window.location.href =
+        "dashboard.html";
 
     }
 
-
-    /* =========================================
-       HELPERS
-    ========================================= */
-
-    function showError(message) {
-
-      const box =
-        document.getElementById("errorBox");
-
-      box.textContent =
-        message || "Something went wrong.";
-
-      box.style.display = "block";
-
-      document.getElementById("successBox")
-        .style.display = "none";
-
-    }
+  }
 
 
-    function showSuccess(message) {
+  /* =========================================
+     UNAUTHORIZED
+  ========================================= */
 
-      const box =
-        document.getElementById("successBox");
+  function handleUnauthorized() {
 
-      box.textContent =
-        message || "Successful.";
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
 
-      box.style.display = "block";
+    alert(
+      "Your session has expired. Please login again."
+    );
 
-      document.getElementById("errorBox")
-        .style.display = "none";
+    window.location.href =
+      "login.html";
 
-    }
-
-
-    function hideMessages() {
-
-      document.getElementById("errorBox")
-        .style.display = "none";
-
-      document.getElementById("successBox")
-        .style.display = "none";
-
-    }
+  }
 
 
-    function goBack() {
+  /* =========================================
+     SET PROFILE PHOTO
+  ========================================= */
 
-      if (document.referrer) {
+  function setProfilePhoto(photo) {
 
-        history.back();
+    const img =
+      document.getElementById("profilePhoto");
 
-      } else {
+    const removeBtn =
+      document.getElementById("removePhotoBtn");
 
-        window.location.href = "dashboard.html";
 
-      }
+    if (
+      photo &&
+      typeof photo === "string" &&
+      photo.trim() !== ""
+    ) {
+
+      img.src =
+        photo;
+
+      removeBtn.style.display =
+        "inline-block";
+
+    } else {
+
+      img.src =
+        DEFAULT_AVATAR;
+
+      removeBtn.style.display =
+        "none";
 
     }
 
-
-    /* =========================================
-       HANDLE AUTH ERROR
-    ========================================= */
-
-    function handleUnauthorized() {
-
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-
-      alert("Your session has expired. Please login again.");
-
-      window.location.href = "login.html";
-
-    }
+  }
 
 
-    /* =========================================
-       LOAD PROFILE
-    ========================================= */
+  /* =========================================
+     LOAD PROFILE
+  ========================================= */
 
-    async function loadProfile() {
+  async function loadProfile() {
 
-      if (!token) return;
+    if (!token) return;
 
 
-      try {
+    try {
 
-        const res = await fetch(
+      const res =
+        await fetch(
           API_URL + "/api/auth/me",
           {
             method: "GET",
 
             headers: {
-              "Accept": "application/json",
-              "Authorization": "Bearer " + token
+              "Accept":
+                "application/json",
+
+              "Authorization":
+                "Bearer " + token
             }
           }
         );
 
 
-        if (res.status === 401) {
+      if (res.status === 401) {
 
-          handleUnauthorized();
-          return;
+        handleUnauthorized();
 
-        }
-
-
-        const data =
-          await res.json();
-
-
-        if (!res.ok || !data.success || !data.user) {
-
-          showError(
-            data.message ||
-            "Unable to load account information."
-          );
-
-          return;
-
-        }
-
-
-        const u =
-          data.user;
-
-
-        /* =====================================
-           DISPLAY PROFILE
-        ===================================== */
-
-        document.getElementById("viewName")
-          .textContent = u.name || "-";
-
-        document.getElementById("viewFather")
-          .textContent = u.father_name || "-";
-
-        document.getElementById("viewPhone")
-          .textContent = u.phone || "-";
-
-        document.getElementById("viewEmail")
-          .textContent = u.email || "-";
-
-        document.getElementById("viewNid")
-          .textContent = u.nid || "-";
-
-        document.getElementById("viewAddress")
-          .textContent = u.address || "-";
-
-        document.getElementById("viewNomineeName")
-          .textContent = u.nominee_name || "-";
-
-        document.getElementById("viewNomineeNum")
-          .textContent = u.nominee_number || "-";
-
-        document.getElementById("viewNomineeNid")
-          .textContent = u.nominee_nid || "-";
-
-
-        /* =====================================
-           FILL EDIT FORM
-        ===================================== */
-
-        document.getElementById("inpName")
-          .value = u.name || "";
-
-        document.getElementById("inpFather")
-          .value = u.father_name || "";
-
-        document.getElementById("inpPhone")
-          .value = u.phone || "";
-
-        document.getElementById("inpEmail")
-          .value = u.email || "";
-
-        document.getElementById("inpNid")
-          .value = u.nid || "";
-
-        document.getElementById("inpAddress")
-          .value = u.address || "";
-
-        document.getElementById("inpNomineeName")
-          .value = u.nominee_name || "";
-
-        document.getElementById("inpNomineeNum")
-          .value = u.nominee_number || "";
-
-        document.getElementById("inpNomineeNid")
-          .value = u.nominee_nid || "";
-
-
-        /* =====================================
-           SAVE LOCAL USER
-        ===================================== */
-
-        localStorage.setItem(
-          "user",
-          JSON.stringify(u)
-        );
-
-
-        profileLoaded = true;
-
-
-        document.getElementById("loadingBox")
-          .classList.add("hidden");
-
-        document.getElementById("profileView")
-          .classList.remove("hidden");
-
-
-        await checkPendingStatus();
-
-
-      } catch (error) {
-
-        console.error(
-          "Profile loading error:",
-          error
-        );
-
-        showError(
-          "Unable to connect to server."
-        );
-
-        document.getElementById("loadingBox")
-          .textContent =
-          "Failed to load account information.";
+        return;
 
       }
 
+
+      const data =
+        await res.json();
+
+
+      if (
+        !res.ok ||
+        !data.success ||
+        !data.user
+      ) {
+
+        showError(
+          data.message ||
+          "Unable to load account information."
+        );
+
+        return;
+
+      }
+
+
+      const u =
+        data.user;
+
+
+      /* =========================
+         PROFILE PHOTO
+      ========================= */
+
+      setProfilePhoto(
+        u.profile_pic
+      );
+
+
+      /* =========================
+         VIEW DATA
+      ========================= */
+
+      document.getElementById("viewName")
+        .textContent =
+        u.name || "-";
+
+      document.getElementById("viewFather")
+        .textContent =
+        u.father_name || "-";
+
+      document.getElementById("viewPhone")
+        .textContent =
+        u.phone || "-";
+
+      document.getElementById("viewEmail")
+        .textContent =
+        u.email || "-";
+
+      document.getElementById("viewNid")
+        .textContent =
+        u.nid || "-";
+
+      document.getElementById("viewAddress")
+        .textContent =
+        u.address || "-";
+
+      document.getElementById("viewNomineeName")
+        .textContent =
+        u.nominee_name || "-";
+
+      document.getElementById("viewNomineeNum")
+        .textContent =
+        u.nominee_number || "-";
+
+      document.getElementById("viewNomineeNid")
+        .textContent =
+        u.nominee_nid || "-";
+
+
+      /* =========================
+         FORM DATA
+      ========================= */
+
+      document.getElementById("inpName")
+        .value =
+        u.name || "";
+
+      document.getElementById("inpFather")
+        .value =
+        u.father_name || "";
+
+      document.getElementById("inpPhone")
+        .value =
+        u.phone || "";
+
+      document.getElementById("inpEmail")
+        .value =
+        u.email || "";
+
+      document.getElementById("inpNid")
+        .value =
+        u.nid || "";
+
+      document.getElementById("inpAddress")
+        .value =
+        u.address || "";
+
+      document.getElementById("inpNomineeName")
+        .value =
+        u.nominee_name || "";
+
+      document.getElementById("inpNomineeNum")
+        .value =
+        u.nominee_number || "";
+
+      document.getElementById("inpNomineeNid")
+        .value =
+        u.nominee_nid || "";
+
+
+      /* =========================
+         SAVE LOCAL USER
+      ========================= */
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(u)
+      );
+
+
+      profileLoaded = true;
+
+
+      document.getElementById("loadingBox")
+        .classList.add("hidden");
+
+      document.getElementById("profileView")
+        .classList.remove("hidden");
+
+      document.getElementById("editToggleBtn")
+        .disabled = false;
+
+
+      await checkPendingStatus();
+
+
+    } catch (error) {
+
+      console.error(
+        "Profile loading error:",
+        error
+      );
+
+      showError(
+        "Unable to connect to server."
+      );
+
+      document.getElementById("loadingBox")
+        .textContent =
+        "Failed to load account information.";
+
     }
 
+  }
 
-    /* =========================================
-       CHECK PROFILE PENDING STATUS
-    ========================================= */
 
-    async function checkPendingStatus() {
+  /* =========================================
+     CHECK PENDING STATUS
+  ========================================= */
 
-      try {
+  async function checkPendingStatus() {
 
-        const res = await fetch(
-          API_URL + "/api/auth/profile-status",
+    try {
+
+      const res =
+        await fetch(
+          API_URL +
+          "/api/auth/profile-status",
           {
             method: "GET",
 
             headers: {
-              "Accept": "application/json",
-              "Authorization": "Bearer " + token
+              "Accept":
+                "application/json",
+
+              "Authorization":
+                "Bearer " + token
             }
           }
         );
 
 
-        if (res.status === 401) {
+      if (res.status === 401) {
 
-          handleUnauthorized();
-          return;
-
-        }
-
-
-        const data =
-          await res.json();
-
-
-        const editBtn =
-          document.getElementById("editToggleBtn");
-
-
-        if (data.success === false) {
-
-          console.warn(
-            "Profile status response:",
-            data.message
-          );
-
-          editBtn.disabled = false;
-
-          return;
-
-        }
-
-
-        profilePending =
-          data.isPending === true;
-
-
-        if (profilePending) {
-
-          editBtn.textContent =
-            "⏳ Pending Approval";
-
-          editBtn.style.background =
-            "#475569";
-
-          editBtn.disabled = true;
-
-          document.getElementById("pendingBox")
-            .style.display = "block";
-
-        } else {
-
-          editBtn.textContent =
-            "✎ Edit Information";
-
-          editBtn.style.background =
-            "";
-
-          editBtn.disabled = false;
-
-          document.getElementById("pendingBox")
-            .style.display = "none";
-
-        }
-
-
-      } catch (error) {
-
-        console.error(
-          "Pending status error:",
-          error
-        );
-
-        document.getElementById("editToggleBtn")
-          .disabled = false;
-
-      }
-
-    }
-
-
-    /* =========================================
-       TOGGLE EDIT
-    ========================================= */
-
-    function toggleEdit() {
-
-      if (!profileLoaded) return;
-
-
-      if (profilePending) {
+        handleUnauthorized();
 
         return;
 
       }
 
 
-      isEditing =
-        !isEditing;
+      const data =
+        await res.json();
 
 
-      const view =
-        document.getElementById("profileView");
-
-      const form =
-        document.getElementById("profileForm");
-
-      const button =
-        document.getElementById("editToggleBtn");
+      const editBtn =
+        document.getElementById(
+          "editToggleBtn"
+        );
 
 
-      if (isEditing) {
+      profilePending =
+        data.isPending === true;
 
-        view.classList.add("hidden");
 
-        form.classList.remove("hidden");
+      if (profilePending) {
 
-        button.textContent =
-          "✕ Cancel";
+        editBtn.textContent =
+          "⏳ Pending Approval";
+
+        editBtn.style.background =
+          "#475569";
+
+        editBtn.disabled =
+          true;
+
+        document.getElementById(
+          "pendingBox"
+        ).style.display =
+          "block";
 
       } else {
 
-        view.classList.remove("hidden");
-
-        form.classList.add("hidden");
-
-        button.textContent =
+        editBtn.textContent =
           "✎ Edit Information";
 
-        hideMessages();
+        editBtn.style.background =
+          "";
+
+        editBtn.disabled =
+          false;
+
+        document.getElementById(
+          "pendingBox"
+        ).style.display =
+          "none";
 
       }
+
+    } catch (error) {
+
+      console.error(
+        "Pending status error:",
+        error
+      );
+
+    }
+
+  }
+
+
+  /* =========================================
+     TOGGLE EDIT
+  ========================================= */
+
+  function toggleEdit() {
+
+    if (!profileLoaded) return;
+
+    if (profilePending) return;
+
+
+    isEditing =
+      !isEditing;
+
+
+    const view =
+      document.getElementById(
+        "profileView"
+      );
+
+    const form =
+      document.getElementById(
+        "profileForm"
+      );
+
+    const button =
+      document.getElementById(
+        "editToggleBtn"
+      );
+
+
+    if (isEditing) {
+
+      view.classList.add(
+        "hidden"
+      );
+
+      form.classList.remove(
+        "hidden"
+      );
+
+      button.textContent =
+        "✕ Cancel";
+
+    } else {
+
+      view.classList.remove(
+        "hidden"
+      );
+
+      form.classList.add(
+        "hidden"
+      );
+
+      button.textContent =
+        "✎ Edit Information";
+
+      hideMessages();
+
+    }
+
+  }
+
+
+  /* =========================================
+     COMPRESS IMAGE
+  ========================================= */
+
+  function compressImage(file) {
+
+    return new Promise(
+      (resolve, reject) => {
+
+        const reader =
+          new FileReader();
+
+
+        reader.onload = function(e) {
+
+          const img =
+            new Image();
+
+
+          img.onload = function() {
+
+            const MAX_SIZE =
+              500;
+
+
+            let width =
+              img.width;
+
+            let height =
+              img.height;
+
+
+            if (
+              width > MAX_SIZE ||
+              height > MAX_SIZE
+            ) {
+
+              if (width > height) {
+
+                height =
+                  Math.round(
+                    height *
+                    MAX_SIZE /
+                    width
+                  );
+
+                width =
+                  MAX_SIZE;
+
+              } else {
+
+                width =
+                  Math.round(
+                    width *
+                    MAX_SIZE /
+                    height
+                  );
+
+                height =
+                  MAX_SIZE;
+
+              }
+
+            }
+
+
+            const canvas =
+              document.createElement(
+                "canvas"
+              );
+
+
+            canvas.width =
+              width;
+
+            canvas.height =
+              height;
+
+
+            const ctx =
+              canvas.getContext(
+                "2d"
+              );
+
+
+            ctx.drawImage(
+              img,
+              0,
+              0,
+              width,
+              height
+            );
+
+
+            const compressed =
+              canvas.toDataURL(
+                "image/jpeg",
+                0.80
+              );
+
+
+            resolve(
+              compressed
+            );
+
+          };
+
+
+          img.onerror =
+            reject;
+
+          img.src =
+            e.target.result;
+
+        };
+
+
+        reader.onerror =
+          reject;
+
+        reader.readAsDataURL(
+          file
+        );
+
+      }
+    );
+
+  }
+
+
+  /* =========================================
+     SELECT PHOTO
+  ========================================= */
+
+  async function handlePhotoSelect(event) {
+
+    const file =
+      event.target.files[0];
+
+
+    if (!file) return;
+
+
+    /* =========================
+       FILE TYPE
+    ========================= */
+
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp"
+    ];
+
+
+    if (
+      !allowedTypes.includes(
+        file.type
+      )
+    ) {
+
+      showError(
+        "Please select JPG, PNG or WEBP image."
+      );
+
+      event.target.value =
+        "";
+
+      return;
 
     }
 
 
-    /* =========================================
-       UPDATE PROFILE
-    ========================================= */
+    /* =========================
+       FILE SIZE
+    ========================= */
 
-    async function handleUpdate(e) {
+    if (
+      file.size >
+      5 * 1024 * 1024
+    ) {
 
-      e.preventDefault();
+      showError(
+        "Image size must be less than 5MB."
+      );
+
+      event.target.value =
+        "";
+
+      return;
+
+    }
 
 
-      if (!token) {
-
-        handleUnauthorized();
-        return;
-
-      }
+    hideMessages();
 
 
-      if (profilePending) {
+    try {
 
-        showError(
-          "You already have a profile update waiting for admin approval."
+      const photo =
+        await compressImage(
+          file
         );
 
-        return;
 
-      }
+      /* =========================
+         PREVIEW
+      ========================= */
 
-
-      const saveBtn =
-        document.getElementById("saveBtn");
-
-
-      /* =====================================
-         COLLECT FORM DATA
-      ===================================== */
-
-      const body = {
-
-        name:
-          document.getElementById("inpName")
-            .value.trim(),
-
-        father_name:
-          document.getElementById("inpFather")
-            .value.trim(),
-
-        phone:
-          document.getElementById("inpPhone")
-            .value.trim(),
-
-        email:
-          document.getElementById("inpEmail")
-            .value.trim(),
-
-        nid:
-          document.getElementById("inpNid")
-            .value.trim(),
-
-        address:
-          document.getElementById("inpAddress")
-            .value.trim(),
-
-        nominee_name:
-          document.getElementById("inpNomineeName")
-            .value.trim(),
-
-        nominee_number:
-          document.getElementById("inpNomineeNum")
-            .value.trim(),
-
-        nominee_nid:
-          document.getElementById("inpNomineeNid")
-            .value.trim()
-
-      };
+      setProfilePhoto(
+        photo
+      );
 
 
-      /* =====================================
-         BASIC VALIDATION
-      ===================================== */
-
-      if (!body.name) {
-
-        showError(
-          "Name is required."
-        );
-
-        return;
-
-      }
+      await uploadProfilePhoto(
+        photo
+      );
 
 
-      if (!body.email) {
+    } catch (error) {
 
-        showError(
-          "Email is required."
-        );
+      console.error(
+        "Image error:",
+        error
+      );
 
-        return;
+      showError(
+        "Could not process the image."
+      );
 
-      }
-
-
-      /* =====================================
-         BUTTON LOADING
-      ===================================== */
-
-      saveBtn.disabled = true;
-
-      saveBtn.textContent =
-        "Submitting...";
-
-      hideMessages();
+    }
 
 
-      try {
+    event.target.value =
+      "";
 
-        const res = await fetch(
-          API_URL + "/api/auth/profile",
+  }
+
+
+  /* =========================================
+     UPLOAD PROFILE PHOTO
+  ========================================= */
+
+  async function uploadProfilePhoto(photo) {
+
+    try {
+
+      showSuccess(
+        "Uploading profile photo..."
+      );
+
+
+      const res =
+        await fetch(
+          API_URL +
+          "/api/auth/profile-photo",
           {
             method: "PUT",
 
             headers: {
-              "Content-Type": "application/json",
-              "Accept": "application/json",
-              "Authorization": "Bearer " + token
+              "Content-Type":
+                "application/json",
+
+              "Accept":
+                "application/json",
+
+              "Authorization":
+                "Bearer " + token
             },
 
-            body: JSON.stringify(body)
-
+            body:
+              JSON.stringify({
+                profile_pic:
+                  photo
+              })
           }
         );
 
 
-        if (res.status === 401) {
+      if (res.status === 401) {
 
-          handleUnauthorized();
-          return;
+        handleUnauthorized();
 
-        }
-
-
-        const data =
-          await res.json();
-
-
-        if (!res.ok || !data.success) {
-
-          showError(
-            data.message ||
-            "Profile update failed."
-          );
-
-          return;
-
-        }
-
-
-        /* =====================================
-           SUCCESS
-        ===================================== */
-
-        showSuccess(
-          data.message ||
-          "Profile update submitted for admin approval."
-        );
-
-
-        /* =====================================
-           RETURN TO VIEW MODE
-        ===================================== */
-
-        isEditing = false;
-
-
-        document.getElementById("profileForm")
-          .classList.add("hidden");
-
-        document.getElementById("profileView")
-          .classList.remove("hidden");
-
-
-        document.getElementById("editToggleBtn")
-          .textContent =
-          "⏳ Pending Approval";
-
-        document.getElementById("editToggleBtn")
-          .style.background =
-          "#475569";
-
-        document.getElementById("editToggleBtn")
-          .disabled = true;
-
-
-        document.getElementById("pendingBox")
-          .style.display = "block";
-
-
-        profilePending = true;
-
-
-        /*
-          Reload profile so the page
-          shows the latest server data.
-        */
-
-        await loadProfile();
-
-
-      } catch (error) {
-
-        console.error(
-          "Profile update error:",
-          error
-        );
-
-        showError(
-          "Request failed. Please check your internet connection."
-        );
-
-      } finally {
-
-        saveBtn.disabled = false;
-
-        saveBtn.textContent =
-          "Submit for Approval";
+        return;
 
       }
+
+
+      const data =
+        await res.json();
+
+
+      if (
+        !res.ok ||
+        !data.success
+      ) {
+
+        showError(
+          data.message ||
+          "Profile photo upload failed."
+        );
+
+        return;
+
+      }
+
+
+      if (
+        data.user
+      ) {
+
+        localStorage.setItem(
+          "user",
+          JSON.stringify(
+            data.user
+          )
+        );
+
+        setProfilePhoto(
+          data.user.profile_pic
+        );
+
+      }
+
+
+      showSuccess(
+        "Profile photo updated successfully."
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "Upload error:",
+        error
+      );
+
+      showError(
+        "Profile photo upload failed."
+      );
+
+    }
+
+  }
+
+
+  /* =========================================
+     REMOVE PROFILE PHOTO
+  ========================================= */
+
+  async function removeProfilePhoto() {
+
+    const confirmed =
+      confirm(
+        "Are you sure you want to remove your profile photo?"
+      );
+
+
+    if (!confirmed) return;
+
+
+    try {
+
+      showSuccess(
+        "Removing profile photo..."
+      );
+
+
+      const res =
+        await fetch(
+          API_URL +
+          "/api/auth/profile-photo",
+          {
+            method: "PUT",
+
+            headers: {
+              "Content-Type":
+                "application/json",
+
+              "Accept":
+                "application/json",
+
+              "Authorization":
+                "Bearer " + token
+            },
+
+            body:
+              JSON.stringify({
+                profile_pic: null
+              })
+          }
+        );
+
+
+      /*
+        Current backend does not allow null.
+        So we handle removal with a separate request.
+      */
+
+      if (res.status === 400) {
+
+        await removePhotoDirectly();
+
+        return;
+
+      }
+
+
+      if (res.status === 401) {
+
+        handleUnauthorized();
+
+        return;
+
+      }
+
+
+      const data =
+        await res.json();
+
+
+      if (
+        !res.ok ||
+        !data.success
+      ) {
+
+        showError(
+          data.message ||
+          "Could not remove photo."
+        );
+
+        return;
+
+      }
+
+
+      setProfilePhoto(
+        ""
+      );
+
+
+      showSuccess(
+        "Profile photo removed."
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "Remove photo error:",
+        error
+      );
+
+      await removePhotoDirectly();
+
+    }
+
+  }
+
+
+  /* =========================================
+     DIRECT REMOVE
+  ========================================= */
+
+  async function removePhotoDirectly() {
+
+    try {
+
+      const res =
+        await fetch(
+          API_URL +
+          "/api/auth/profile-photo",
+          {
+            method: "DELETE",
+
+            headers: {
+              "Accept":
+                "application/json",
+
+              "Authorization":
+                "Bearer " + token
+            }
+          }
+        );
+
+
+      if (res.status === 401) {
+
+        handleUnauthorized();
+
+        return;
+
+      }
+
+
+      const data =
+        await res.json();
+
+
+      if (
+        !res.ok ||
+        !data.success
+      ) {
+
+        showError(
+          data.message ||
+          "Could not remove profile photo."
+        );
+
+        return;
+
+      }
+
+
+      setProfilePhoto(
+        ""
+      );
+
+
+      if (data.user) {
+
+        localStorage.setItem(
+          "user",
+          JSON.stringify(
+            data.user
+          )
+        );
+
+      }
+
+
+      showSuccess(
+        "Profile photo removed successfully."
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "Direct remove error:",
+        error
+      );
+
+      showError(
+        "Profile photo removal failed."
+      );
+
+    }
+
+  }
+
+
+  /* =========================================
+     UPDATE PROFILE
+  ========================================= */
+
+  async function handleUpdate(e) {
+
+    e.preventDefault();
+
+
+    if (!token) {
+
+      handleUnauthorized();
+
+      return;
 
     }
 
 
-    /* =========================================
-       INITIAL LOAD
-    ========================================= */
+    if (profilePending) {
 
-    loadProfile();
+      showError(
+        "You already have a profile update waiting for admin approval."
+      );
 
-  </script>
+      return;
+
+    }
+
+
+    const saveBtn =
+      document.getElementById(
+        "saveBtn"
+      );
+
+
+    const body = {
+
+      name:
+        document.getElementById(
+          "inpName"
+        ).value.trim(),
+
+      father_name:
+        document.getElementById(
+          "inpFather"
+        ).value.trim(),
+
+      phone:
+        document.getElementById(
+          "inpPhone"
+        ).value.trim(),
+
+      email:
+        document.getElementById(
+          "inpEmail"
+        ).value.trim()
+        .toLowerCase(),
+
+      nid:
+        document.getElementById(
+          "inpNid"
+        ).value.trim(),
+
+      address:
+        document.getElementById(
+          "inpAddress"
+        ).value.trim(),
+
+      nominee_name:
+        document.getElementById(
+          "inpNomineeName"
+        ).value.trim(),
+
+      nominee_number:
+        document.getElementById(
+          "inpNomineeNum"
+        ).value.trim(),
+
+      nominee_nid:
+        document.getElementById(
+          "inpNomineeNid"
+        ).value.trim()
+
+    };
+
+
+    if (!body.name) {
+
+      showError(
+        "Name is required."
+      );
+
+      return;
+
+    }
+
+
+    if (!body.email) {
+
+      showError(
+        "Email is required."
+      );
+
+      return;
+
+    }
+
+
+    saveBtn.disabled =
+      true;
+
+    saveBtn.textContent =
+      "Submitting...";
+
+    hideMessages();
+
+
+    try {
+
+      const res =
+        await fetch(
+          API_URL +
+          "/api/auth/profile",
+          {
+            method: "PUT",
+
+            headers: {
+              "Content-Type":
+                "application/json",
+
+              "Accept":
+                "application/json",
+
+              "Authorization":
+                "Bearer " + token
+            },
+
+            body:
+              JSON.stringify(
+                body
+              )
+          }
+        );
+
+
+      if (res.status === 401) {
+
+        handleUnauthorized();
+
+        return;
+
+      }
+
+
+      const data =
+        await res.json();
+
+
+      if (
+        !res.ok ||
+        !data.success
+      ) {
+
+        showError(
+          data.message ||
+          "Profile update failed."
+        );
+
+        return;
+
+      }
+
+
+      showSuccess(
+        data.message ||
+        "Profile update submitted for admin approval."
+      );
+
+
+      isEditing =
+        false;
+
+
+      document.getElementById(
+        "profileForm"
+      ).classList.add(
+        "hidden"
+      );
+
+      document.getElementById(
+        "profileView"
+      ).classList.remove(
+        "hidden"
+      );
+
+
+      await checkPendingStatus();
+
+
+    } catch (error) {
+
+      console.error(
+        "Profile update error:",
+        error
+      );
+
+      showError(
+        "Request failed. Please check your internet connection."
+      );
+
+    } finally {
+
+      saveBtn.disabled =
+        false;
+
+      saveBtn.textContent =
+        "Submit for Approval";
+
+    }
+
+  }
+
+
+  /* =========================================
+     START
+  ========================================= */
+
+  setProfilePhoto("");
+
+  loadProfile();
+
+</script>
 
 </body>
 </html>
