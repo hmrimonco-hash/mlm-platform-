@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -310,6 +311,7 @@
       justify-content: space-around;
       align-items: center;
       z-index: 100;
+      overflow-x: auto;
     }
 
     .nav-item {
@@ -318,6 +320,7 @@
       color: #718197;
       font-size: 10px;
       text-align: center;
+      min-width: 60px;
     }
 
     .nav-item.active {
@@ -384,6 +387,7 @@
     }
 
     @media (max-width: 360px) {
+
       .container {
         padding: 14px;
       }
@@ -391,55 +395,112 @@
       .wallet-balance {
         font-size: 28px;
       }
+
+      .nav-item {
+        min-width: 55px;
+        font-size: 9px;
+      }
+
+      .nav-icon {
+        font-size: 18px;
+      }
+
     }
   </style>
 </head>
+
 
 <body>
 
   <div class="container">
 
+    <!-- TOP BAR -->
+
     <div class="topbar">
 
       <div class="brand">
-        <div class="brand-icon">P</div>
+
+        <div class="brand-icon">
+          P
+        </div>
 
         <div class="brand-text">
-          <h3>Proyjon Marketing LTD</h3>
-          <p>আপনার প্রয়োজন আমাদের আয়োজন</p>
+
+          <h3>
+            Proyjon Marketing LTD
+          </h3>
+
+          <p>
+            আপনার প্রয়োজন আমাদের আয়োজন
+          </p>
+
         </div>
+
       </div>
 
-      <button class="profile-btn" onclick="goAccount()">👤</button>
+
+      <button
+        class="profile-btn"
+        onclick="goAccount()">
+        👤
+      </button>
 
     </div>
 
 
-    <div id="errorBox" class="error-box"></div>
+    <!-- ERROR -->
 
+    <div
+      id="errorBox"
+      class="error-box">
+    </div>
+
+
+    <!-- WELCOME -->
 
     <div class="welcome">
-      <h2 id="userName">Welcome 👋</h2>
-      <p id="userEmail">Loading account...</p>
+
+      <h2 id="userName">
+        Welcome 👋
+      </h2>
+
+      <p id="userEmail">
+        Loading account...
+      </p>
+
     </div>
 
+
+    <!-- WALLET -->
 
     <div class="wallet">
 
       <div class="wallet-top">
-        <div>
-          <div class="wallet-label">Wallet Balance</div>
 
-          <div class="wallet-balance" id="walletBalance">
+        <div>
+
+          <div class="wallet-label">
+            Wallet Balance
+          </div>
+
+          <div
+            class="wallet-balance"
+            id="walletBalance">
             ৳ 0.00
           </div>
 
-          <div class="wallet-id" id="walletId">
+          <div
+            class="wallet-id"
+            id="walletId">
             Account ID: —
           </div>
+
         </div>
 
-        <div style="font-size:28px;">💳</div>
+        <div style="font-size:28px;">
+          💳
+        </div>
+
       </div>
 
 
@@ -448,13 +509,18 @@
         <button
           class="action-btn add-btn"
           onclick="openModal('Add Money')">
+
           + Add Money
+
         </button>
+
 
         <button
           class="action-btn withdraw-btn"
           onclick="openModal('Withdraw')">
+
           Withdraw
+
         </button>
 
       </div>
@@ -462,11 +528,17 @@
     </div>
 
 
+    <!-- PROMO -->
+
     <div class="promo">
 
-      <small>PROYJON MARKETING LTD</small>
+      <small>
+        PROYJON MARKETING LTD
+      </small>
 
-      <h3>Build your network 🚀</h3>
+      <h3>
+        Build your network 🚀
+      </h3>
 
       <p>
         Manage your account, packages, team and transactions
@@ -476,100 +548,240 @@
     </div>
 
 
-    <h3 class="section-title">Quick Actions</h3>
+    <!-- QUICK ACTIONS -->
+
+    <h3 class="section-title">
+      Quick Actions
+    </h3>
+
 
     <div class="quick-grid">
 
-      <button class="quick-card" onclick="openModal('Packages')">
-        <div class="quick-icon">📦</div>
-        <strong>Packages</strong>
-        <span>View packages</span>
+      <button
+        class="quick-card"
+        onclick="openModal('Packages')">
+
+        <div class="quick-icon">
+          📦
+        </div>
+
+        <strong>
+          Packages
+        </strong>
+
+        <span>
+          View packages
+        </span>
+
       </button>
 
 
-      <button class="quick-card" onclick="openModal('Buy Share')">
-        <div class="quick-icon">🛒</div>
-        <strong>Buy Share</strong>
-        <span>Purchase share</span>
+      <button
+        class="quick-card"
+        onclick="openModal('Buy Share')">
+
+        <div class="quick-icon">
+          🛒
+        </div>
+
+        <strong>
+          Buy Share
+        </strong>
+
+        <span>
+          Purchase share
+        </span>
+
       </button>
 
 
-      <button class="quick-card" onclick="openModal('Tree View')">
-        <div class="quick-icon">🌳</div>
-        <strong>Tree View</strong>
-        <span>Binary structure</span>
+      <button
+        class="quick-card"
+        onclick="openModal('Tree View')">
+
+        <div class="quick-icon">
+          🌳
+        </div>
+
+        <strong>
+          Tree View
+        </strong>
+
+        <span>
+          Binary structure
+        </span>
+
       </button>
 
 
-      <button class="quick-card" onclick="openModal('Team')">
-        <div class="quick-icon">👥</div>
-        <strong>Team</strong>
-        <span>Your network</span>
+      <button
+        class="quick-card"
+        onclick="openModal('Team')">
+
+        <div class="quick-icon">
+          👥
+        </div>
+
+        <strong>
+          Team
+        </strong>
+
+        <span>
+          Your network
+        </span>
+
       </button>
 
 
-      <button class="quick-card" onclick="openModal('Transactions')">
-        <div class="quick-icon">📊</div>
-        <strong>Transactions</strong>
-        <span>Account history</span>
+      <button
+        class="quick-card"
+        onclick="openModal('Transactions')">
+
+        <div class="quick-icon">
+          📊
+        </div>
+
+        <strong>
+          Transactions
+        </strong>
+
+        <span>
+          Account history
+        </span>
+
       </button>
 
 
-      <button class="quick-card" onclick="openModal('Deposits')">
-        <div class="quick-icon">💰</div>
-        <strong>Deposits</strong>
-        <span>Deposit requests</span>
+      <button
+        class="quick-card"
+        onclick="openModal('Deposits')">
+
+        <div class="quick-icon">
+          💰
+        </div>
+
+        <strong>
+          Deposits
+        </strong>
+
+        <span>
+          Deposit requests
+        </span>
+
       </button>
 
 
-      <button class="quick-card" onclick="openModal('Withdrawals')">
-        <div class="quick-icon">💸</div>
-        <strong>Withdrawals</strong>
-        <span>Withdrawal requests</span>
+      <button
+        class="quick-card"
+        onclick="openModal('Withdrawals')">
+
+        <div class="quick-icon">
+          💸
+        </div>
+
+        <strong>
+          Withdrawals
+        </strong>
+
+        <span>
+          Withdrawal requests
+        </span>
+
       </button>
 
 
-      <button class="quick-card" onclick="goAccount()">
-        <div class="quick-icon">⚙️</div>
-        <strong>Account</strong>
-        <span>Profile settings</span>
+      <button
+        class="quick-card"
+        onclick="goAccount()">
+
+        <div class="quick-icon">
+          ⚙️
+        </div>
+
+        <strong>
+          Account
+        </strong>
+
+        <span>
+          Profile settings
+        </span>
+
       </button>
 
     </div>
 
 
-    <h3 class="section-title">Overview</h3>
+    <!-- OVERVIEW -->
+
+    <h3 class="section-title">
+      Overview
+    </h3>
+
 
     <div class="stats">
 
       <div class="stat-card">
-        <div class="stat-label">Total Team</div>
-        <div class="stat-value">0</div>
+
+        <div class="stat-label">
+          Total Team
+        </div>
+
+        <div class="stat-value">
+          0
+        </div>
+
       </div>
 
-      <div class="stat-card">
-        <div class="stat-label">Active Packages</div>
-        <div class="stat-value">0</div>
-      </div>
 
       <div class="stat-card">
-        <div class="stat-label">Left Team</div>
-        <div class="stat-value">0</div>
+
+        <div class="stat-label">
+          Active Packages
+        </div>
+
+        <div class="stat-value">
+          0
+        </div>
+
       </div>
 
+
       <div class="stat-card">
-        <div class="stat-label">Right Team</div>
-        <div class="stat-value">0</div>
+
+        <div class="stat-label">
+          Left Team
+        </div>
+
+        <div class="stat-value">
+          0
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-label">
+          Right Team
+        </div>
+
+        <div class="stat-value">
+          0
+        </div>
+
       </div>
 
     </div>
 
+
+    <!-- REFERRAL -->
 
     <div class="referral">
 
       <div class="referral-title">
         🔗 Your Referral Link
       </div>
+
 
       <div class="referral-row">
 
@@ -580,10 +792,13 @@
           readonly
         >
 
+
         <button
           class="copy-btn"
           onclick="copyReferral()">
+
           Copy
+
         </button>
 
       </div>
@@ -591,11 +806,14 @@
     </div>
 
 
+    <!-- TRANSACTIONS -->
+
     <div class="transactions">
 
       <div class="referral-title">
         Recent Transactions
       </div>
+
 
       <div class="transaction-empty">
         No transactions yet.
@@ -606,59 +824,115 @@
   </div>
 
 
-  <!-- Bottom Navigation (Updated with Logout) -->
+  <!-- BOTTOM NAV -->
 
   <div class="bottom-nav">
 
-    <button class="nav-item active" onclick="location.reload()">
-      <span class="nav-icon">⌂</span>
+    <button
+      class="nav-item active"
+      onclick="location.reload()">
+
+      <span class="nav-icon">
+        ⌂
+      </span>
+
       Home
+
     </button>
 
-    <button class="nav-item" onclick="openModal('Packages')">
-      <span class="nav-icon">📦</span>
+
+    <button
+      class="nav-item"
+      onclick="openModal('Packages')">
+
+      <span class="nav-icon">
+        📦
+      </span>
+
       Packages
+
     </button>
 
-    <button class="nav-item" onclick="openModal('Buy Share')">
-      <span class="nav-icon">🛒</span>
+
+    <button
+      class="nav-item"
+      onclick="openModal('Buy Share')">
+
+      <span class="nav-icon">
+        🛒
+      </span>
+
       Buy Share
+
     </button>
 
-    <button class="nav-item" onclick="openModal('Team')">
-      <span class="nav-icon">👥</span>
+
+    <button
+      class="nav-item"
+      onclick="openModal('Team')">
+
+      <span class="nav-icon">
+        👥
+      </span>
+
       Team
+
     </button>
 
-    <button class="nav-item" onclick="goAccount()">
-      <span class="nav-icon">👤</span>
+
+    <button
+      class="nav-item"
+      onclick="goAccount()">
+
+      <span class="nav-icon">
+        👤
+      </span>
+
       Account
+
     </button>
 
-    <button class="nav-item" onclick="logoutUser()" style="color: #fca5a5;">
-      <span class="nav-icon">🚪</span>
+
+    <button
+      class="nav-item"
+      onclick="logoutUser()"
+      style="color:#fca5a5;">
+
+      <span class="nav-icon">
+        🚪
+      </span>
+
       Logout
+
     </button>
 
   </div>
 
 
-  <!-- Modal -->
+  <!-- MODAL -->
 
-  <div id="modal" class="modal">
+  <div
+    id="modal"
+    class="modal">
 
     <div class="modal-box">
 
-      <h3 id="modalTitle">Feature</h3>
+      <h3 id="modalTitle">
+        Feature
+      </h3>
+
 
       <p>
         This feature will be connected in the next step.
       </p>
 
+
       <button
         class="close-btn"
         onclick="closeModal()">
+
         Close
+
       </button>
 
     </div>
@@ -666,42 +940,75 @@
   </div>
 
 
+  <!-- ============================= -->
+  <!-- USER DASHBOARD JAVASCRIPT -->
+  <!-- ============================= -->
+
   <script>
 
     const API_URL =
       "https://mlm-platform-production.up.railway.app";
 
 
+    // ==========================================
+    // USER TOKEN
+    // ==========================================
+
+    function getUserToken() {
+
+      return localStorage.getItem("token") || "";
+
+    }
+
+
+    // ==========================================
+    // ERROR MESSAGE
+    // ==========================================
+
     function showError(message) {
 
       const box =
         document.getElementById("errorBox");
 
-      box.textContent = message;
 
-      box.style.display = "block";
+      box.textContent =
+        message;
+
+
+      box.style.display =
+        "block";
+
     }
 
+
+    // ==========================================
+    // LOAD USER DATA
+    // ==========================================
 
     async function loadUserData() {
 
       const token =
-        localStorage.getItem("token");
+        getUserToken();
 
+
+      // No user token
       if (!token) {
 
         showError(
           "Login session পাওয়া যায়নি। আবার Login করুন।"
         );
 
-        setTimeout(function() {
+
+        setTimeout(function () {
 
           window.location.href =
             "login.html";
 
-        }, 1500);
+        }, 1200);
+
 
         return;
+
       }
 
 
@@ -714,12 +1021,15 @@
               method: "GET",
 
               headers: {
-                "Authorization":
-                  "Bearer " + token,
 
                 "Accept":
-                  "application/json"
+                  "application/json",
+
+                "Authorization":
+                  "Bearer " + token
+
               }
+
             }
           );
 
@@ -739,25 +1049,102 @@
         }
 
 
+        // ==========================================
+        // 401 = SESSION EXPIRED / INVALID TOKEN
+        // ==========================================
+
+        if (response.status === 401) {
+
+          localStorage.removeItem(
+            "token"
+          );
+
+          localStorage.removeItem(
+            "user"
+          );
+
+
+          showError(
+            "Login session expired। আবার Login করুন।"
+          );
+
+
+          setTimeout(function () {
+
+            window.location.href =
+              "login.html";
+
+          }, 1200);
+
+
+          return;
+
+        }
+
+
+        // ==========================================
+        // 403 = FORBIDDEN
+        // ==========================================
+
+        if (response.status === 403) {
+
+          showError(
+            "এই account-এর permission নেই।"
+          );
+
+          return;
+
+        }
+
+
+        // ==========================================
+        // OTHER SERVER ERROR
+        // ==========================================
+
+        if (!response.ok) {
+
+          showError(
+
+            data && data.message
+              ? data.message
+              : "Account information load করা যাচ্ছে না।"
+
+          );
+
+          return;
+
+        }
+
+
+        // ==========================================
+        // SUCCESS CHECK
+        // ==========================================
+
         if (
-          !response.ok ||
           !data ||
           !data.success
         ) {
 
           showError(
+
             data && data.message
               ? data.message
-              : "Account information load করা যাচ্ছে না।"
+              : "User information পাওয়া যায়নি।"
+
           );
 
           return;
+
         }
 
 
         const user =
           data.user;
 
+
+        // ==========================================
+        // USER NOT FOUND
+        // ==========================================
 
         if (!user) {
 
@@ -766,29 +1153,49 @@
           );
 
           return;
+
         }
 
+
+        // ==========================================
+        // USER NAME
+        // ==========================================
 
         document.getElementById(
           "userName"
         ).textContent =
+
           (user.name || "User") +
           " 👋";
 
 
+        // ==========================================
+        // USER EMAIL
+        // ==========================================
+
         document.getElementById(
           "userEmail"
         ).textContent =
+
           user.email ||
           "No email";
 
 
+        // ==========================================
+        // ACCOUNT ID
+        // ==========================================
+
         document.getElementById(
           "walletId"
         ).textContent =
+
           "Account ID: " +
           (user.id || "—");
 
+
+        // ==========================================
+        // WALLET BALANCE
+        // ==========================================
 
         const balance =
           Number(
@@ -799,13 +1206,21 @@
         document.getElementById(
           "walletBalance"
         ).textContent =
+
           "৳ " +
           balance.toFixed(2);
 
 
-        if (user.referral_code) {
+        // ==========================================
+        // REFERRAL LINK
+        // ==========================================
+
+        if (
+          user.referral_code
+        ) {
 
           const referralURL =
+
             window.location.origin +
             "/register.html?ref=" +
             encodeURIComponent(
@@ -816,6 +1231,7 @@
           document.getElementById(
             "referralLink"
           ).value =
+
             referralURL;
 
         } else {
@@ -823,10 +1239,15 @@
           document.getElementById(
             "referralLink"
           ).value =
+
             "No referral code";
 
         }
 
+
+        // ==========================================
+        // SAVE USER INFO
+        // ==========================================
 
         localStorage.setItem(
           "user",
@@ -834,7 +1255,13 @@
         );
 
 
-      } catch (error) {
+        console.log(
+          "User dashboard loaded successfully."
+        );
+
+      }
+
+      catch (error) {
 
         console.error(
           "Dashboard connection error:",
@@ -850,6 +1277,10 @@
 
     }
 
+
+    // ==========================================
+    // COPY REFERRAL
+    // ==========================================
 
     function copyReferral() {
 
@@ -870,31 +1301,74 @@
       }
 
 
-      navigator.clipboard
-        .writeText(input.value)
-        .then(function() {
+      if (
+        navigator.clipboard &&
+        navigator.clipboard.writeText
+      ) {
 
-          alert(
-            "Referral link copied! ✅"
-          );
+        navigator.clipboard
+          .writeText(
+            input.value
+          )
 
-        })
-        .catch(function() {
+          .then(function () {
 
-          input.select();
+            alert(
+              "Referral link copied! ✅"
+            );
 
-          document.execCommand(
-            "copy"
-          );
+          })
 
-          alert(
-            "Referral link copied! ✅"
-          );
+          .catch(function () {
 
-        });
+            fallbackCopy(
+              input
+            );
+
+          });
+
+      }
+
+      else {
+
+        fallbackCopy(
+          input
+        );
+
+      }
 
     }
 
+
+    // ==========================================
+    // FALLBACK COPY
+    // ==========================================
+
+    function fallbackCopy(input) {
+
+      input.select();
+
+      input.setSelectionRange(
+        0,
+        99999
+      );
+
+
+      document.execCommand(
+        "copy"
+      );
+
+
+      alert(
+        "Referral link copied! ✅"
+      );
+
+    }
+
+
+    // ==========================================
+    // OPEN MODAL
+    // ==========================================
 
     function openModal(title) {
 
@@ -912,6 +1386,10 @@
     }
 
 
+    // ==========================================
+    // CLOSE MODAL
+    // ==========================================
+
     function closeModal() {
 
       document.getElementById(
@@ -922,7 +1400,25 @@
     }
 
 
+    // ==========================================
+    // ACCOUNT
+    // ==========================================
+
     function goAccount() {
+
+      const token =
+        getUserToken();
+
+
+      if (!token) {
+
+        window.location.href =
+          "login.html";
+
+        return;
+
+      }
+
 
       window.location.href =
         "account.html";
@@ -930,18 +1426,36 @@
     }
 
 
+    // ==========================================
+    // USER LOGOUT
+    // ==========================================
+
     function logoutUser() {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      window.location.href = "login.html";
+
+      localStorage.removeItem(
+        "token"
+      );
+
+      localStorage.removeItem(
+        "user"
+      );
+
+
+      window.location.href =
+        "login.html";
+
     }
 
+
+    // ==========================================
+    // CLOSE MODAL BY CLICKING OUTSIDE
+    // ==========================================
 
     document.getElementById(
       "modal"
     ).addEventListener(
       "click",
-      function(event) {
+      function (event) {
 
         if (
           event.target === this
@@ -955,9 +1469,14 @@
     );
 
 
+    // ==========================================
+    // START DASHBOARD
+    // ==========================================
+
     loadUserData();
 
   </script>
 
 </body>
+
 </html>
