@@ -443,7 +443,7 @@ button,input{font:inherit}
       <div class="desc">Review deposit requests.</div>
     </button>
 
-    <!-- NEW: Profile Update Requests Button Update -->
+    <!-- Profile Update Requests Button -->
     <button class="card" onclick="openProfileRequests()">
       <div class="icon">📝</div>
       <div class="title">Profile Update Requests</div>
@@ -567,7 +567,7 @@ button,input{font:inherit}
       <button class="secondary" onclick="backToAccount()">← Back</button>
     </div>
 
-    <!-- NEW: Profile Requests Form Container -->
+    <!-- Profile Requests Form Container -->
     <div id="profileRequestsForm" class="form">
       <!-- Content populated by JavaScript -->
     </div>
@@ -864,15 +864,18 @@ function goHome(){
   window.scrollTo({ top:0, behavior:"smooth" });
 }
 
+// লগআউট ফাংশন আপডেট করা হয়েছে
 function logout(){
   localStorage.removeItem("token");
   localStorage.removeItem("adminToken");
-  window.location.href = "admin-login.html";
+  localStorage.removeItem("user");
+  localStorage.removeItem("adminUser");
+  window.location.href = "login.html"; // লগইন পেজে যাবে
 }
 
 
 /* =========================
-   NEW: PROFILE REQUESTS ADMIN
+   PROFILE REQUESTS ADMIN
 ========================= */
 function openProfileRequests() {
   document.getElementById("adminOverlay").classList.add("show");
@@ -931,12 +934,11 @@ async function handleProfileReq(id, action) {
       body: JSON.stringify({ action: action })
     });
     showToast(`Request ${action}d successfully.`, "success");
-    loadProfileRequests(); // Reload list to remove the processed item
+    loadProfileRequests(); 
   } catch (error) {
     showToast(error.message, "error");
   }
 }
-
 </script>
 </body>
 </html>
