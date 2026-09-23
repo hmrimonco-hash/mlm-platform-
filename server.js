@@ -29,6 +29,7 @@ const PORT = process.env.PORT || 3000;
 const JWT_SECRET =
   process.env.JWT_SECRET || "change-this-secret";
 
+
 /* =========================
    DATABASE
 ========================= */
@@ -39,22 +40,28 @@ const db = mysql.createPool({
   user: process.env.MYSQLUSER,
   password: process.env.MYSQLPASSWORD,
   database: process.env.MYSQLDATABASE,
+
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
 });
+
 
 /* =========================
    CREATE TABLES
 ========================= */
 
 async function createTables() {
+
   try {
 
-    /* USERS */
+    /* =========================
+       USERS
+    ========================= */
 
     await db.query(`
       CREATE TABLE IF NOT EXISTS users (
+
         id INT AUTO_INCREMENT PRIMARY KEY,
 
         name VARCHAR(100) NOT NULL,
@@ -93,14 +100,18 @@ async function createTables() {
         updated_at TIMESTAMP
           DEFAULT CURRENT_TIMESTAMP
           ON UPDATE CURRENT_TIMESTAMP
+
       )
     `);
 
 
-    /* PACKAGES */
+    /* =========================
+       PACKAGES
+    ========================= */
 
     await db.query(`
       CREATE TABLE IF NOT EXISTS packages (
+
         id INT AUTO_INCREMENT PRIMARY KEY,
 
         name VARCHAR(100) NOT NULL,
@@ -114,14 +125,18 @@ async function createTables() {
 
         created_at TIMESTAMP
           DEFAULT CURRENT_TIMESTAMP
+
       )
     `);
 
 
-    /* TRANSACTIONS */
+    /* =========================
+       TRANSACTIONS
+    ========================= */
 
     await db.query(`
       CREATE TABLE IF NOT EXISTS transactions (
+
         id INT AUTO_INCREMENT PRIMARY KEY,
 
         user_id INT NOT NULL,
@@ -145,7 +160,8 @@ async function createTables() {
           'pending',
           'approved',
           'rejected'
-        ) DEFAULT 'pending',
+        )
+        DEFAULT 'pending',
 
         created_at TIMESTAMP
           DEFAULT CURRENT_TIMESTAMP,
@@ -153,14 +169,18 @@ async function createTables() {
         FOREIGN KEY (user_id)
           REFERENCES users(id)
           ON DELETE CASCADE
+
       )
     `);
 
 
-    /* USER PACKAGES */
+    /* =========================
+       USER PACKAGES
+    ========================= */
 
     await db.query(`
       CREATE TABLE IF NOT EXISTS user_packages (
+
         id INT AUTO_INCREMENT PRIMARY KEY,
 
         user_id INT NOT NULL,
@@ -177,14 +197,18 @@ async function createTables() {
         FOREIGN KEY (package_id)
           REFERENCES packages(id)
           ON DELETE CASCADE
+
       )
     `);
 
 
-    /* BINARY TREE */
+    /* =========================
+       BINARY TREE
+    ========================= */
 
     await db.query(`
       CREATE TABLE IF NOT EXISTS binary_tree (
+
         id INT AUTO_INCREMENT PRIMARY KEY,
 
         user_id INT NOT NULL UNIQUE,
@@ -199,14 +223,18 @@ async function createTables() {
         FOREIGN KEY (user_id)
           REFERENCES users(id)
           ON DELETE CASCADE
+
       )
     `);
 
 
-    /* ADMIN ALERTS */
+    /* =========================
+       ADMIN ALERTS
+    ========================= */
 
     await db.query(`
       CREATE TABLE IF NOT EXISTS admin_alerts (
+
         id INT AUTO_INCREMENT PRIMARY KEY,
 
         user_id INT NOT NULL,
@@ -220,7 +248,8 @@ async function createTables() {
         status ENUM(
           'unread',
           'read'
-        ) DEFAULT 'unread',
+        )
+        DEFAULT 'unread',
 
         created_at TIMESTAMP
           DEFAULT CURRENT_TIMESTAMP,
@@ -228,6 +257,7 @@ async function createTables() {
         FOREIGN KEY (user_id)
           REFERENCES users(id)
           ON DELETE CASCADE
+
       )
     `);
 
@@ -242,34 +272,49 @@ async function createTables() {
       definition
     ) {
 
-      const [columns] = await db.query(
-        `
-        SELECT COLUMN_NAME
-        FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_SCHEMA = ?
-        AND TABLE_NAME = ?
-        AND COLUMN_NAME = ?
-        `,
-        [
-          process.env.MYSQLDATABASE,
-          table,
-          column
-        ]
-      );
+      const [columns] =
+        await db.query(
+          `
+          SELECT COLUMN_NAME
+
+          FROM INFORMATION_SCHEMA.COLUMNS
+
+          WHERE TABLE_SCHEMA = ?
+
+          AND TABLE_NAME = ?
+
+          AND COLUMN_NAME = ?
+          `,
+          [
+            process.env.MYSQLDATABASE,
+            table,
+            column
+          ]
+        );
+
 
       if (columns.length === 0) {
 
         await db.query(
-          `ALTER TABLE ${table}
-           ADD COLUMN ${column} ${definition}`
+          `
+          ALTER TABLE ${table}
+          ADD COLUMN ${column} ${definition}
+          `
         );
+
 
         console.log(
           `Added column ${column} to ${table}`
         );
+
       }
+
     }
 
+
+    /* =========================
+       USERS OLD COLUMNS
+    ========================= */
 
     await addColumnIfMissing(
       "users",
@@ -277,11 +322,13 @@ async function createTables() {
       "VARCHAR(100)"
     );
 
+
     await addColumnIfMissing(
       "users",
       "nid",
       "VARCHAR(50)"
     );
+
 
     await addColumnIfMissing(
       "users",
@@ -289,11 +336,13 @@ async function createTables() {
       "TEXT"
     );
 
+
     await addColumnIfMissing(
       "users",
       "nominee_name",
       "VARCHAR(100)"
     );
+
 
     await addColumnIfMissing(
       "users",
@@ -301,11 +350,13 @@ async function createTables() {
       "VARCHAR(30)"
     );
 
+
     await addColumnIfMissing(
       "users",
       "nominee_nid",
       "VARCHAR(50)"
     );
+
 
     await addColumnIfMissing(
       "users",
@@ -314,7 +365,18 @@ async function createTables() {
     );
 
 
-    console.log("Database tables are ready.");
+    /* IMPORTANT FIX */
+
+    await addColumnIfMissing(
+      "users",
+      "updated_at",
+      "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+    );
+
+
+    console.log(
+      "Database tables are ready."
+    );
 
   } catch (error) {
 
@@ -324,7 +386,9 @@ async function createTables() {
     );
 
     throw error;
+
   }
+
 }
 
 
@@ -341,19 +405,27 @@ function authenticateToken(
   const authHeader =
     req.headers.authorization;
 
+
   if (
     !authHeader ||
     !authHeader.startsWith("Bearer ")
   ) {
 
     return res.status(401).json({
+
       success: false,
-      message: "Authentication required"
+
+      message:
+        "Authentication required"
+
     });
+
   }
+
 
   const token =
     authHeader.split(" ")[1];
+
 
   try {
 
@@ -363,17 +435,32 @@ function authenticateToken(
         JWT_SECRET
       );
 
-    req.user = decoded;
+
+    req.user =
+      decoded;
+
 
     next();
 
   } catch (error) {
 
+    console.error(
+      "JWT error:",
+      error.message
+    );
+
+
     return res.status(401).json({
+
       success: false,
-      message: "Invalid or expired token"
+
+      message:
+        "Invalid or expired token"
+
     });
+
   }
+
 }
 
 
@@ -393,12 +480,19 @@ function requireAdmin(
   ) {
 
     return res.status(403).json({
+
       success: false,
-      message: "Admin access required"
+
+      message:
+        "Admin access required"
+
     });
+
   }
 
+
   next();
+
 }
 
 
@@ -406,17 +500,27 @@ function requireAdmin(
    HOME
 ========================= */
 
-app.get("/", (req, res) => {
+app.get(
+  "/",
+  (req, res) => {
 
-  res.json({
-    success: true,
-    company: "Proyjon Marketing LTD",
-    slogan: "আপনার প্রয়োজন আমাদের আয়োজন",
-    message:
-      "Proyjon Marketing LTD API is running"
-  });
+    res.json({
 
-});
+      success: true,
+
+      company:
+        "Proyjon Marketing LTD",
+
+      slogan:
+        "আপনার প্রয়োজন আমাদের আয়োজন",
+
+      message:
+        "Proyjon Marketing LTD API is running"
+
+    });
+
+  }
+);
 
 
 /* =========================
@@ -428,8 +532,12 @@ app.get(
   (req, res) => {
 
     res.json({
+
       success: true,
-      status: "OK"
+
+      status:
+        "OK"
+
     });
 
   }
@@ -451,10 +559,17 @@ app.get(
           "SELECT 1 AS test"
         );
 
+
       res.json({
+
         success: true,
-        database: "connected",
-        result: rows
+
+        database:
+          "connected",
+
+        result:
+          rows
+
       });
 
     } catch (error) {
@@ -464,11 +579,16 @@ app.get(
         error.message
       );
 
+
       res.status(500).json({
+
         success: false,
+
         message:
           "Database connection failed"
+
       });
+
     }
 
   }
@@ -501,10 +621,14 @@ app.post(
       ) {
 
         return res.status(400).json({
+
           success: false,
+
           message:
             "Name, email and password are required"
+
         });
+
       }
 
 
@@ -522,10 +646,14 @@ app.post(
       if (existing.length > 0) {
 
         return res.status(409).json({
+
           success: false,
+
           message:
             "Email already registered"
+
         });
+
       }
 
 
@@ -554,6 +682,7 @@ app.post(
             password,
             referral_code
           )
+
           VALUES (?, ?, ?, ?, ?)
           `,
           [
@@ -574,16 +703,23 @@ app.post(
           "Registration successful",
 
         user: {
-          id: result.insertId,
+
+          id:
+            result.insertId,
+
           name,
+
           email,
-          phone: phone || null,
+
+          phone:
+            phone || null,
+
           referral_code:
             generatedReferral
+
         }
 
       });
-
 
     } catch (error) {
 
@@ -592,11 +728,16 @@ app.post(
         error.message
       );
 
+
       res.status(500).json({
+
         success: false,
+
         message:
           "Registration failed"
+
       });
+
     }
 
   }
@@ -625,10 +766,14 @@ app.post(
       ) {
 
         return res.status(400).json({
+
           success: false,
+
           message:
             "Email and password are required"
+
         });
+
       }
 
 
@@ -647,14 +792,19 @@ app.post(
       if (users.length === 0) {
 
         return res.status(401).json({
+
           success: false,
+
           message:
             "Invalid email or password"
+
         });
+
       }
 
 
-      const user = users[0];
+      const user =
+        users[0];
 
 
       const passwordMatch =
@@ -667,22 +817,32 @@ app.post(
       if (!passwordMatch) {
 
         return res.status(401).json({
+
           success: false,
+
           message:
             "Invalid email or password"
+
         });
+
       }
 
 
       const token =
         jwt.sign(
           {
-            id: user.id,
-            role: user.role
+            id:
+              user.id,
+
+            role:
+              user.role
           },
+
           JWT_SECRET,
+
           {
-            expiresIn: "7d"
+            expiresIn:
+              "7d"
           }
         );
 
@@ -703,7 +863,6 @@ app.post(
 
       });
 
-
     } catch (error) {
 
       console.error(
@@ -711,11 +870,16 @@ app.post(
         error.message
       );
 
+
       res.status(500).json({
+
         success: false,
+
         message:
           "Login failed"
+
       });
+
     }
 
   }
@@ -737,57 +901,92 @@ app.get(
         await db.query(
           `
           SELECT
+
             id,
+
             name,
+
             email,
+
             phone,
+
             role,
+
             referral_code,
+
             wallet_balance,
+
             father_name,
+
             nid,
+
             address,
+
             nominee_name,
+
             nominee_number,
+
             nominee_nid,
+
             profile_pic,
+
             created_at,
+
             updated_at
+
           FROM users
+
           WHERE id = ?
           `,
-          [req.user.id]
+          [
+            req.user.id
+          ]
         );
 
 
       if (users.length === 0) {
 
         return res.status(404).json({
+
           success: false,
+
           message:
             "User not found"
+
         });
+
       }
 
 
       res.json({
-        success: true,
-        user: users[0]
-      });
 
+        success: true,
+
+        user:
+          users[0]
+
+      });
 
     } catch (error) {
 
       console.error(
         "Get user error:",
-        error.message
+        error
       );
 
+
       res.status(500).json({
+
         success: false,
+
         message:
-          "Failed to load user information"
+          "Failed to load user information",
+
+        error:
+          error.message
+
       });
+
     }
 
   }
@@ -828,21 +1027,26 @@ app.put(
       ) {
 
         return res.status(400).json({
+
           success: false,
+
           message:
             "Name and email are required"
+
         });
+
       }
 
-
-      /* Check email */
 
       const [emailUsers] =
         await db.query(
           `
           SELECT id
+
           FROM users
+
           WHERE email = ?
+
           AND id != ?
           `,
           [
@@ -852,45 +1056,68 @@ app.put(
         );
 
 
-      if (emailUsers.length > 0) {
+      if (
+        emailUsers.length > 0
+      ) {
 
         return res.status(409).json({
+
           success: false,
+
           message:
             "This email is already used by another account"
+
         });
+
       }
 
-
-      /* Get old profile */
 
       const [oldUsers] =
         await db.query(
           `
           SELECT
+
             name,
+
             email,
+
             phone,
+
             father_name,
+
             nid,
+
             address,
+
             nominee_name,
+
             nominee_number,
+
             nominee_nid
+
           FROM users
+
           WHERE id = ?
           `,
-          [userId]
+          [
+            userId
+          ]
         );
 
 
-      if (oldUsers.length === 0) {
+      if (
+        oldUsers.length === 0
+      ) {
 
         return res.status(404).json({
+
           success: false,
+
           message:
             "User not found"
+
         });
+
       }
 
 
@@ -898,137 +1125,187 @@ app.put(
         oldUsers[0];
 
 
-      /* Detect changed fields */
-
       const changedFields = [];
 
 
       if (
         oldUser.name !== name
       ) {
+
         changedFields.push(
           "Name"
         );
+
       }
+
 
       if (
         oldUser.email !== email
       ) {
+
         changedFields.push(
           "Email"
         );
+
       }
+
 
       if (
         (oldUser.phone || "") !==
         (phone || "")
       ) {
+
         changedFields.push(
           "Mobile Number"
         );
+
       }
+
 
       if (
         (oldUser.father_name || "") !==
         (father_name || "")
       ) {
+
         changedFields.push(
           "Father's Name"
         );
+
       }
+
 
       if (
         (oldUser.nid || "") !==
         (nid || "")
       ) {
+
         changedFields.push(
           "NID"
         );
+
       }
+
 
       if (
         (oldUser.address || "") !==
         (address || "")
       ) {
+
         changedFields.push(
           "Address"
         );
+
       }
+
 
       if (
         (oldUser.nominee_name || "") !==
         (nominee_name || "")
       ) {
+
         changedFields.push(
           "Nominee Name"
         );
+
       }
+
 
       if (
         (oldUser.nominee_number || "") !==
         (nominee_number || "")
       ) {
+
         changedFields.push(
           "Nominee Number"
         );
+
       }
+
 
       if (
         (oldUser.nominee_nid || "") !==
         (nominee_nid || "")
       ) {
+
         changedFields.push(
           "Nominee NID"
         );
+
       }
 
-
-      /* Update */
 
       await db.query(
         `
         UPDATE users
+
         SET
+
           name = ?,
+
           email = ?,
+
           phone = ?,
+
           father_name = ?,
+
           nid = ?,
+
           address = ?,
+
           nominee_name = ?,
+
           nominee_number = ?,
+
           nominee_nid = ?
+
         WHERE id = ?
         `,
         [
+
           name,
+
           email,
+
           phone || null,
+
           father_name || null,
+
           nid || null,
+
           address || null,
+
           nominee_name || null,
+
           nominee_number || null,
+
           nominee_nid || null,
+
           userId
+
         ]
       );
 
 
-      /* =========================
-         ADMIN ALERT
-      ========================= */
+      /* ADMIN ALERT */
 
-      if (changedFields.length > 0) {
+      if (
+        changedFields.length > 0
+      ) {
 
         const [userInfo] =
           await db.query(
             `
-            SELECT name, email
+            SELECT
+              name,
+              email
+
             FROM users
+
             WHERE id = ?
             `,
-            [userId]
+            [
+              userId
+            ]
           );
 
 
@@ -1053,45 +1330,69 @@ app.put(
             title,
             message
           )
+
           VALUES (?, ?, ?, ?)
           `,
           [
+
             userId,
+
             "profile_update",
+
             "Profile Update",
+
             message
+
           ]
         );
 
       }
 
 
-      /* Get updated user */
-
       const [updatedUsers] =
         await db.query(
           `
           SELECT
+
             id,
+
             name,
+
             email,
+
             phone,
+
             role,
+
             referral_code,
+
             wallet_balance,
+
             father_name,
+
             nid,
+
             address,
+
             nominee_name,
+
             nominee_number,
+
             nominee_nid,
+
             profile_pic,
+
             created_at,
+
             updated_at
+
           FROM users
+
           WHERE id = ?
           `,
-          [userId]
+          [
+            userId
+          ]
         );
 
 
@@ -1109,19 +1410,26 @@ app.put(
 
       });
 
-
     } catch (error) {
 
       console.error(
         "Profile update error:",
-        error.message
+        error
       );
 
+
       res.status(500).json({
+
         success: false,
+
         message:
-          "Profile update failed"
+          "Profile update failed",
+
+        error:
+          error.message
+
       });
+
     }
 
   }
@@ -1142,6 +1450,7 @@ app.put(
       const userId =
         req.user.id;
 
+
       const {
         profile_pic
       } = req.body;
@@ -1150,17 +1459,23 @@ app.put(
       if (!profile_pic) {
 
         return res.status(400).json({
+
           success: false,
+
           message:
             "Profile photo is required"
+
         });
+
       }
 
 
       await db.query(
         `
         UPDATE users
+
         SET profile_pic = ?
+
         WHERE id = ?
         `,
         [
@@ -1170,16 +1485,18 @@ app.put(
       );
 
 
-      /* Admin alert */
-
       const [users] =
         await db.query(
           `
           SELECT name
+
           FROM users
+
           WHERE id = ?
           `,
-          [userId]
+          [
+            userId
+          ]
         );
 
 
@@ -1197,43 +1514,67 @@ app.put(
           title,
           message
         )
+
         VALUES (?, ?, ?, ?)
         `,
         [
+
           userId,
+
           "profile_photo_update",
+
           "Profile Photo Updated",
+
           `${userName} updated their profile photo.`
+
         ]
       );
 
-
-      /* Return updated user */
 
       const [updatedUsers] =
         await db.query(
           `
           SELECT
+
             id,
+
             name,
+
             email,
+
             phone,
+
             role,
+
             referral_code,
+
             wallet_balance,
+
             father_name,
+
             nid,
+
             address,
+
             nominee_name,
+
             nominee_number,
+
             nominee_nid,
+
             profile_pic,
+
             created_at,
+
             updated_at
+
           FROM users
+
           WHERE id = ?
           `,
-          [userId]
+          [
+            userId
+          ]
         );
 
 
@@ -1249,19 +1590,26 @@ app.put(
 
       });
 
-
     } catch (error) {
 
       console.error(
         "Profile photo error:",
-        error.message
+        error
       );
 
+
       res.status(500).json({
+
         success: false,
+
         message:
-          "Profile photo update failed"
+          "Profile photo update failed",
+
+        error:
+          error.message
+
       });
+
     }
 
   }
@@ -1284,15 +1632,23 @@ app.get(
         await db.query(
           `
           SELECT
+
             a.id,
+
             a.type,
+
             a.title,
+
             a.message,
+
             a.status,
+
             a.created_at,
 
             u.id AS user_id,
+
             u.name AS user_name,
+
             u.email AS user_email
 
           FROM admin_alerts a
@@ -1314,19 +1670,23 @@ app.get(
 
       });
 
-
     } catch (error) {
 
       console.error(
         "Admin alerts error:",
-        error.message
+        error
       );
 
+
       res.status(500).json({
+
         success: false,
+
         message:
           "Failed to load admin alerts"
+
       });
+
     }
 
   }
@@ -1348,8 +1708,11 @@ app.get(
       const [rows] =
         await db.query(
           `
-          SELECT COUNT(*) AS count
+          SELECT
+            COUNT(*) AS count
+
           FROM admin_alerts
+
           WHERE status = 'unread'
           `
         );
@@ -1364,19 +1727,23 @@ app.get(
 
       });
 
-
     } catch (error) {
 
       console.error(
         "Unread alert error:",
-        error.message
+        error
       );
 
+
       res.status(500).json({
+
         success: false,
+
         message:
           "Failed to load alert count"
+
       });
+
     }
 
   }
@@ -1398,10 +1765,14 @@ app.put(
       await db.query(
         `
         UPDATE admin_alerts
+
         SET status = 'read'
+
         WHERE id = ?
         `,
-        [req.params.id]
+        [
+          req.params.id
+        ]
       );
 
 
@@ -1414,19 +1785,23 @@ app.put(
 
       });
 
-
     } catch (error) {
 
       console.error(
         "Mark alert error:",
-        error.message
+        error
       );
 
+
       res.status(500).json({
+
         success: false,
+
         message:
           "Failed to update alert"
+
       });
+
     }
 
   }
@@ -1438,17 +1813,26 @@ app.put(
 ========================= */
 
 app.use(
-  (err, req, res, next) => {
+  (
+    err,
+    req,
+    res,
+    next
+  ) => {
 
     console.error(
       "Server error:",
       err
     );
 
+
     res.status(500).json({
+
       success: false,
+
       message:
         "Internal server error"
+
     });
 
   }
@@ -1460,6 +1844,7 @@ app.use(
 ========================= */
 
 createTables()
+
   .then(() => {
 
     app.listen(
@@ -1475,6 +1860,7 @@ createTables()
     );
 
   })
+
   .catch((error) => {
 
     console.error(
