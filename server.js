@@ -5,7 +5,6 @@ const rateLimit = require("express-rate-limit");
 const mysql = require("mysql2/promise");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
 require("dotenv").config();
 
 const app = express();
@@ -86,6 +85,7 @@ const db = mysql.createPool({
 
 async function createTables() {
   try {
+
     /* =========================
        USERS
     ========================= */
@@ -113,6 +113,7 @@ async function createTables() {
       )
     `);
 
+
     /* =========================
        PACKAGES
     ========================= */
@@ -127,6 +128,7 @@ async function createTables() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
+
 
     /* =========================
        TRANSACTIONS
@@ -150,6 +152,7 @@ async function createTables() {
       )
     `);
 
+
     /* =========================
        USER PACKAGES
     ========================= */
@@ -171,6 +174,7 @@ async function createTables() {
       )
     `);
 
+
     /* =========================
        BINARY TREE
     ========================= */
@@ -188,6 +192,7 @@ async function createTables() {
         ON DELETE CASCADE
       )
     `);
+
 
     /* =========================
        ADMIN ALERTS
@@ -209,6 +214,7 @@ async function createTables() {
       )
     `);
 
+
     /* =========================
        PROFILE REQUESTS
     ========================= */
@@ -229,6 +235,7 @@ async function createTables() {
       )
     `);
 
+
     /* =====================================================
        OLD DATABASE COMPATIBILITY
     ===================================================== */
@@ -238,31 +245,40 @@ async function createTables() {
       column,
       definition
     ) {
-      const [columns] = await db.query(
-        `
-        SELECT COLUMN_NAME
-        FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_SCHEMA = ?
-        AND TABLE_NAME = ?
-        AND COLUMN_NAME = ?
-        `,
-        [
-          process.env.MYSQLDATABASE,
-          table,
-          column
-        ]
-      );
+
+      const [columns] =
+        await db.query(
+          `
+          SELECT COLUMN_NAME
+          FROM INFORMATION_SCHEMA.COLUMNS
+          WHERE TABLE_SCHEMA = ?
+          AND TABLE_NAME = ?
+          AND COLUMN_NAME = ?
+          `,
+          [
+            process.env.MYSQLDATABASE,
+            table,
+            column
+          ]
+        );
+
 
       if (columns.length === 0) {
+
         await db.query(
-          `ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`
+          `ALTER TABLE ${table}
+           ADD COLUMN ${column} ${definition}`
         );
+
 
         console.log(
           `Added column ${column} to ${table}`
         );
+
       }
+
     }
+
 
     await addColumnIfMissing(
       "users",
@@ -270,11 +286,13 @@ async function createTables() {
       "VARCHAR(100)"
     );
 
+
     await addColumnIfMissing(
       "users",
       "nid",
       "VARCHAR(50)"
     );
+
 
     await addColumnIfMissing(
       "users",
@@ -282,11 +300,13 @@ async function createTables() {
       "TEXT"
     );
 
+
     await addColumnIfMissing(
       "users",
       "nominee_name",
       "VARCHAR(100)"
     );
+
 
     await addColumnIfMissing(
       "users",
@@ -294,11 +314,13 @@ async function createTables() {
       "VARCHAR(30)"
     );
 
+
     await addColumnIfMissing(
       "users",
       "nominee_nid",
       "VARCHAR(50)"
     );
+
 
     await addColumnIfMissing(
       "users",
@@ -306,21 +328,27 @@ async function createTables() {
       "LONGTEXT"
     );
 
+
     await addColumnIfMissing(
       "users",
       "updated_at",
       "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
     );
 
-    console.log("Database tables are ready.");
+
+    console.log(
+      "Database tables are ready."
+    );
 
   } catch (error) {
+
     console.error(
       "Database table error:",
       error.message
     );
 
     throw error;
+
   }
 }
 
@@ -328,39 +356,63 @@ async function createTables() {
    JWT AUTHENTICATION
 ========================================================= */
 
-function authenticateToken(req, res, next) {
+function authenticateToken(
+  req,
+  res,
+  next
+) {
+
   try {
+
     const authHeader =
       req.headers.authorization;
+
 
     if (
       !authHeader ||
       typeof authHeader !== "string"
     ) {
+
       return res.status(401).json({
         success: false,
-        message: "Authentication required"
+        message:
+          "Authentication required"
       });
+
     }
+
 
     if (
-      !authHeader.startsWith("Bearer ")
+      !authHeader.startsWith(
+        "Bearer "
+      )
     ) {
+
       return res.status(401).json({
         success: false,
-        message: "Invalid authorization format"
+        message:
+          "Invalid authorization format"
       });
+
     }
+
 
     const token =
-      authHeader.substring(7).trim();
+      authHeader
+        .substring(7)
+        .trim();
+
 
     if (!token) {
+
       return res.status(401).json({
         success: false,
-        message: "Token missing"
+        message:
+          "Token missing"
       });
+
     }
+
 
     const decoded =
       jwt.verify(
@@ -368,28 +420,43 @@ function authenticateToken(req, res, next) {
         JWT_SECRET
       );
 
-    if (!decoded || !decoded.id) {
+
+    if (
+      !decoded ||
+      !decoded.id
+    ) {
+
       return res.status(401).json({
         success: false,
-        message: "Invalid token"
+        message:
+          "Invalid token"
       });
+
     }
 
-    req.user = decoded;
+
+    req.user =
+      decoded;
+
 
     next();
 
   } catch (error) {
+
     console.error(
       "JWT error:",
       error.message
     );
 
+
     return res.status(401).json({
       success: false,
-      message: "Invalid or expired token"
+      message:
+        "Invalid or expired token"
     });
+
   }
+
 }
 
 /* =========================================================
@@ -401,43 +468,62 @@ function requireAdmin(
   res,
   next
 ) {
+
   if (
     !req.user ||
     req.user.role !== "admin"
   ) {
+
     return res.status(403).json({
       success: false,
-      message: "Admin access required"
+      message:
+        "Admin access required"
     });
+
   }
 
+
   next();
+
 }
 
 /* =========================================================
    HOME
 ========================================================= */
 
-app.get("/", (req, res) => {
-  res.json({
-    success: true,
-    company: "Proyjon Marketing LTD",
-    slogan: "আপনার প্রয়োজন আমাদের আয়োজন",
-    message: "Proyjon Marketing LTD API is running"
-  });
-});
+app.get(
+  "/",
+  (req, res) => {
+
+    res.json({
+      success: true,
+      company:
+        "Proyjon Marketing LTD",
+      slogan:
+        "আপনার প্রয়োজন আমাদের আয়োজন",
+      message:
+        "Proyjon Marketing LTD API is running"
+    });
+
+  }
+);
 
 /* =========================================================
    HEALTH CHECK
 ========================================================= */
 
-app.get("/api/health", (req, res) => {
-  res.json({
-    success: true,
-    status: "OK",
-    server: "running"
-  });
-});
+app.get(
+  "/api/health",
+  (req, res) => {
+
+    res.json({
+      success: true,
+      status: "OK",
+      server: "running"
+    });
+
+  }
+);
 
 /* =========================================================
    DATABASE TEST
@@ -446,11 +532,14 @@ app.get("/api/health", (req, res) => {
 app.get(
   "/api/db-test",
   async (req, res) => {
+
     try {
+
       const [rows] =
         await db.query(
           "SELECT 1 AS test"
         );
+
 
       res.json({
         success: true,
@@ -459,16 +548,21 @@ app.get(
       });
 
     } catch (error) {
+
       console.error(
         "DB test error:",
         error.message
       );
 
+
       res.status(500).json({
         success: false,
-        message: "Database connection failed"
+        message:
+          "Database connection failed"
       });
+
     }
+
   }
 );
 
@@ -479,40 +573,62 @@ app.get(
 app.post(
   "/api/auth/register",
   async (req, res) => {
+
     try {
+
       const name =
-        String(req.body.name || "").trim();
+        String(
+          req.body.name || ""
+        ).trim();
+
 
       const email =
-        String(req.body.email || "")
+        String(
+          req.body.email || ""
+        )
           .trim()
           .toLowerCase();
 
+
       const phone =
-        String(req.body.phone || "").trim();
+        String(
+          req.body.phone || ""
+        ).trim();
+
 
       const password =
-        String(req.body.password || "");
+        String(
+          req.body.password || ""
+        );
+
 
       if (
         !name ||
         !email ||
         !password
       ) {
+
         return res.status(400).json({
           success: false,
           message:
             "Name, email and password are required"
         });
+
       }
 
-      if (password.length < 6) {
+
+      if (
+        password.length < 6
+      ) {
+
         return res.status(400).json({
           success: false,
           message:
             "Password must be at least 6 characters"
         });
+
       }
+
 
       const [existing] =
         await db.query(
@@ -525,13 +641,19 @@ app.post(
           [email]
         );
 
-      if (existing.length > 0) {
+
+      if (
+        existing.length > 0
+      ) {
+
         return res.status(409).json({
           success: false,
           message:
             "Email already registered"
         });
+
       }
+
 
       const hashedPassword =
         await bcrypt.hash(
@@ -539,9 +661,16 @@ app.post(
           10
         );
 
+
       let generatedReferral;
 
-      for (let i = 0; i < 5; i++) {
+
+      for (
+        let i = 0;
+        i < 5;
+        i++
+      ) {
+
         generatedReferral =
           "PM" +
           Date.now()
@@ -551,6 +680,7 @@ app.post(
             Math.random() * 100
           );
 
+
         const [check] =
           await db.query(
             `
@@ -558,13 +688,22 @@ app.post(
             FROM users
             WHERE referral_code = ?
             `,
-            [generatedReferral]
+            [
+              generatedReferral
+            ]
           );
 
-        if (check.length === 0) {
+
+        if (
+          check.length === 0
+        ) {
+
           break;
+
         }
+
       }
+
 
       const [result] =
         await db.query(
@@ -589,33 +728,43 @@ app.post(
           ]
         );
 
+
       res.status(201).json({
         success: true,
         message:
           "Registration successful",
         user: {
-          id: result.insertId,
+          id:
+            result.insertId,
           name,
           email,
-          phone: phone || null,
-          role: "user",
+          phone:
+            phone || null,
+          role:
+            "user",
           referral_code:
             generatedReferral
         }
       });
 
     } catch (error) {
+
       console.error(
         "Register error:",
         error
       );
 
+
       res.status(500).json({
         success: false,
-        message: "Registration failed",
-        error: error.message
+        message:
+          "Registration failed",
+        error:
+          error.message
       });
+
     }
+
   }
 );
 
@@ -626,41 +775,41 @@ app.post(
 app.post(
   "/api/auth/login",
   async (req, res) => {
+
     try {
-      /* -----------------------------------------
-         READ INPUT
-      ----------------------------------------- */
 
       const email =
-        String(req.body.email || "")
+        String(
+          req.body.email || ""
+        )
           .trim()
           .toLowerCase();
 
+
       const password =
-        String(req.body.password || "");
+        String(
+          req.body.password || ""
+        );
+
 
       console.log(
         `Login attempt: ${email}`
       );
 
-      /* -----------------------------------------
-         VALIDATION
-      ----------------------------------------- */
 
       if (
         !email ||
         !password
       ) {
+
         return res.status(400).json({
           success: false,
           message:
             "Email and password are required"
         });
+
       }
 
-      /* -----------------------------------------
-         FIND USER
-      ----------------------------------------- */
 
       const [users] =
         await db.query(
@@ -693,24 +842,28 @@ app.post(
           [email]
         );
 
-      if (users.length === 0) {
+
+      if (
+        users.length === 0
+      ) {
+
         console.log(
           `Login failed: user not found - ${email}`
         );
+
 
         return res.status(401).json({
           success: false,
           message:
             "Invalid email or password"
         });
+
       }
+
 
       const user =
         users[0];
 
-      /* -----------------------------------------
-         CHECK PASSWORD
-      ----------------------------------------- */
 
       const passwordMatch =
         await bcrypt.compare(
@@ -718,61 +871,64 @@ app.post(
           user.password
         );
 
+
       if (!passwordMatch) {
+
         console.log(
           `Login failed: wrong password - ${email}`
         );
+
 
         return res.status(401).json({
           success: false,
           message:
             "Invalid email or password"
         });
+
       }
 
-      /* -----------------------------------------
-         CREATE JWT
-      ----------------------------------------- */
 
       const token =
         jwt.sign(
           {
-            id: user.id,
-            email: user.email,
-            role: user.role
+            id:
+              user.id,
+            email:
+              user.email,
+            role:
+              user.role
           },
           JWT_SECRET,
           {
-            expiresIn: "7d"
+            expiresIn:
+              "7d"
           }
         );
 
-      /* -----------------------------------------
-         REMOVE PASSWORD
-      ----------------------------------------- */
 
       delete user.password;
 
-      /* -----------------------------------------
-         SUCCESS RESPONSE
-      ----------------------------------------- */
 
       console.log(
         `Login successful: ${email} | role=${user.role}`
       );
 
+
       return res.status(200).json({
         success: true,
-        message: "Login successful",
+        message:
+          "Login successful",
         token,
         user
       });
 
     } catch (error) {
+
       console.error(
         "LOGIN ERROR:",
         error
       );
+
 
       return res.status(500).json({
         success: false,
@@ -781,7 +937,9 @@ app.post(
         error:
           error.message
       });
+
     }
+
   }
 );
 
@@ -793,7 +951,9 @@ app.get(
   "/api/auth/me",
   authenticateToken,
   async (req, res) => {
+
     try {
+
       const [users] =
         await db.query(
           `
@@ -824,30 +984,42 @@ app.get(
           [req.user.id]
         );
 
-      if (users.length === 0) {
+
+      if (
+        users.length === 0
+      ) {
+
         return res.status(404).json({
           success: false,
-          message: "User not found"
+          message:
+            "User not found"
         });
+
       }
+
 
       res.json({
         success: true,
-        user: users[0]
+        user:
+          users[0]
       });
 
     } catch (error) {
+
       console.error(
         "Get user error:",
         error
       );
+
 
       res.status(500).json({
         success: false,
         message:
           "Failed to load user information"
       });
+
     }
+
   }
 );
 
@@ -859,12 +1031,16 @@ app.put(
   "/api/auth/profile",
   authenticateToken,
   async (req, res) => {
+
     try {
+
       const userId =
         req.user.id;
 
+
       const requestedData =
         req.body || {};
+
 
       const email =
         String(
@@ -873,12 +1049,17 @@ app.put(
           .trim()
           .toLowerCase();
 
+
       if (!email) {
+
         return res.status(400).json({
           success: false,
-          message: "Email is required"
+          message:
+            "Email is required"
         });
+
       }
+
 
       const [emailUsers] =
         await db.query(
@@ -895,13 +1076,19 @@ app.put(
           ]
         );
 
-      if (emailUsers.length > 0) {
+
+      if (
+        emailUsers.length > 0
+      ) {
+
         return res.status(409).json({
           success: false,
           message:
             "This email is already used by another account"
         });
+
       }
+
 
       const [existing] =
         await db.query(
@@ -915,13 +1102,19 @@ app.put(
           [userId]
         );
 
-      if (existing.length > 0) {
+
+      if (
+        existing.length > 0
+      ) {
+
         return res.status(400).json({
           success: false,
           message:
             "আপনার একটি রিকোয়েস্ট আগেই Pending আছে। অ্যাডমিন অ্যাপ্রুভ করা পর্যন্ত অপেক্ষা করুন।"
         });
+
       }
+
 
       const [currentUsers] =
         await db.query(
@@ -936,13 +1129,18 @@ app.put(
             nominee_name,
             nominee_number,
             nominee_nid
+
           FROM users
+
           WHERE id = ?
           `,
           [userId]
         );
 
-      requestedData.email = email;
+
+      requestedData.email =
+        email;
+
 
       await db.query(
         `
@@ -965,6 +1163,7 @@ app.put(
         ]
       );
 
+
       res.json({
         success: true,
         message:
@@ -972,17 +1171,23 @@ app.put(
       });
 
     } catch (error) {
+
       console.error(
         "Profile request error:",
         error
       );
 
+
       res.status(500).json({
         success: false,
-        message: "Request failed",
-        error: error.message
+        message:
+          "Request failed",
+        error:
+          error.message
       });
+
     }
+
   }
 );
 
@@ -994,7 +1199,9 @@ app.get(
   "/api/auth/profile-status",
   authenticateToken,
   async (req, res) => {
+
     try {
+
       const [pending] =
         await db.query(
           `
@@ -1006,6 +1213,7 @@ app.get(
           [req.user.id]
         );
 
+
       res.json({
         success: true,
         isPending:
@@ -1013,16 +1221,21 @@ app.get(
       });
 
     } catch (error) {
+
       console.error(
         "Profile status error:",
         error.message
       );
 
+
       res.json({
         success: false,
-        isPending: false
+        isPending:
+          false
       });
+
     }
+
   }
 );
 
@@ -1035,7 +1248,9 @@ app.get(
   authenticateToken,
   requireAdmin,
   async (req, res) => {
+
     try {
+
       const [requests] =
         await db.query(`
           SELECT
@@ -1057,23 +1272,28 @@ app.get(
             p.created_at DESC
         `);
 
+
       res.json({
         success: true,
         requests
       });
 
     } catch (error) {
+
       console.error(
         "Profile requests error:",
         error.message
       );
+
 
       res.status(500).json({
         success: false,
         message:
           "Failed to load requests"
       });
+
     }
+
   }
 );
 
@@ -1086,7 +1306,9 @@ app.get(
   authenticateToken,
   requireAdmin,
   async (req, res) => {
+
     try {
+
       const [users] =
         await db.query(`
           SELECT
@@ -1105,23 +1327,28 @@ app.get(
             id DESC
         `);
 
+
       res.json({
         success: true,
         users
       });
 
     } catch (error) {
+
       console.error(
         "Admin users error:",
         error.message
       );
+
 
       res.status(500).json({
         success: false,
         message:
           "Failed to load users"
       });
+
     }
+
   }
 );
 
@@ -1134,7 +1361,9 @@ app.put(
   authenticateToken,
   requireAdmin,
   async (req, res) => {
+
     try {
+
       const action =
         String(
           req.body.action || ""
@@ -1142,18 +1371,27 @@ app.put(
           .trim()
           .toLowerCase();
 
+
       const requestId =
-        Number(req.params.id);
+        Number(
+          req.params.id
+        );
+
 
       if (
-        !Number.isInteger(requestId)
+        !Number.isInteger(
+          requestId
+        )
       ) {
+
         return res.status(400).json({
           success: false,
           message:
             "Invalid request ID"
         });
+
       }
+
 
       const [requests] =
         await db.query(
@@ -1166,36 +1404,61 @@ app.put(
           [requestId]
         );
 
-      if (requests.length === 0) {
+
+      if (
+        requests.length === 0
+      ) {
+
         return res.status(404).json({
           success: false,
           message:
             "Request not found"
         });
+
       }
+
 
       const request =
         requests[0];
 
-      if (request.status !== "pending") {
+
+      if (
+        request.status !==
+        "pending"
+      ) {
+
         return res.status(400).json({
           success: false,
           message:
             "This request has already been processed"
         });
+
       }
 
-      if (action === "approve") {
+
+      /* =========================
+         APPROVE
+      ========================= */
+
+      if (
+        action === "approve"
+      ) {
+
         const newData =
-          typeof request.requested_data === "string"
+          typeof request.requested_data ===
+          "string"
+
             ? JSON.parse(
                 request.requested_data
               )
+
             : request.requested_data;
+
 
         await db.query(
           `
           UPDATE users
+
           SET
             name = ?,
             father_name = ?,
@@ -1211,17 +1474,25 @@ app.put(
           `,
           [
             newData.name,
-            newData.father_name || null,
-            newData.phone || null,
+            newData.father_name ||
+              null,
+            newData.phone ||
+              null,
             newData.email,
-            newData.nid || null,
-            newData.address || null,
-            newData.nominee_name || null,
-            newData.nominee_number || null,
-            newData.nominee_nid || null,
+            newData.nid ||
+              null,
+            newData.address ||
+              null,
+            newData.nominee_name ||
+              null,
+            newData.nominee_number ||
+              null,
+            newData.nominee_nid ||
+              null,
             request.user_id
           ]
         );
+
 
         await db.query(
           `
@@ -1231,6 +1502,7 @@ app.put(
           `,
           [requestId]
         );
+
 
         await db.query(
           `
@@ -1251,14 +1523,24 @@ app.put(
           ]
         );
 
+
         return res.json({
           success: true,
           message:
             "Profile approved successfully!"
         });
+
       }
 
-      if (action === "reject") {
+
+      /* =========================
+         REJECT
+      ========================= */
+
+      if (
+        action === "reject"
+      ) {
+
         await db.query(
           `
           UPDATE profile_requests
@@ -1268,23 +1550,29 @@ app.put(
           [requestId]
         );
 
+
         return res.json({
           success: true,
           message:
             "Profile request rejected."
         });
+
       }
+
 
       return res.status(400).json({
         success: false,
-        message: "Invalid action"
+        message:
+          "Invalid action"
       });
 
     } catch (error) {
+
       console.error(
         "Profile action error:",
         error
       );
+
 
       res.status(500).json({
         success: false,
@@ -1293,37 +1581,113 @@ app.put(
         error:
           error.message
       });
+
     }
+
   }
 );
 
 /* =========================================================
-   PROFILE PHOTO
+   PROFILE PHOTO - UPLOAD / CHANGE
 ========================================================= */
 
 app.put(
   "/api/auth/profile-photo",
   authenticateToken,
   async (req, res) => {
+
     try {
+
       const userId =
         req.user.id;
+
 
       const profilePic =
         req.body.profile_pic;
 
-      if (!profilePic) {
+
+      /* =========================
+         VALIDATION
+      ========================= */
+
+      if (
+        typeof profilePic !==
+        "string" ||
+        !profilePic.trim()
+      ) {
+
         return res.status(400).json({
           success: false,
           message:
             "Profile photo is required"
         });
+
       }
+
+
+      /* =========================
+         IMAGE FORMAT CHECK
+      ========================= */
+
+      const validImagePattern =
+        /^data:image\/(jpeg|jpg|png|webp);base64,/i;
+
+
+      if (
+        !validImagePattern.test(
+          profilePic
+        )
+      ) {
+
+        return res.status(400).json({
+          success: false,
+          message:
+            "Invalid image format"
+        });
+
+      }
+
+
+      /* =========================
+         IMAGE SIZE CHECK
+      ========================= */
+
+      const imageSize =
+        Buffer.byteLength(
+          profilePic,
+          "utf8"
+        );
+
+
+      /*
+        Maximum approximately 700KB
+        after browser compression.
+      */
+
+      if (
+        imageSize >
+        700 * 1024
+      ) {
+
+        return res.status(413).json({
+          success: false,
+          message:
+            "Profile photo is too large. Please choose a smaller image."
+        });
+
+      }
+
+
+      /* =========================
+         SAVE PHOTO
+      ========================= */
 
       await db.query(
         `
         UPDATE users
+
         SET profile_pic = ?
+
         WHERE id = ?
         `,
         [
@@ -1332,19 +1696,31 @@ app.put(
         ]
       );
 
+
+      /* =========================
+         USER NAME
+      ========================= */
+
       const [users] =
         await db.query(
           `
           SELECT name
           FROM users
           WHERE id = ?
+          LIMIT 1
           `,
           [userId]
         );
 
+
       const userName =
         users[0]?.name ||
         "User";
+
+
+      /* =========================
+         ADMIN ALERT
+      ========================= */
 
       await db.query(
         `
@@ -1364,6 +1740,11 @@ app.put(
           `${userName} updated their profile photo.`
         ]
       );
+
+
+      /* =========================
+         RETURN UPDATED USER
+      ========================= */
 
       const [updatedUsers] =
         await db.query(
@@ -1389,11 +1770,14 @@ app.put(
           FROM users
 
           WHERE id = ?
+
+          LIMIT 1
           `,
           [userId]
         );
 
-      res.json({
+
+      return res.json({
         success: true,
         message:
           "Profile photo updated successfully",
@@ -1402,17 +1786,157 @@ app.put(
       });
 
     } catch (error) {
+
       console.error(
         "Profile photo error:",
         error
       );
 
-      res.status(500).json({
+
+      return res.status(500).json({
         success: false,
         message:
           "Profile photo update failed"
       });
+
     }
+
+  }
+);
+
+/* =========================================================
+   PROFILE PHOTO - REMOVE
+========================================================= */
+
+app.delete(
+  "/api/auth/profile-photo",
+  authenticateToken,
+  async (req, res) => {
+
+    try {
+
+      const userId =
+        req.user.id;
+
+
+      /* =========================
+         GET USER NAME
+      ========================= */
+
+      const [users] =
+        await db.query(
+          `
+          SELECT name
+          FROM users
+          WHERE id = ?
+          LIMIT 1
+          `,
+          [userId]
+        );
+
+
+      const userName =
+        users[0]?.name ||
+        "User";
+
+
+      /* =========================
+         REMOVE PHOTO
+      ========================= */
+
+      await db.query(
+        `
+        UPDATE users
+        SET profile_pic = NULL
+        WHERE id = ?
+        `,
+        [userId]
+      );
+
+
+      /* =========================
+         ADMIN ALERT
+      ========================= */
+
+      await db.query(
+        `
+        INSERT INTO admin_alerts
+        (
+          user_id,
+          type,
+          title,
+          message
+        )
+        VALUES (?, ?, ?, ?)
+        `,
+        [
+          userId,
+          "profile_photo_removed",
+          "Profile Photo Removed",
+          `${userName} removed their profile photo.`
+        ]
+      );
+
+
+      /* =========================
+         UPDATED USER
+      ========================= */
+
+      const [updatedUsers] =
+        await db.query(
+          `
+          SELECT
+            id,
+            name,
+            email,
+            phone,
+            role,
+            referral_code,
+            wallet_balance,
+            father_name,
+            nid,
+            address,
+            nominee_name,
+            nominee_number,
+            nominee_nid,
+            profile_pic,
+            created_at,
+            updated_at
+
+          FROM users
+
+          WHERE id = ?
+
+          LIMIT 1
+          `,
+          [userId]
+        );
+
+
+      return res.json({
+        success: true,
+        message:
+          "Profile photo removed successfully",
+        user:
+          updatedUsers[0]
+      });
+
+    } catch (error) {
+
+      console.error(
+        "Remove profile photo error:",
+        error
+      );
+
+
+      return res.status(500).json({
+        success: false,
+        message:
+          "Profile photo removal failed"
+      });
+
+    }
+
   }
 );
 
@@ -1425,7 +1949,9 @@ app.get(
   authenticateToken,
   requireAdmin,
   async (req, res) => {
+
     try {
+
       const [alerts] =
         await db.query(`
           SELECT
@@ -1448,23 +1974,28 @@ app.get(
             a.created_at DESC
         `);
 
+
       res.json({
         success: true,
         alerts
       });
 
     } catch (error) {
+
       console.error(
         "Admin alerts error:",
         error.message
       );
+
 
       res.status(500).json({
         success: false,
         message:
           "Failed to load admin alerts"
       });
+
     }
+
   }
 );
 
@@ -1477,7 +2008,9 @@ app.get(
   authenticateToken,
   requireAdmin,
   async (req, res) => {
+
     try {
+
       const [rows] =
         await db.query(
           `
@@ -1487,24 +2020,31 @@ app.get(
           `
         );
 
+
       res.json({
         success: true,
         count:
-          Number(rows[0].count)
+          Number(
+            rows[0].count
+          )
       });
 
     } catch (error) {
+
       console.error(
         "Unread alert error:",
         error.message
       );
+
 
       res.status(500).json({
         success: false,
         message:
           "Failed to load alert count"
       });
+
     }
+
   }
 );
 
@@ -1517,7 +2057,9 @@ app.put(
   authenticateToken,
   requireAdmin,
   async (req, res) => {
+
     try {
+
       await db.query(
         `
         UPDATE admin_alerts
@@ -1527,6 +2069,7 @@ app.put(
         [req.params.id]
       );
 
+
       res.json({
         success: true,
         message:
@@ -1534,17 +2077,21 @@ app.put(
       });
 
     } catch (error) {
+
       console.error(
         "Mark alert error:",
         error.message
       );
+
 
       res.status(500).json({
         success: false,
         message:
           "Failed to update alert"
       });
+
     }
+
   }
 );
 
@@ -1555,18 +2102,23 @@ app.put(
 app.get(
   "/api/setup-admin",
   async (req, res) => {
+
     try {
+
       const adminEmail =
         "admin@proyjon.com";
 
+
       const adminPassword =
         "123456";
+
 
       const hashedPassword =
         await bcrypt.hash(
           adminPassword,
           10
         );
+
 
       const [existing] =
         await db.query(
@@ -1579,7 +2131,11 @@ app.get(
           [adminEmail]
         );
 
-      if (existing.length > 0) {
+
+      if (
+        existing.length > 0
+      ) {
+
         await db.query(
           `
           UPDATE users
@@ -1594,6 +2150,7 @@ app.get(
           ]
         );
 
+
         return res.json({
           success: true,
           message:
@@ -1603,13 +2160,16 @@ app.get(
           password:
             adminPassword
         });
+
       }
+
 
       const generatedReferral =
         "ADMIN" +
         Date.now()
           .toString()
           .slice(-8);
+
 
       await db.query(
         `
@@ -1631,6 +2191,7 @@ app.get(
         ]
       );
 
+
       res.json({
         success: true,
         message:
@@ -1642,10 +2203,12 @@ app.get(
       });
 
     } catch (error) {
+
       console.error(
         "Setup admin error:",
         error
       );
+
 
       res.status(500).json({
         success: false,
@@ -1654,7 +2217,9 @@ app.get(
         error:
           error.message
       });
+
     }
+
   }
 );
 
@@ -1664,6 +2229,7 @@ app.get(
 
 app.use(
   (req, res) => {
+
     res.status(404).json({
       success: false,
       message:
@@ -1671,6 +2237,7 @@ app.use(
       path:
         req.originalUrl
     });
+
   }
 );
 
@@ -1685,16 +2252,19 @@ app.use(
     res,
     next
   ) => {
+
     console.error(
       "Server error:",
       err
     );
+
 
     res.status(500).json({
       success: false,
       message:
         "Internal server error"
     });
+
   }
 );
 
@@ -1703,31 +2273,42 @@ app.use(
 ========================================================= */
 
 async function startServer() {
+
   try {
+
     console.log(
       "Starting Proyjon Marketing LTD API..."
     );
 
+
     await createTables();
+
 
     app.listen(
       PORT,
       "0.0.0.0",
       () => {
+
         console.log(
           `Server running on port ${PORT}`
         );
+
       }
     );
 
   } catch (error) {
+
     console.error(
       "SERVER STARTUP FAILED:",
       error
     );
 
+
     process.exit(1);
+
   }
+
 }
+
 
 startServer();
