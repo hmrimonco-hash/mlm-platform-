@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Dashboard — Proyjon Marketing LTD</title>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    Dashboard — Proyjon Marketing LTD
+  </title>
+
 
   <style>
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -15,363 +23,286 @@
       font-family: Arial, sans-serif;
     }
 
+
     body {
-      background:
-        radial-gradient(circle at top left, #263b55 0%, transparent 35%),
-        radial-gradient(circle at bottom right, #172238 0%, transparent 40%),
-        #07101d;
+      background: #07101d;
       color: #fff;
       min-height: 100vh;
-      padding-bottom: 85px;
+      padding: 18px;
+      padding-bottom: 90px;
     }
+
 
     .container {
-      width: 100%;
-      max-width: 520px;
+      max-width: 700px;
       margin: auto;
-      padding: 18px;
     }
 
-    .topbar {
+
+    /* =================================
+       TOP HEADER
+    ================================= */
+
+    .top-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 22px;
     }
 
-    .brand {
+
+    .brand-area {
       display: flex;
       align-items: center;
       gap: 10px;
+      min-width: 0;
     }
 
-    .brand-icon {
+
+    .brand-logo {
       width: 42px;
       height: 42px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #ffffff, #aab8ca);
-      color: #07101d;
+      border-radius: 13px;
+      background: #18263a;
+      border: 1px solid #34465f;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 900;
-      font-size: 18px;
+      font-weight: bold;
+      color: #22c55e;
+      font-size: 17px;
+      flex-shrink: 0;
     }
 
-    .brand-text h3 {
-      font-size: 15px;
+
+    .brand-text {
+      min-width: 0;
     }
+
+
+    .brand-text h2 {
+      font-size: 15px;
+      white-space: nowrap;
+    }
+
 
     .brand-text p {
-      color: #91a0b5;
-      font-size: 11px;
+      color: #8190a4;
+      font-size: 10px;
       margin-top: 3px;
     }
 
-    .profile-btn {
-      width: 40px;
-      height: 40px;
+
+    /* =================================
+       PROFILE BUTTON TOP RIGHT
+    ================================= */
+
+    .profile-button {
+      border: none;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+
+    .dashboard-profile-pic {
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
-      border: 1px solid #314158;
-      background: #111d2e;
-      color: white;
-      font-size: 17px;
+      object-fit: cover;
+      background: #18263a;
+      border: 2px solid #34465f;
+      display: block;
     }
 
-    .welcome {
-      margin-bottom: 18px;
+
+    .profile-button:hover
+    .dashboard-profile-pic {
+      border-color: #22c55e;
     }
 
-    .welcome h2 {
-      font-size: 25px;
+
+    /* =================================
+       WELCOME
+    ================================= */
+
+    .welcome-card {
+      background: #101c2c;
+      border: 1px solid #25374e;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+
+    .welcome-small {
+      color: #8190a4;
+      font-size: 11px;
       margin-bottom: 6px;
     }
 
-    .welcome p {
-      color: #91a0b5;
-      font-size: 13px;
+
+    .welcome-name {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+
+    .welcome-email {
+      color: #8190a4;
+      font-size: 12px;
       word-break: break-word;
     }
 
-    .wallet {
-      background:
-        linear-gradient(145deg, rgba(38,57,82,.95), rgba(13,25,41,.98));
-      border: 1px solid #30435d;
-      border-radius: 24px;
-      padding: 22px;
+
+    /* =================================
+       WALLET
+    ================================= */
+
+    .wallet-card {
+      background: #101c2c;
+      border: 1px solid #25374e;
+      border-radius: 20px;
+      padding: 20px;
       margin-bottom: 16px;
-      box-shadow: 0 15px 40px rgba(0,0,0,.25);
     }
 
-    .wallet-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
 
     .wallet-label {
-      color: #9caabd;
-      font-size: 12px;
+      color: #8190a4;
+      font-size: 11px;
+      margin-bottom: 8px;
     }
+
 
     .wallet-balance {
-      font-size: 32px;
-      font-weight: 800;
-      margin-top: 8px;
+      font-size: 30px;
+      font-weight: bold;
+      margin-bottom: 6px;
     }
+
 
     .wallet-id {
-      color: #8190a5;
-      font-size: 11px;
-      margin-top: 6px;
-    }
-
-    .wallet-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    .action-btn {
-      border: none;
-      border-radius: 14px;
-      padding: 13px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .add-btn {
-      background: white;
-      color: #08111e;
-    }
-
-    .withdraw-btn {
-      background: #18263a;
-      color: white;
-      border: 1px solid #34465f;
-    }
-
-    .promo {
-      background: linear-gradient(135deg, #15283f, #0c1728);
-      border: 1px solid #263b55;
-      border-radius: 20px;
-      padding: 18px;
-      margin-bottom: 18px;
-    }
-
-    .promo small {
-      color: #7f91a8;
-      font-size: 11px;
-    }
-
-    .promo h3 {
-      margin-top: 7px;
-      font-size: 18px;
-    }
-
-    .promo p {
-      color: #98a6b8;
-      font-size: 12px;
-      margin-top: 7px;
-      line-height: 1.5;
-    }
-
-    .section-title {
-      font-size: 15px;
-      margin: 20px 0 12px;
-    }
-
-    .quick-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
-    .quick-card {
-      background: #101c2c;
-      border: 1px solid #25374e;
-      border-radius: 17px;
-      padding: 17px;
-      min-height: 92px;
-      color: white;
-      text-align: left;
-    }
-
-    .quick-icon {
-      font-size: 22px;
-      margin-bottom: 10px;
-    }
-
-    .quick-card strong {
-      font-size: 13px;
-      display: block;
-    }
-
-    .quick-card span {
-      display: block;
-      color: #7f90a6;
-      font-size: 10px;
-      margin-top: 4px;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
-    .stat-card {
-      background: #101c2c;
-      border: 1px solid #25374e;
-      border-radius: 17px;
-      padding: 17px;
-    }
-
-    .stat-label {
       color: #8190a4;
       font-size: 11px;
     }
 
-    .stat-value {
-      font-size: 23px;
-      font-weight: 800;
-      margin-top: 8px;
+
+    /* =================================
+       MENU GRID
+    ================================= */
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 12px;
     }
 
-    .referral {
+
+    .menu-card {
       background: #101c2c;
       border: 1px solid #25374e;
       border-radius: 18px;
-      padding: 17px;
-      margin-top: 16px;
+      padding: 18px;
+      cursor: pointer;
+      transition: .15s;
     }
 
-    .referral-title {
-      font-size: 13px;
-      font-weight: 700;
+
+    .menu-card:hover {
+      background: #16253a;
+      transform: translateY(-1px);
+    }
+
+
+    .menu-icon {
+      font-size: 23px;
       margin-bottom: 10px;
     }
 
-    .referral-row {
-      display: flex;
-      gap: 8px;
-    }
 
-    .referral-row input {
-      min-width: 0;
-      flex: 1;
-      background: #0a1422;
-      border: 1px solid #2b3d55;
-      color: #cbd5e1;
-      border-radius: 11px;
-      padding: 11px;
-      font-size: 11px;
-    }
-
-    .copy-btn {
-      border: none;
-      background: white;
-      color: #07101d;
-      border-radius: 11px;
-      padding: 0 13px;
-      font-weight: 700;
-      font-size: 11px;
-    }
-
-    .transactions {
-      background: #101c2c;
-      border: 1px solid #25374e;
-      border-radius: 18px;
-      padding: 17px;
-      margin-top: 16px;
-    }
-
-    .transaction-empty {
-      text-align: center;
-      padding: 25px 10px;
-      color: #74849a;
-      font-size: 12px;
-    }
-
-    .bottom-nav {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 72px;
-      background: rgba(7,16,29,.96);
-      backdrop-filter: blur(15px);
-      border-top: 1px solid #25374e;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 100;
-      overflow-x: auto;
-    }
-
-    .nav-item {
-      background: transparent;
-      border: none;
-      color: #718197;
-      font-size: 10px;
-      text-align: center;
-      min-width: 60px;
-    }
-
-    .nav-item.active {
-      color: white;
-    }
-
-    .nav-icon {
-      display: block;
-      font-size: 20px;
+    .menu-title {
+      font-size: 14px;
+      font-weight: bold;
       margin-bottom: 4px;
     }
 
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.65);
-      align-items: flex-end;
-      justify-content: center;
-      z-index: 200;
+
+    .menu-description {
+      color: #8190a4;
+      font-size: 10px;
+      line-height: 1.4;
     }
 
-    .modal-box {
-      width: 100%;
-      max-width: 520px;
+
+    /* =================================
+       REFERRAL
+    ================================= */
+
+    .referral-card {
       background: #101c2c;
-      border: 1px solid #30435d;
-      border-radius: 25px 25px 0 0;
-      padding: 22px;
+      border: 1px solid #25374e;
+      border-radius: 20px;
+      padding: 18px;
+      margin-top: 16px;
     }
 
-    .modal-box h3 {
+
+    .referral-title {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+
+    .referral-link {
+      background: #0a1422;
+      border: 1px solid #2b3d55;
+      padding: 11px;
+      border-radius: 10px;
+      color: #a8b5c7;
+      font-size: 11px;
+      word-break: break-all;
       margin-bottom: 10px;
     }
 
-    .modal-box p {
-      color: #8998ac;
-      font-size: 13px;
-      line-height: 1.5;
+
+    .copy-btn {
+      background: #22c55e;
+      border: none;
+      color: #07101d;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 11px;
     }
 
-    .close-btn {
+
+    /* =================================
+       LOGOUT
+    ================================= */
+
+    .logout-btn {
       width: 100%;
-      margin-top: 18px;
+      margin-top: 16px;
       padding: 13px;
-      border: none;
       border-radius: 13px;
-      background: white;
-      color: #07101d;
-      font-weight: 700;
+      background: #35151a;
+      border: 1px solid #693039;
+      color: #ffb8c0;
+      font-weight: bold;
+      cursor: pointer;
     }
+
+
+    /* =================================
+       ERROR
+    ================================= */
 
     .error-box {
       display: none;
@@ -382,1035 +313,414 @@
       padding: 12px;
       margin-bottom: 15px;
       font-size: 12px;
-      line-height: 1.5;
-      word-break: break-word;
     }
 
-    @media (max-width: 360px) {
 
-      .container {
+    .loading {
+      text-align: center;
+      color: #8190a4;
+      padding: 40px 0;
+      font-size: 13px;
+    }
+
+
+    /* =================================
+       MOBILE
+    ================================= */
+
+    @media (max-width: 480px) {
+
+      body {
         padding: 14px;
       }
 
+
+      .brand-text h2 {
+        font-size: 13px;
+      }
+
+
+      .dashboard-profile-pic {
+        width: 44px;
+        height: 44px;
+      }
+
+
+      .welcome-name {
+        font-size: 21px;
+      }
+
+
       .wallet-balance {
-        font-size: 28px;
-      }
-
-      .nav-item {
-        min-width: 55px;
-        font-size: 9px;
-      }
-
-      .nav-icon {
-        font-size: 18px;
+        font-size: 27px;
       }
 
     }
+
   </style>
+
 </head>
 
 
 <body>
 
-  <div class="container">
 
-    <!-- TOP BAR -->
+<div class="container">
 
-    <div class="topbar">
 
-      <div class="brand">
+  <!-- =================================
+       TOP HEADER
+  ================================= -->
 
-        <div class="brand-icon">
-          P
-        </div>
+  <div class="top-header">
 
-        <div class="brand-text">
 
-          <h3>
-            Proyjon Marketing LTD
-          </h3>
+    <div class="brand-area">
 
-          <p>
-            আপনার প্রয়োজন আমাদের আয়োজন
-          </p>
+      <div class="brand-logo">
+        PM
+      </div>
 
-        </div>
+      <div class="brand-text">
+
+        <h2>
+          Proyjon Marketing LTD
+        </h2>
+
+        <p>
+          আপনার প্রয়োজন আমাদের আয়োজন
+        </p>
 
       </div>
 
-
-      <button
-        class="profile-btn"
-        onclick="goAccount()">
-        👤
-      </button>
-
     </div>
 
 
-    <!-- ERROR -->
+    <!-- PROFILE TOP RIGHT -->
 
-    <div
-      id="errorBox"
-      class="error-box">
-    </div>
+    <button
+      class="profile-button"
+      onclick="goAccount()"
+      title="My Account"
+    >
+
+      <img
+        id="dashboardProfilePic"
+        class="dashboard-profile-pic"
+        alt="Profile"
+      >
+
+    </button>
+
+
+  </div>
+
+
+  <!-- ERROR -->
+
+  <div
+    id="errorBox"
+    class="error-box"
+  ></div>
+
+
+  <!-- LOADING -->
+
+  <div
+    id="loadingBox"
+    class="loading"
+  >
+    Loading dashboard...
+  </div>
+
+
+  <!-- MAIN DASHBOARD -->
+
+  <div id="dashboardContent" style="display:none;">
 
 
     <!-- WELCOME -->
 
-    <div class="welcome">
+    <div class="welcome-card">
 
-      <h2 id="userName">
-        Welcome 👋
-      </h2>
+      <div class="welcome-small">
+        Welcome back
+      </div>
 
-      <p id="userEmail">
-        Loading account...
-      </p>
+      <div
+        class="welcome-name"
+        id="userName"
+      >
+        -
+      </div>
+
+      <div
+        class="welcome-email"
+        id="userEmail"
+      >
+        -
+      </div>
 
     </div>
 
 
     <!-- WALLET -->
 
-    <div class="wallet">
+    <div class="wallet-card">
 
-      <div class="wallet-top">
-
-        <div>
-
-          <div class="wallet-label">
-            Wallet Balance
-          </div>
-
-          <div
-            class="wallet-balance"
-            id="walletBalance">
-            ৳ 0.00
-          </div>
-
-          <div
-            class="wallet-id"
-            id="walletId">
-            Account ID: —
-          </div>
-
-        </div>
-
-        <div style="font-size:28px;">
-          💳
-        </div>
-
+      <div class="wallet-label">
+        Wallet Balance
       </div>
 
+      <div
+        class="wallet-balance"
+        id="walletBalance"
+      >
+        ৳ 0.00
+      </div>
 
-      <div class="wallet-actions">
-
-        <button
-          class="action-btn add-btn"
-          onclick="openModal('Add Money')">
-
-          + Add Money
-
-        </button>
-
-
-        <button
-          class="action-btn withdraw-btn"
-          onclick="openModal('Withdraw')">
-
-          Withdraw
-
-        </button>
-
+      <div
+        class="wallet-id"
+        id="walletId"
+      >
+        Wallet ID: -
       </div>
 
     </div>
 
 
-    <!-- PROMO -->
+    <!-- MENU -->
 
-    <div class="promo">
-
-      <small>
-        PROYJON MARKETING LTD
-      </small>
-
-      <h3>
-        Build your network 🚀
-      </h3>
-
-      <p>
-        Manage your account, packages, team and transactions
-        from one place.
-      </p>
-
-    </div>
+    <div class="menu-grid">
 
 
-    <!-- QUICK ACTIONS -->
+      <div
+        class="menu-card"
+        onclick="goAccount()"
+      >
 
-    <h3 class="section-title">
-      Quick Actions
-    </h3>
-
-
-    <div class="quick-grid">
-
-      <button
-        class="quick-card"
-        onclick="openModal('Packages')">
-
-        <div class="quick-icon">
-          📦
+        <div class="menu-icon">
+          👤
         </div>
 
-        <strong>
-          Packages
-        </strong>
-
-        <span>
-          View packages
-        </span>
-
-      </button>
-
-
-      <button
-        class="quick-card"
-        onclick="openModal('Buy Share')">
-
-        <div class="quick-icon">
-          🛒
+        <div class="menu-title">
+          My Account
         </div>
 
-        <strong>
-          Buy Share
-        </strong>
-
-        <span>
-          Purchase share
-        </span>
-
-      </button>
-
-
-      <button
-        class="quick-card"
-        onclick="openModal('Tree View')">
-
-        <div class="quick-icon">
-          🌳
+        <div class="menu-description">
+          View and update your profile information
         </div>
 
-        <strong>
-          Tree View
-        </strong>
-
-        <span>
-          Binary structure
-        </span>
-
-      </button>
+      </div>
 
 
-      <button
-        class="quick-card"
-        onclick="openModal('Team')">
+      <div
+        class="menu-card"
+        onclick="comingSoon('My Team')"
+      >
 
-        <div class="quick-icon">
+        <div class="menu-icon">
           👥
         </div>
 
-        <strong>
-          Team
-        </strong>
-
-        <span>
-          Your network
-        </span>
-
-      </button>
-
-
-      <button
-        class="quick-card"
-        onclick="openModal('Transactions')">
-
-        <div class="quick-icon">
-          📊
+        <div class="menu-title">
+          My Team
         </div>
 
-        <strong>
+        <div class="menu-description">
+          View your referral team and downline
+        </div>
+
+      </div>
+
+
+      <div
+        class="menu-card"
+        onclick="comingSoon('Packages')"
+      >
+
+        <div class="menu-icon">
+          📦
+        </div>
+
+        <div class="menu-title">
+          Packages
+        </div>
+
+        <div class="menu-description">
+          View available packages
+        </div>
+
+      </div>
+
+
+      <div
+        class="menu-card"
+        onclick="comingSoon('Transactions')"
+      >
+
+        <div class="menu-icon">
+          💳
+        </div>
+
+        <div class="menu-title">
           Transactions
-        </strong>
-
-        <span>
-          Account history
-        </span>
-
-      </button>
-
-
-      <button
-        class="quick-card"
-        onclick="openModal('Deposits')">
-
-        <div class="quick-icon">
-          💰
         </div>
 
-        <strong>
-          Deposits
-        </strong>
-
-        <span>
-          Deposit requests
-        </span>
-
-      </button>
-
-
-      <button
-        class="quick-card"
-        onclick="openModal('Withdrawals')">
-
-        <div class="quick-icon">
-          💸
-        </div>
-
-        <strong>
-          Withdrawals
-        </strong>
-
-        <span>
-          Withdrawal requests
-        </span>
-
-      </button>
-
-
-      <button
-        class="quick-card"
-        onclick="goAccount()">
-
-        <div class="quick-icon">
-          ⚙️
-        </div>
-
-        <strong>
-          Account
-        </strong>
-
-        <span>
-          Profile settings
-        </span>
-
-      </button>
-
-    </div>
-
-
-    <!-- OVERVIEW -->
-
-    <h3 class="section-title">
-      Overview
-    </h3>
-
-
-    <div class="stats">
-
-      <div class="stat-card">
-
-        <div class="stat-label">
-          Total Team
-        </div>
-
-        <div class="stat-value">
-          0
+        <div class="menu-description">
+          View your transaction history
         </div>
 
       </div>
 
-
-      <div class="stat-card">
-
-        <div class="stat-label">
-          Active Packages
-        </div>
-
-        <div class="stat-value">
-          0
-        </div>
-
-      </div>
-
-
-      <div class="stat-card">
-
-        <div class="stat-label">
-          Left Team
-        </div>
-
-        <div class="stat-value">
-          0
-        </div>
-
-      </div>
-
-
-      <div class="stat-card">
-
-        <div class="stat-label">
-          Right Team
-        </div>
-
-        <div class="stat-value">
-          0
-        </div>
-
-      </div>
 
     </div>
 
 
     <!-- REFERRAL -->
 
-    <div class="referral">
+    <div class="referral-card">
 
       <div class="referral-title">
         🔗 Your Referral Link
       </div>
 
-
-      <div class="referral-row">
-
-        <input
-          id="referralLink"
-          type="text"
-          value="Loading..."
-          readonly
-        >
-
-
-        <button
-          class="copy-btn"
-          onclick="copyReferral()">
-
-          Copy
-
-        </button>
-
+      <div
+        class="referral-link"
+        id="referralLink"
+      >
+        -
       </div>
-
-    </div>
-
-
-    <!-- TRANSACTIONS -->
-
-    <div class="transactions">
-
-      <div class="referral-title">
-        Recent Transactions
-      </div>
-
-
-      <div class="transaction-empty">
-        No transactions yet.
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- BOTTOM NAV -->
-
-  <div class="bottom-nav">
-
-    <button
-      class="nav-item active"
-      onclick="location.reload()">
-
-      <span class="nav-icon">
-        ⌂
-      </span>
-
-      Home
-
-    </button>
-
-
-    <button
-      class="nav-item"
-      onclick="openModal('Packages')">
-
-      <span class="nav-icon">
-        📦
-      </span>
-
-      Packages
-
-    </button>
-
-
-    <button
-      class="nav-item"
-      onclick="openModal('Buy Share')">
-
-      <span class="nav-icon">
-        🛒
-      </span>
-
-      Buy Share
-
-    </button>
-
-
-    <button
-      class="nav-item"
-      onclick="openModal('Team')">
-
-      <span class="nav-icon">
-        👥
-      </span>
-
-      Team
-
-    </button>
-
-
-    <button
-      class="nav-item"
-      onclick="goAccount()">
-
-      <span class="nav-icon">
-        👤
-      </span>
-
-      Account
-
-    </button>
-
-
-    <button
-      class="nav-item"
-      onclick="logoutUser()"
-      style="color:#fca5a5;">
-
-      <span class="nav-icon">
-        🚪
-      </span>
-
-      Logout
-
-    </button>
-
-  </div>
-
-
-  <!-- MODAL -->
-
-  <div
-    id="modal"
-    class="modal">
-
-    <div class="modal-box">
-
-      <h3 id="modalTitle">
-        Feature
-      </h3>
-
-
-      <p>
-        This feature will be connected in the next step.
-      </p>
-
 
       <button
-        class="close-btn"
-        onclick="closeModal()">
-
-        Close
-
+        class="copy-btn"
+        onclick="copyReferral()"
+      >
+        Copy Referral Link
       </button>
 
     </div>
 
+
+    <!-- LOGOUT -->
+
+    <button
+      class="logout-btn"
+      onclick="logoutUser()"
+    >
+      Logout
+    </button>
+
+
   </div>
 
-
-  <!-- ============================= -->
-  <!-- USER DASHBOARD JAVASCRIPT -->
-  <!-- ============================= -->
-
-  <script>
-
-    const API_URL =
-      "https://mlm-platform-production.up.railway.app";
+</div>
 
 
-    // ==========================================
-    // USER TOKEN
-    // ==========================================
-
-    function getUserToken() {
-
-      return localStorage.getItem("token") || "";
-
-    }
+<script>
 
 
-    // ==========================================
-    // ERROR MESSAGE
-    // ==========================================
+  /* =========================================
+     CONFIG
+  ========================================= */
 
-    function showError(message) {
-
-      const box =
-        document.getElementById("errorBox");
+  const API_URL =
+    "https://mlm-platform-production.up.railway.app";
 
 
-      box.textContent =
-        message;
+  const token =
+    localStorage.getItem("token");
 
 
-      box.style.display =
-        "block";
+  /* =========================================
+     DEFAULT AVATAR
+  ========================================= */
 
-    }
+  const DEFAULT_AVATAR =
+    "data:image/svg+xml;charset=UTF-8," +
+    encodeURIComponent(`
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="300"
+        height="300"
+        viewBox="0 0 300 300"
+      >
+        <rect
+          width="300"
+          height="300"
+          rx="150"
+          fill="#18263a"
+        />
 
+        <circle
+          cx="150"
+          cy="115"
+          r="55"
+          fill="#8190a4"
+        />
 
-    // ==========================================
-    // LOAD USER DATA
-    // ==========================================
-
-    async function loadUserData() {
-
-      const token =
-        getUserToken();
-
-
-      // No user token
-      if (!token) {
-
-        showError(
-          "Login session পাওয়া যায়নি। আবার Login করুন।"
-        );
-
-
-        setTimeout(function () {
-
-          window.location.href =
-            "login.html";
-
-        }, 1200);
-
-
-        return;
-
-      }
+        <path
+          d="M55 270c10-58 45-88 95-88s85 30 95 88"
+          fill="#8190a4"
+        />
+      </svg>
+    `);
 
 
-      try {
+  /* =========================================
+     AUTH CHECK
+  ========================================= */
 
-        const response =
-          await fetch(
-            API_URL + "/api/auth/me",
-            {
-              method: "GET",
+  if (!token) {
 
-              headers: {
+    window.location.href =
+      "login.html";
 
-                "Accept":
-                  "application/json",
+  }
 
-                "Authorization":
-                  "Bearer " + token
 
-              }
+  /* =========================================
+     LOAD USER
+  ========================================= */
 
+  async function loadUserData() {
+
+    if (!token) return;
+
+
+    try {
+
+      const res =
+        await fetch(
+          API_URL +
+          "/api/auth/me",
+          {
+            method: "GET",
+
+            headers: {
+              "Accept":
+                "application/json",
+
+              "Authorization":
+                "Bearer " + token
             }
-          );
-
-
-        let data = null;
-
-
-        try {
-
-          data =
-            await response.json();
-
-        } catch (e) {
-
-          data = null;
-
-        }
-
-
-        // ==========================================
-        // 401 = SESSION EXPIRED / INVALID TOKEN
-        // ==========================================
-
-        if (response.status === 401) {
-
-          localStorage.removeItem(
-            "token"
-          );
-
-          localStorage.removeItem(
-            "user"
-          );
-
-
-          showError(
-            "Login session expired। আবার Login করুন।"
-          );
-
-
-          setTimeout(function () {
-
-            window.location.href =
-              "login.html";
-
-          }, 1200);
-
-
-          return;
-
-        }
-
-
-        // ==========================================
-        // 403 = FORBIDDEN
-        // ==========================================
-
-        if (response.status === 403) {
-
-          showError(
-            "এই account-এর permission নেই।"
-          );
-
-          return;
-
-        }
-
-
-        // ==========================================
-        // OTHER SERVER ERROR
-        // ==========================================
-
-        if (!response.ok) {
-
-          showError(
-
-            data && data.message
-              ? data.message
-              : "Account information load করা যাচ্ছে না।"
-
-          );
-
-          return;
-
-        }
-
-
-        // ==========================================
-        // SUCCESS CHECK
-        // ==========================================
-
-        if (
-          !data ||
-          !data.success
-        ) {
-
-          showError(
-
-            data && data.message
-              ? data.message
-              : "User information পাওয়া যায়নি।"
-
-          );
-
-          return;
-
-        }
-
-
-        const user =
-          data.user;
-
-
-        // ==========================================
-        // USER NOT FOUND
-        // ==========================================
-
-        if (!user) {
-
-          showError(
-            "User information পাওয়া যায়নি।"
-          );
-
-          return;
-
-        }
-
-
-        // ==========================================
-        // USER NAME
-        // ==========================================
-
-        document.getElementById(
-          "userName"
-        ).textContent =
-
-          (user.name || "User") +
-          " 👋";
-
-
-        // ==========================================
-        // USER EMAIL
-        // ==========================================
-
-        document.getElementById(
-          "userEmail"
-        ).textContent =
-
-          user.email ||
-          "No email";
-
-
-        // ==========================================
-        // ACCOUNT ID
-        // ==========================================
-
-        document.getElementById(
-          "walletId"
-        ).textContent =
-
-          "Account ID: " +
-          (user.id || "—");
-
-
-        // ==========================================
-        // WALLET BALANCE
-        // ==========================================
-
-        const balance =
-          Number(
-            user.wallet_balance || 0
-          );
-
-
-        document.getElementById(
-          "walletBalance"
-        ).textContent =
-
-          "৳ " +
-          balance.toFixed(2);
-
-
-        // ==========================================
-        // REFERRAL LINK
-        // ==========================================
-
-        if (
-          user.referral_code
-        ) {
-
-          const referralURL =
-
-            window.location.origin +
-            "/register.html?ref=" +
-            encodeURIComponent(
-              user.referral_code
-            );
-
-
-          document.getElementById(
-            "referralLink"
-          ).value =
-
-            referralURL;
-
-        } else {
-
-          document.getElementById(
-            "referralLink"
-          ).value =
-
-            "No referral code";
-
-        }
-
-
-        // ==========================================
-        // SAVE USER INFO
-        // ==========================================
-
-        localStorage.setItem(
-          "user",
-          JSON.stringify(user)
+          }
         );
 
 
-        console.log(
-          "User dashboard loaded successfully."
+      if (res.status === 401) {
+
+        localStorage.removeItem(
+          "token"
         );
 
-      }
-
-      catch (error) {
-
-        console.error(
-          "Dashboard connection error:",
-          error
+        localStorage.removeItem(
+          "user"
         );
 
-
-        showError(
-          "Server-এর সাথে connection করা যাচ্ছে না।"
+        alert(
+          "Your session has expired. Please login again."
         );
-
-      }
-
-    }
-
-
-    // ==========================================
-    // COPY REFERRAL
-    // ==========================================
-
-    function copyReferral() {
-
-      const input =
-        document.getElementById(
-          "referralLink"
-        );
-
-
-      if (
-        !input.value ||
-        input.value === "Loading..." ||
-        input.value === "No referral code"
-      ) {
-
-        return;
-
-      }
-
-
-      if (
-        navigator.clipboard &&
-        navigator.clipboard.writeText
-      ) {
-
-        navigator.clipboard
-          .writeText(
-            input.value
-          )
-
-          .then(function () {
-
-            alert(
-              "Referral link copied! ✅"
-            );
-
-          })
-
-          .catch(function () {
-
-            fallbackCopy(
-              input
-            );
-
-          });
-
-      }
-
-      else {
-
-        fallbackCopy(
-          input
-        );
-
-      }
-
-    }
-
-
-    // ==========================================
-    // FALLBACK COPY
-    // ==========================================
-
-    function fallbackCopy(input) {
-
-      input.select();
-
-      input.setSelectionRange(
-        0,
-        99999
-      );
-
-
-      document.execCommand(
-        "copy"
-      );
-
-
-      alert(
-        "Referral link copied! ✅"
-      );
-
-    }
-
-
-    // ==========================================
-    // OPEN MODAL
-    // ==========================================
-
-    function openModal(title) {
-
-      document.getElementById(
-        "modalTitle"
-      ).textContent =
-        title;
-
-
-      document.getElementById(
-        "modal"
-      ).style.display =
-        "flex";
-
-    }
-
-
-    // ==========================================
-    // CLOSE MODAL
-    // ==========================================
-
-    function closeModal() {
-
-      document.getElementById(
-        "modal"
-      ).style.display =
-        "none";
-
-    }
-
-
-    // ==========================================
-    // ACCOUNT
-    // ==========================================
-
-    function goAccount() {
-
-      const token =
-        getUserToken();
-
-
-      if (!token) {
 
         window.location.href =
           "login.html";
@@ -1420,63 +730,342 @@
       }
 
 
-      window.location.href =
-        "account.html";
+      const data =
+        await res.json();
+
+
+      if (
+        !res.ok ||
+        !data.success ||
+        !data.user
+      ) {
+
+        showError(
+          data.message ||
+          "Unable to load dashboard."
+        );
+
+        return;
+
+      }
+
+
+      const user =
+        data.user;
+
+
+      /* =====================================
+         PROFILE PHOTO
+      ===================================== */
+
+      const profilePic =
+        document.getElementById(
+          "dashboardProfilePic"
+        );
+
+
+      if (
+        user.profile_pic &&
+        typeof user.profile_pic === "string"
+      ) {
+
+        profilePic.src =
+          user.profile_pic;
+
+      } else {
+
+        profilePic.src =
+          DEFAULT_AVATAR;
+
+      }
+
+
+      /* =====================================
+         USER DATA
+      ===================================== */
+
+      document.getElementById(
+        "userName"
+      ).textContent =
+        user.name || "-";
+
+
+      document.getElementById(
+        "userEmail"
+      ).textContent =
+        user.email || "-";
+
+
+      document.getElementById(
+        "walletId"
+      ).textContent =
+        "Wallet ID: " +
+        (
+          user.referral_code ||
+          user.id ||
+          "-"
+        );
+
+
+      const balance =
+        Number(
+          user.wallet_balance || 0
+        );
+
+
+      document.getElementById(
+        "walletBalance"
+      ).textContent =
+        "৳ " +
+        balance.toLocaleString(
+          "en-BD",
+          {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          }
+        );
+
+
+      /* =====================================
+         REFERRAL LINK
+      ===================================== */
+
+      const referralCode =
+        user.referral_code || "";
+
+
+      if (referralCode) {
+
+        const referralUrl =
+          window.location.origin +
+          "/register.html?ref=" +
+          encodeURIComponent(
+            referralCode
+          );
+
+
+        document.getElementById(
+          "referralLink"
+        ).textContent =
+          referralUrl;
+
+      } else {
+
+        document.getElementById(
+          "referralLink"
+        ).textContent =
+          "Referral link unavailable";
+
+      }
+
+
+      /* =====================================
+         SAVE USER
+      ===================================== */
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(user)
+      );
+
+
+      /* =====================================
+         SHOW DASHBOARD
+      ===================================== */
+
+      document.getElementById(
+        "loadingBox"
+      ).style.display =
+        "none";
+
+
+      document.getElementById(
+        "dashboardContent"
+      ).style.display =
+        "block";
+
+
+    } catch (error) {
+
+      console.error(
+        "Dashboard error:",
+        error
+      );
+
+      showError(
+        "Unable to connect to server."
+      );
 
     }
 
+  }
 
-    // ==========================================
-    // USER LOGOUT
-    // ==========================================
 
-    function logoutUser() {
+  /* =========================================
+     SHOW ERROR
+  ========================================= */
 
-      localStorage.removeItem(
-        "token"
+  function showError(message) {
+
+    const box =
+      document.getElementById(
+        "errorBox"
       );
 
-      localStorage.removeItem(
-        "user"
-      );
+    box.textContent =
+      message;
 
+    box.style.display =
+      "block";
+
+
+    document.getElementById(
+      "loadingBox"
+    ).style.display =
+      "none";
+
+  }
+
+
+  /* =========================================
+     ACCOUNT
+  ========================================= */
+
+  function goAccount() {
+
+    if (!token) {
 
       window.location.href =
         "login.html";
 
+      return;
+
     }
 
 
-    // ==========================================
-    // CLOSE MODAL BY CLICKING OUTSIDE
-    // ==========================================
+    window.location.href =
+      "account.html";
 
-    document.getElementById(
-      "modal"
-    ).addEventListener(
-      "click",
-      function (event) {
+  }
 
-        if (
-          event.target === this
-        ) {
 
-          closeModal();
+  /* =========================================
+     COPY REFERRAL
+  ========================================= */
 
-        }
+  async function copyReferral() {
 
-      }
+    const text =
+      document.getElementById(
+        "referralLink"
+      ).textContent;
+
+
+    if (
+      !text ||
+      text === "-" ||
+      text === "Referral link unavailable"
+    ) {
+
+      return;
+
+    }
+
+
+    try {
+
+      await navigator.clipboard.writeText(
+        text
+      );
+
+      alert(
+        "Referral link copied!"
+      );
+
+    } catch (error) {
+
+      /* Fallback */
+
+      const textarea =
+        document.createElement(
+          "textarea"
+        );
+
+      textarea.value =
+        text;
+
+      document.body.appendChild(
+        textarea
+      );
+
+      textarea.select();
+
+      document.execCommand(
+        "copy"
+      );
+
+      textarea.remove();
+
+      alert(
+        "Referral link copied!"
+      );
+
+    }
+
+  }
+
+
+  /* =========================================
+     COMING SOON
+  ========================================= */
+
+  function comingSoon(name) {
+
+    alert(
+      name +
+      " section will be available soon."
+    );
+
+  }
+
+
+  /* =========================================
+     LOGOUT
+  ========================================= */
+
+  function logoutUser() {
+
+    const confirmed =
+      confirm(
+        "Are you sure you want to logout?"
+      );
+
+
+    if (!confirmed) return;
+
+
+    localStorage.removeItem(
+      "token"
+    );
+
+    localStorage.removeItem(
+      "user"
     );
 
 
-    // ==========================================
-    // START DASHBOARD
-    // ==========================================
+    window.location.href =
+      "login.html";
 
-    loadUserData();
+  }
 
-  </script>
+
+  /* =========================================
+     START
+  ========================================= */
+
+  loadUserData();
+
+</script>
 
 </body>
-
 </html>
