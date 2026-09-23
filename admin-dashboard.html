@@ -1,4663 +1,2260 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Admin Dashboard — Proyjon Marketing LTD</title>
-
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
-body{
-  background:#070b12;
-  color:#f4f7fb;
-  font-family:Arial,sans-serif;
-  min-height:100vh;
-  padding-bottom:80px;
-}
-
-button,input{
-  font:inherit;
-}
-
-button{
-  -webkit-tap-highlight-color:transparent;
-}
-
-.header{
-  height:70px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 16px;
-  background:#0a0f18;
-  border-bottom:1px solid #202938;
-  position:sticky;
-  top:0;
-  z-index:50;
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.logo{
-  width:40px;
-  height:40px;
-  border-radius:12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#6c63ff;
-  font-weight:900;
-  font-size:20px;
-}
-
-.name{
-  font-size:14px;
-  font-weight:800;
-}
-
-.sub{
-  color:#8994a5;
-  font-size:10px;
-  margin-top:3px;
-}
-
-.header-actions{
-  display:flex;
-  align-items:center;
-  gap:9px;
-}
-
-.bell{
-  width:42px;
-  height:42px;
-  border:1px solid #273143;
-  border-radius:12px;
-  background:#101725;
-  color:white;
-  font-size:18px;
-  cursor:pointer;
-  position:relative;
-}
-
-.bell:hover{
-  border-color:#6c63ff;
-}
-
-.badge{
-  position:absolute;
-  top:-5px;
-  right:-5px;
-  min-width:19px;
-  height:19px;
-  padding:0 5px;
-  border-radius:20px;
-  background:#ef4444;
-  color:white;
-  font-size:9px;
-  font-weight:bold;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  border:2px solid #0a0f18;
-}
-
-.badge.show{
-  display:flex;
-}
-
-.container{
-  max-width:900px;
-  margin:auto;
-  padding:20px 15px;
-}
-
-.welcome{
-  padding:22px;
-  border:1px solid #202938;
-  border-radius:20px;
-  background:#0e1522;
-  margin-bottom:18px;
-}
-
-.welcome-top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-}
-
-.welcome h1{
-  font-size:23px;
-  margin-bottom:8px;
-}
-
-.welcome p{
-  color:#8d99aa;
-  font-size:12px;
-  line-height:1.6;
-}
-
-.status-pill{
-  background:#14251b;
-  color:#4ade80;
-  border:1px solid #245237;
-  padding:7px 10px;
-  border-radius:20px;
-  font-size:9px;
-  white-space:nowrap;
-}
-
-.summary{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  margin-top:16px;
-}
-
-.summary-card{
-  background:#101725;
-  border:1px solid #202938;
-  border-radius:13px;
-  padding:12px;
-}
-
-.summary-label{
-  color:#7f8a9c;
-  font-size:9px;
-}
-
-.summary-number{
-  font-size:20px;
-  font-weight:800;
-  margin-top:5px;
-}
-
-.summary-number.pending{
-  color:#facc15;
-}
-
-.summary-number.unread{
-  color:#f87171;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:11px;
-}
-
-.card{
-  min-height:110px;
-  padding:16px;
-  border:1px solid #202938;
-  border-radius:18px;
-  background:#0e1522;
-  color:white;
-  text-align:left;
-  cursor:pointer;
-  transition:.15s;
-}
-
-.card:hover{
-  border-color:#35415a;
-  background:#101827;
-}
-
-.card:active{
-  transform:scale(.97);
-}
-
-.icon{
-  font-size:22px;
-  margin-bottom:12px;
-}
-
-.title{
-  font-size:13px;
-  font-weight:bold;
-}
-
-.desc{
-  color:#7f8a9c;
-  font-size:10px;
-  line-height:1.4;
-  margin-top:5px;
-}
-
-.card-alert{
-  position:relative;
-}
-
-.card-badge{
-  position:absolute;
-  top:13px;
-  right:13px;
-  min-width:21px;
-  height:21px;
-  padding:0 6px;
-  border-radius:20px;
-  background:#ef4444;
-  color:white;
-  font-size:9px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:bold;
-}
-
-.overlay{
-  position:fixed;
-  inset:0;
-  z-index:100;
-  display:none;
-  align-items:flex-end;
-  justify-content:center;
-  background:rgba(0,0,0,.78);
-}
-
-.overlay.show{
-  display:flex;
-}
-
-.modal{
-  width:100%;
-  max-width:650px;
-  max-height:92vh;
-  overflow:auto;
-  background:#0b111b;
-  border:1px solid #263044;
-  border-radius:24px 24px 0 0;
-  padding:20px;
-}
-
-.modal-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:18px;
-  position:sticky;
-  top:-20px;
-  background:#0b111b;
-  padding-top:3px;
-  padding-bottom:12px;
-  z-index:5;
-}
-
-.modal-title{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.modal-icon{
-  width:42px;
-  height:42px;
-  border-radius:13px;
-  background:#151b36;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:20px;
-}
-
-.modal-title h2{
-  font-size:17px;
-}
-
-.modal-title p{
-  color:#7f8a9c;
-  font-size:10px;
-  margin-top:3px;
-}
-
-.close{
-  width:38px;
-  height:38px;
-  border-radius:12px;
-  border:1px solid #273143;
-  background:#111827;
-  color:white;
-  cursor:pointer;
-  font-size:18px;
-}
-
-.actions{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-}
-
-.action{
-  padding:15px;
-  background:#111827;
-  border:1px solid #222d40;
-  border-radius:16px;
-  color:white;
-  text-align:left;
-  cursor:pointer;
-}
-
-.action:hover{
-  border-color:#3a4660;
-}
-
-.action:active{
-  transform:scale(.98);
-}
-
-.action-icon{
-  font-size:20px;
-  margin-bottom:8px;
-}
-
-.action-title{
-  font-size:12px;
-  font-weight:bold;
-}
-
-.action-desc{
-  color:#7f8a9c;
-  font-size:9px;
-  line-height:1.4;
-  margin-top:4px;
-}
-
-.form{
-  display:none;
-}
-
-.form.show{
-  display:block;
-}
-
-.form-title{
-  font-size:15px;
-  font-weight:bold;
-  margin-bottom:14px;
-}
-
-.input-group{
-  margin-bottom:11px;
-}
-
-.input-group label{
-  display:block;
-  color:#8994a5;
-  font-size:10px;
-  margin-bottom:6px;
-}
-
-.input{
-  width:100%;
-  padding:13px;
-  border-radius:12px;
-  border:1px solid #273143;
-  outline:none;
-  background:#101725;
-  color:white;
-}
-
-.input:focus{
-  border-color:#6c63ff;
-}
-
-.primary{
-  width:100%;
-  padding:13px;
-  border:0;
-  border-radius:13px;
-  background:#6c63ff;
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
-  margin-top:5px;
-}
-
-.secondary{
-  width:100%;
-  padding:12px;
-  border:1px solid #273143;
-  border-radius:13px;
-  background:#101725;
-  color:#cbd5e1;
-  cursor:pointer;
-  margin-top:9px;
-}
-
-.primary:disabled{
-  opacity:.6;
-  cursor:not-allowed;
-}
-
-.info-box{
-  background:#101725;
-  border:1px solid #273143;
-  border-radius:15px;
-  padding:15px;
-  line-height:1.8;
-  font-size:12px;
-}
-
-.info-label{
-  color:#7f8a9c;
-  font-size:10px;
-}
-
-.info-value{
-  color:#fff;
-  font-weight:bold;
-  word-break:break-word;
-}
-
-.error-box{
-  color:#fca5a5;
-  line-height:1.6;
-  background:#211317;
-  border:1px solid #4b252c;
-  border-radius:13px;
-  padding:13px;
-  font-size:11px;
-}
-
-.logout{
-  width:100%;
-  margin-top:12px;
-  padding:13px;
-  border-radius:14px;
-  border:1px solid rgba(239,68,68,.25);
-  background:rgba(239,68,68,.08);
-  color:#fca5a5;
-  cursor:pointer;
-}
-
-/* =========================================
-   NOTIFICATIONS
-========================================= */
-
-.notification-item{
-  padding:14px;
-  background:#101725;
-  border:1px solid #273143;
-  border-radius:15px;
-  margin-bottom:10px;
-  cursor:pointer;
-}
-
-.notification-item.unread{
-  border-color:#4b438d;
-  background:#12152a;
-}
-
-.notification-top{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:10px;
-}
-
-.notification-title{
-  font-size:12px;
-  font-weight:bold;
-}
-
-.notification-message{
-  color:#8b97a7;
-  font-size:10px;
-  line-height:1.6;
-  margin-top:6px;
-}
-
-.notification-time{
-  color:#5f6c7b;
-  font-size:9px;
-  margin-top:8px;
-}
-
-.unread-dot{
-  width:8px;
-  height:8px;
-  background:#ef4444;
-  border-radius:50%;
-  flex-shrink:0;
-  margin-top:4px;
-}
-
-.read-label{
-  color:#64748b;
-  font-size:8px;
-}
-
-/* =========================================
-   PROFILE REQUEST
-========================================= */
-
-.request-card{
-  background:#101725;
-  border:1px solid #303a4d;
-  border-radius:17px;
-  padding:14px;
-  margin-bottom:12px;
-}
-
-.request-card.pending{
-  border-color:#6c63ff;
-}
-
-.request-header{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:10px;
-}
-
-.request-user{
-  font-size:13px;
-  font-weight:bold;
-}
-
-.request-email{
-  color:#748091;
-  font-size:9px;
-  margin-top:3px;
-  word-break:break-word;
-}
-
-.status{
-  font-size:8px;
-  padding:5px 8px;
-  border-radius:20px;
-  font-weight:bold;
-  flex-shrink:0;
-}
-
-.status.pending{
-  background:#3d3513;
-  color:#facc15;
-  border:1px solid #635517;
-}
-
-.status.approved{
-  background:#12351f;
-  color:#4ade80;
-  border:1px solid #245b37;
-}
-
-.status.rejected{
-  background:#351619;
-  color:#f87171;
-  border:1px solid #61252b;
-}
-
-.request-time{
-  color:#667383;
-  font-size:9px;
-  margin-top:10px;
-}
-
-.compare-title{
-  color:#aab4c1;
-  font-size:10px;
-  font-weight:bold;
-  margin:14px 0 8px;
-}
-
-.compare-table{
-  width:100%;
-  border-collapse:collapse;
-  table-layout:fixed;
-}
-
-.compare-table th{
-  text-align:left;
-  color:#687586;
-  font-size:9px;
-  padding:8px;
-  border-bottom:1px solid #293342;
-}
-
-.compare-table td{
-  vertical-align:top;
-  padding:9px 8px;
-  border-bottom:1px solid #202a38;
-  font-size:10px;
-  line-height:1.5;
-  word-break:break-word;
-}
-
-.compare-table td:first-child{
-  width:27%;
-  color:#778495;
-}
-
-.old-data{
-  color:#f87171;
-  background:rgba(239,68,68,.05);
-}
-
-.new-data{
-  color:#4ade80;
-  background:rgba(34,197,94,.05);
-}
-
-.same-data{
-  color:#9aa6b5;
-}
-
-.change-arrow{
-  color:#64748b;
-  text-align:center;
-  width:18px;
-}
-
-.request-actions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px;
-  margin-top:14px;
-}
-
-.approve{
-  border:0;
-  border-radius:11px;
-  padding:12px;
-  background:#22c55e;
-  color:#06130b;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.reject{
-  border:0;
-  border-radius:11px;
-  padding:12px;
-  background:#ef4444;
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.approve:disabled,
-.reject:disabled{
-  opacity:.5;
-  cursor:not-allowed;
-}
-
-.empty{
-  padding:25px 15px;
-  text-align:center;
-  color:#667383;
-  font-size:11px;
-  border:1px dashed #293342;
-  border-radius:14px;
-}
-
-.loading{
-  padding:25px;
-  text-align:center;
-  color:#778495;
-  font-size:11px;
-}
-
-.filter-row{
-  display:flex;
-  gap:7px;
-  margin-bottom:13px;
-}
-
-.filter-btn{
-  flex:1;
-  padding:9px;
-  border-radius:9px;
-  border:1px solid #293342;
-  background:#101725;
-  color:#7f8a9c;
-  font-size:9px;
-  cursor:pointer;
-}
-
-.filter-btn.active{
-  color:#a5a0ff;
-  border-color:#6c63ff;
-  background:#15152c;
-}
-
-/* =========================================
-   USER LIST
-========================================= */
-
-.user-item{
-  background:#101725;
-  border:1px solid #273143;
-  border-radius:14px;
-  padding:13px;
-  margin-bottom:9px;
-}
-
-.user-head{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-}
-
-.user-name{
-  font-size:12px;
-  font-weight:bold;
-}
-
-.user-email{
-  color:#748091;
-  font-size:9px;
-  margin-top:3px;
-}
-
-.user-meta{
-  color:#7f8a9c;
-  font-size:9px;
-  line-height:1.7;
-  margin-top:8px;
-}
-
-/* =========================================
-   TOAST
-========================================= */
-
-.toast{
-  position:fixed;
-  left:50%;
-  bottom:90px;
-  transform:translate(-50%,20px);
-  z-index:200;
-  opacity:0;
-  pointer-events:none;
-  background:#172033;
-  border:1px solid #29364c;
-  color:white;
-  padding:12px 16px;
-  border-radius:12px;
-  font-size:11px;
-  transition:.2s;
-  text-align:center;
-  max-width:90%;
-}
-
-.toast.show{
-  opacity:1;
-  transform:translate(-50%,0);
-}
-
-.toast.success{
-  border-color:#245c43;
-}
-
-.toast.error{
-  border-color:#713b3b;
-}
-
-/* =========================================
-   BOTTOM NAV
-========================================= */
-
-.bottom{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  height:68px;
-  z-index:50;
-  background:#0a0f18;
-  border-top:1px solid #202938;
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-}
-
-.nav{
-  border:0;
-  background:none;
-  color:#7f8a9c;
-  cursor:pointer;
-  font-size:10px;
-  position:relative;
-}
-
-.nav span{
-  display:block;
-  font-size:18px;
-  margin-bottom:3px;
-}
-
-.nav.active{
-  color:#a5a0ff;
-}
-
-.nav-badge{
-  position:absolute;
-  top:4px;
-  right:calc(50% - 22px);
-  min-width:15px;
-  height:15px;
-  padding:0 4px;
-  background:#ef4444;
-  color:white;
-  border-radius:10px;
-  font-size:8px;
-  display:none;
-  align-items:center;
-  justify-content:center;
-}
-
-.nav-badge.show{
-  display:flex;
-}
-
-@media(max-width:600px){
-
-  .welcome-top{
-    align-items:flex-start;
-    flex-direction:column;
-  }
-
-  .status-pill{
-    align-self:flex-start;
-  }
-
-}
-
-@media(max-width:380px){
-
-  .grid,
-  .actions{
-    grid-template-columns:1fr;
-  }
-
-  .summary{
-    grid-template-columns:1fr;
-  }
-
-  .compare-table td,
-  .compare-table th{
-    padding:7px 5px;
-    font-size:9px;
-  }
-
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Admin Dashboard — Proyjon Marketing LTD</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    body {
+      background: #080b11;
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      padding-bottom: 90px;
+    }
+
+    /* HEADER */
+
+    header {
+      height: 70px;
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #1d2330;
+      background: #0c1018;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 16px;
+    }
+
+    .brand-text h2 {
+      font-size: 15px;
+    }
+
+    .brand-text p {
+      font-size: 10px;
+      color: #777;
+      margin-top: 2px;
+    }
+
+    .notification-btn {
+      position: relative;
+      width: 42px;
+      height: 42px;
+      border: 1px solid #252c39;
+      border-radius: 12px;
+      background: #111722;
+      color: #fff;
+      font-size: 19px;
+      cursor: pointer;
+    }
+
+    .badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      min-width: 19px;
+      height: 19px;
+      padding: 0 5px;
+      border-radius: 20px;
+      background: #ef4444;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #0c1018;
+    }
+
+    /* MAIN */
+
+    main {
+      padding: 20px 16px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .welcome {
+      margin-bottom: 20px;
+    }
+
+    .welcome h1 {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .welcome p {
+      color: #777;
+      font-size: 13px;
+    }
+
+    /* STATS */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .stat {
+      background: #10151f;
+      border: 1px solid #1d2430;
+      border-radius: 16px;
+      padding: 15px;
+    }
+
+    .stat-icon {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .stat-value {
+      font-size: 23px;
+      font-weight: 800;
+    }
+
+    .stat-label {
+      color: #777;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    /* SECTION */
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 22px 0 12px;
+    }
+
+    .section-title h3 {
+      font-size: 16px;
+    }
+
+    .section-title span {
+      font-size: 11px;
+      color: #777;
+    }
+
+    /* CARDS */
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .card {
+      background: #10151f;
+      border: 1px solid #1d2430;
+      border-radius: 17px;
+      padding: 18px;
+      cursor: pointer;
+      transition: .2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      border-color: #334155;
+      transform: translateY(-1px);
+    }
+
+    .card-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: #182131;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      margin-bottom: 13px;
+    }
+
+    .card h4 {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .card p {
+      color: #777;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .coming {
+      position: absolute;
+      top: 13px;
+      right: 13px;
+      font-size: 9px;
+      padding: 4px 7px;
+      border-radius: 10px;
+      background: #1b2230;
+      color: #7c8798;
+    }
+
+    .working {
+      position: absolute;
+      top: 13px;
+      right: 13px;
+      font-size: 9px;
+      padding: 4px 7px;
+      border-radius: 10px;
+      background: rgba(34,197,94,.12);
+      color: #4ade80;
+    }
+
+    .alert-count {
+      position: absolute;
+      top: 11px;
+      right: 11px;
+      min-width: 21px;
+      height: 21px;
+      padding: 0 5px;
+      border-radius: 20px;
+      background: #ef4444;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    /* PAGE */
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .back-btn {
+      border: 1px solid #252d3a;
+      background: #111722;
+      color: #fff;
+      padding: 9px 13px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-bottom: 15px;
+    }
+
+    /* REQUEST */
+
+    .request-card {
+      background: #10151f;
+      border: 1px solid #2b3443;
+      border-radius: 17px;
+      padding: 17px;
+      margin-bottom: 14px;
+    }
+
+    .request-card.pending {
+      border-color: #f59e0b;
+    }
+
+    .request-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 15px;
+    }
+
+    .request-user {
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .request-email {
+      color: #777;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    .request-id {
+      color: #555;
+      font-size: 10px;
+      margin-top: 4px;
+    }
+
+    .status {
+      padding: 6px 9px;
+      border-radius: 20px;
+      font-size: 9px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .status.pending {
+      color: #fbbf24;
+      background: rgba(245,158,11,.12);
+    }
+
+    .status.approved {
+      color: #4ade80;
+      background: rgba(34,197,94,.12);
+    }
+
+    .status.rejected {
+      color: #f87171;
+      background: rgba(239,68,68,.12);
+    }
+
+    .change-box {
+      border-top: 1px solid #202733;
+    }
+
+    .change {
+      padding: 11px 0;
+      border-bottom: 1px solid #202733;
+    }
+
+    .field-name {
+      color: #8b95a5;
+      font-size: 11px;
+      margin-bottom: 6px;
+    }
+
+    .old {
+      color: #f87171;
+      font-size: 12px;
+      word-break: break-word;
+    }
+
+    .new {
+      color: #4ade80;
+      font-size: 12px;
+      margin-top: 4px;
+      word-break: break-word;
+    }
+
+    .decision-text {
+      margin-top: 14px;
+      padding: 11px;
+      border-radius: 10px;
+      background: #0c1119;
+      color: #8993a2;
+      font-size: 11px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 15px;
+      cursor: pointer;
+      font-weight: 800;
+      flex: 1;
+    }
+
+    .approve {
+      background: #16a34a;
+      color: white;
+    }
+
+    .reject {
+      background: #dc2626;
+      color: white;
+    }
+
+    .btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    /* ALERTS */
+
+    .alert-item {
+      background: #10151f;
+      border: 1px solid #1e2734;
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 11px;
+    }
+
+    .alert-item.unread {
+      border-color: #f59e0b;
+      background: #131820;
+    }
+
+    .alert-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .alert-title {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .alert-time {
+      color: #666;
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .alert-message {
+      color: #8d96a4;
+      font-size: 12px;
+      line-height: 1.5;
+      margin-top: 7px;
+    }
+
+    .alert-user {
+      color: #6ea8ff;
+      font-size: 11px;
+      margin-top: 8px;
+    }
+
+    .alert-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .small-btn {
+      border: 1px solid #293241;
+      background: #151b25;
+      color: #fff;
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    /* USERS */
+
+    .user-item {
+      background: #10151f;
+      border: 1px solid #1e2734;
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 10px;
+    }
+
+    .user-name {
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .user-info {
+      color: #777;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    .user-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    /* ACCOUNT */
+
+    .account-box {
+      background: #10151f;
+      border: 1px solid #1e2734;
+      border-radius: 17px;
+      padding: 18px;
+    }
+
+    .account-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 13px 0;
+      border-bottom: 1px solid #202733;
+    }
+
+    .account-line:last-child {
+      border-bottom: 0;
+    }
+
+    .account-line span:first-child {
+      color: #777;
+      font-size: 12px;
+    }
+
+    .account-line span:last-child {
+      text-align: right;
+      font-size: 12px;
+      word-break: break-word;
+    }
+
+    /* EMPTY / ERROR */
+
+    .empty {
+      padding: 35px 15px;
+      text-align: center;
+      color: #6b7280;
+      background: #10151f;
+      border: 1px solid #1d2430;
+      border-radius: 15px;
+      font-size: 13px;
+    }
+
+    .error {
+      padding: 18px;
+      background: #2a1111;
+      border: 1px solid #7f1d1d;
+      border-radius: 15px;
+      color: #ff8a8a;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .retry {
+      margin-top: 12px;
+      background: #fff;
+      color: #111;
+      border: 0;
+      padding: 9px 13px;
+      border-radius: 8px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    /* BOTTOM NAV */
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: rgba(12,16,24,.96);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid #1d2330;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      z-index: 100;
+    }
+
+    .nav-btn {
+      border: 0;
+      background: transparent;
+      color: #667080;
+      cursor: pointer;
+      font-size: 10px;
+      position: relative;
+    }
+
+    .nav-btn .nav-icon {
+      display: block;
+      font-size: 19px;
+      margin-bottom: 3px;
+    }
+
+    .nav-btn.active {
+      color: #fff;
+    }
+
+    .nav-badge {
+      position: absolute;
+      top: 7px;
+      right: 23%;
+      min-width: 17px;
+      height: 17px;
+      border-radius: 20px;
+      background: #ef4444;
+      color: white;
+      font-size: 9px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+    }
+
+    /* TOAST */
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 88px;
+      transform: translateX(-50%) translateY(20px);
+      background: #171d28;
+      border: 1px solid #303949;
+      color: #fff;
+      padding: 11px 15px;
+      border-radius: 11px;
+      font-size: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transition: .25s;
+      z-index: 200;
+      max-width: 90%;
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (min-width: 700px) {
+      main {
+        padding: 30px 25px;
+      }
+
+      .cards {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .stats {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<header class="header">
+<div class="app">
 
-  <div class="brand">
+  <!-- HEADER -->
 
-    <div class="logo">
-      P
-    </div>
+  <header>
+    <div class="brand">
+      <div class="brand-logo">P</div>
 
-    <div>
-      <div class="name">
-        Proyjon Marketing LTD
-      </div>
-
-      <div class="sub">
-        আপনার প্রয়োজন আমাদের আয়োজন
+      <div class="brand-text">
+        <h2>Proyjon Marketing LTD</h2>
+        <p>Administrator Panel</p>
       </div>
     </div>
 
-  </div>
-
-
-  <div class="header-actions">
-
-    <button
-      class="bell"
-      onclick="openNotifications()"
-      title="Notifications"
-    >
-
+    <button class="notification-btn" onclick="openAlerts()">
       🔔
-
-      <span
-        id="headerNotificationBadge"
-        class="badge"
-      >
-        0
-      </span>
-
+      <span id="notificationBadge" class="badge">0</span>
     </button>
-
-  </div>
-
-</header>
+  </header>
 
 
-<main class="container">
+  <main>
 
-  <!-- WELCOME -->
+    <!-- HOME -->
 
-  <section class="welcome">
+    <section id="homePage" class="page active">
 
-    <div class="welcome-top">
-
-      <div>
-
-        <h1>
-          Admin Dashboard 👋
-        </h1>
-
-        <p>
-          Manage users, requests, packages, deposits,
-          withdrawals and system activities.
-        </p>
-
+      <div class="welcome">
+        <h1>Admin Dashboard</h1>
+        <p>Manage your Proyjon Marketing LTD platform.</p>
       </div>
 
-      <div class="status-pill">
-        ● System Online
-      </div>
 
-    </div>
+      <div class="stats">
 
-
-    <div class="summary">
-
-      <div class="summary-card">
-
-        <div class="summary-label">
-          TOTAL USERS
+        <div class="stat">
+          <div class="stat-icon">👥</div>
+          <div id="totalUsers" class="stat-value">—</div>
+          <div class="stat-label">Total Users</div>
         </div>
 
-        <div
-          id="totalUsers"
-          class="summary-number"
-        >
-          —
+        <div class="stat">
+          <div class="stat-icon">📝</div>
+          <div id="pendingRequests" class="stat-value">—</div>
+          <div class="stat-label">Pending Profile Requests</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-icon">🔔</div>
+          <div id="unreadAlerts" class="stat-value">—</div>
+          <div class="stat-label">Unread Notifications</div>
         </div>
 
       </div>
 
 
-      <div class="summary-card">
+      <div class="section-title">
+        <h3>Management</h3>
+        <span>Admin controls</span>
+      </div>
 
-        <div class="summary-label">
-          PENDING PROFILE
+
+      <div class="cards">
+
+        <div class="card" onclick="showComing('New User Requests')">
+          <div class="card-icon">🆕</div>
+          <span class="coming">Soon</span>
+          <h4>New User Requests</h4>
+          <p>Review and manage new registration requests.</p>
         </div>
 
-        <div
-          id="pendingRequests"
-          class="summary-number pending"
-        >
-          0
+
+        <div class="card" onclick="openUsers()">
+          <div class="card-icon">👥</div>
+          <span class="working">Working</span>
+          <h4>User Management</h4>
+          <p>View registered users and their account information.</p>
         </div>
 
-      </div>
 
-
-      <div class="summary-card">
-
-        <div class="summary-label">
-          UNREAD ALERTS
+        <div class="card" onclick="showComing('Tree Management')">
+          <div class="card-icon">🌳</div>
+          <span class="coming">Soon</span>
+          <h4>Tree Management</h4>
+          <p>Manage referral and MLM tree structure.</p>
         </div>
 
-        <div
-          id="unreadAlerts"
-          class="summary-number unread"
-        >
-          0
+
+        <div class="card" onclick="showComing('Withdraw Requests')">
+          <div class="card-icon">💸</div>
+          <span class="coming">Soon</span>
+          <h4>Withdraw Requests</h4>
+          <p>Review user withdrawal requests.</p>
         </div>
 
-      </div>
 
-    </div>
-
-  </section>
-
-
-  <!-- MAIN CARDS -->
-
-  <section class="grid">
-
-    <button
-      class="card"
-      onclick="showComing('New User Requests')"
-    >
-
-      <div class="icon">
-        🆕
-      </div>
-
-      <div class="title">
-        New User Requests
-      </div>
-
-      <div class="desc">
-        Review new registration requests.
-      </div>
-
-    </button>
-
-
-    <button
-      class="card"
-      onclick="openUserManagement()"
-    >
-
-      <div class="icon">
-        👥
-      </div>
-
-      <div class="title">
-        User Management
-      </div>
-
-      <div class="desc">
-        View and manage registered users.
-      </div>
-
-    </button>
-
-
-    <button
-      class="card"
-      onclick="showComing('Tree Management')"
-    >
-
-      <div class="icon">
-        🌳
-      </div>
-
-      <div class="title">
-        Tree Management
-      </div>
-
-      <div class="desc">
-        Manage binary tree placement.
-      </div>
-
-    </button>
-
-
-    <button
-      class="card"
-      onclick="showComing('Withdraw Requests')"
-    >
-
-      <div class="icon">
-        💸
-      </div>
-
-      <div class="title">
-        Withdraw Requests
-      </div>
-
-      <div class="desc">
-        Review withdrawal requests.
-      </div>
-
-    </button>
-
-
-    <button
-      class="card"
-      onclick="showComing('Purchase Requests')"
-    >
-
-      <div class="icon">
-        🛒
-      </div>
-
-      <div class="title">
-        Purchase Requests
-      </div>
-
-      <div class="desc">
-        Manage purchase requests.
-      </div>
-
-    </button>
-
-
-    <button
-      class="card"
-      onclick="showComing('Package Management')"
-    >
-
-      <div class="icon">
-        📦
-      </div>
-
-      <div class="title">
-        Package Management
-      </div>
-
-      <div class="desc">
-        Create and manage packages.
-      </div>
-
-    </button>
-
-
-    <button
-      class="card"
-      onclick="showComing('Deposit Requests')"
-    >
-
-      <div class="icon">
-        💰
-      </div>
-
-      <div class="title">
-        Deposit Requests
-      </div>
-
-      <div class="desc">
-        Review deposit requests.
-      </div>
-
-    </button>
-
-
-    <button
-      class="card card-alert"
-      onclick="openProfileRequests()"
-    >
-
-      <span
-        id="profileRequestBadge"
-        class="card-badge"
-        style="display:none;"
-      >
-        0
-      </span>
-
-      <div class="icon">
-        📝
-      </div>
-
-      <div class="title">
-        Profile Update Requests
-      </div>
-
-      <div class="desc">
-        Compare old & new data and approve or reject changes.
-      </div>
-
-    </button>
-
-
-    <button
-      class="card"
-      onclick="openAdmin()"
-    >
-
-      <div class="icon">
-        🔐
-      </div>
-
-      <div class="title">
-        Admin Account
-      </div>
-
-      <div class="desc">
-        Profile, password and security.
-      </div>
-
-    </button>
-
-
-    <button
-      class="card"
-      onclick="openNotifications()"
-    >
-
-      <div class="icon">
-        🔔
-      </div>
-
-      <div class="title">
-        Notifications
-      </div>
-
-      <div class="desc">
-        View profile changes and system alerts.
-      </div>
-
-    </button>
-
-  </section>
-
-</main>
-
-
-<!-- =========================================
-     MODAL
-========================================= -->
-
-<div
-  id="adminOverlay"
-  class="overlay"
-  onclick="closeOutside(event)"
->
-
-  <div class="modal">
-
-    <div class="modal-head">
-
-      <div class="modal-title">
-
-        <div
-          id="modalIcon"
-          class="modal-icon"
-        >
-          🔐
+        <div class="card" onclick="showComing('Purchase Requests')">
+          <div class="card-icon">🛒</div>
+          <span class="coming">Soon</span>
+          <h4>Purchase Requests</h4>
+          <p>Review package purchase requests.</p>
         </div>
 
-        <div>
 
-          <h2 id="modalHeading">
-            Admin Account
-          </h2>
+        <div class="card" onclick="showComing('Package Management')">
+          <div class="card-icon">📦</div>
+          <span class="coming">Soon</span>
+          <h4>Package Management</h4>
+          <p>Create and manage MLM packages.</p>
+        </div>
 
-          <p id="modalSubheading">
-            Account and security settings
+
+        <div class="card" onclick="showComing('Deposit Requests')">
+          <div class="card-icon">💰</div>
+          <span class="coming">Soon</span>
+          <h4>Deposit Requests</h4>
+          <p>Review deposit and payment requests.</p>
+        </div>
+
+
+        <div class="card" onclick="openProfileRequests()">
+          <div class="card-icon">📋</div>
+
+          <span class="working">Working</span>
+
+          <span id="profileRequestBadge"
+                class="alert-count">
+            0
+          </span>
+
+          <h4>Profile Update Requests</h4>
+
+          <p>
+            Compare old and new information and approve or reject changes.
           </p>
+        </div>
 
+
+        <div class="card" onclick="openAccount()">
+          <div class="card-icon">🔐</div>
+          <span class="working">Working</span>
+          <h4>Admin Account</h4>
+          <p>View administrator account information.</p>
+        </div>
+
+
+        <div class="card" onclick="openAlerts()">
+          <div class="card-icon">🔔</div>
+
+          <span id="notificationCardBadge"
+                class="alert-count">
+            0
+          </span>
+
+          <h4>Notifications</h4>
+
+          <p>
+            View system notifications and admin alerts.
+          </p>
         </div>
 
       </div>
 
-
-      <button
-        class="close"
-        onclick="closeAdmin()"
-      >
-        ✕
-      </button>
-
-    </div>
-
-
-    <!-- ACCOUNT MENU -->
-
-    <div id="accountMenu">
-
-      <div class="actions">
-
-        <button
-          class="action"
-          onclick="loadAdminProfile()"
-        >
-
-          <div class="action-icon">
-            👤
-          </div>
-
-          <div class="action-title">
-            Admin Profile
-          </div>
-
-          <div class="action-desc">
-            View admin account information.
-          </div>
-
-        </button>
-
-
-        <button
-          class="action"
-          onclick="openChangePassword()"
-        >
-
-          <div class="action-icon">
-            🔑
-          </div>
-
-          <div class="action-title">
-            Change Password
-          </div>
-
-          <div class="action-desc">
-            Change your current password.
-          </div>
-
-        </button>
-
-
-        <button
-          class="action"
-          onclick="openAdminReset()"
-        >
-
-          <div class="action-icon">
-            🔐
-          </div>
-
-          <div class="action-title">
-            Admin Password Reset
-          </div>
-
-          <div class="action-desc">
-            Reset your administrator password.
-          </div>
-
-        </button>
-
-
-        <button
-          class="action"
-          onclick="openUserReset()"
-        >
-
-          <div class="action-icon">
-            👤
-          </div>
-
-          <div class="action-title">
-            Reset User Password
-          </div>
-
-          <div class="action-desc">
-            Reset password for a selected user.
-          </div>
-
-        </button>
-
-      </div>
-
-
-      <button
-        class="logout"
-        onclick="logout()"
-      >
-        🚪 Logout
-      </button>
-
-    </div>
-
-
-    <!-- ADMIN PROFILE -->
-
-    <div
-      id="profileForm"
-      class="form"
-    >
-
-      <div class="form-title">
-        👤 Admin Profile
-      </div>
-
-      <div
-        id="profileInfo"
-        class="info-box"
-      >
-        Loading...
-      </div>
-
-      <button
-        class="secondary"
-        onclick="backToAccount()"
-      >
-        ← Back
-      </button>
-
-    </div>
-
-
-    <!-- CHANGE PASSWORD -->
-
-    <div
-      id="changePasswordForm"
-      class="form"
-    >
-
-      <div class="form-title">
-        🔑 Change Password
-      </div>
-
-      <div class="input-group">
-
-        <label>
-          Current Password
-        </label>
-
-        <input
-          id="currentPassword"
-          class="input"
-          type="password"
-          autocomplete="current-password"
-          placeholder="Enter current password"
-        >
-
-      </div>
-
-
-      <div class="input-group">
-
-        <label>
-          New Password
-        </label>
-
-        <input
-          id="newPassword"
-          class="input"
-          type="password"
-          autocomplete="new-password"
-          placeholder="Minimum 6 characters"
-        >
-
-      </div>
-
-
-      <div class="input-group">
-
-        <label>
-          Confirm New Password
-        </label>
-
-        <input
-          id="confirmPassword"
-          class="input"
-          type="password"
-          autocomplete="new-password"
-          placeholder="Confirm new password"
-        >
-
-      </div>
-
-
-      <button
-        id="changePasswordBtn"
-        class="primary"
-        onclick="changePassword()"
-      >
-        Change Password
-      </button>
-
-
-      <button
-        class="secondary"
-        onclick="backToAccount()"
-      >
-        ← Back
-      </button>
-
-    </div>
-
-
-    <!-- ADMIN RESET -->
-
-    <div
-      id="adminResetForm"
-      class="form"
-    >
-
-      <div class="form-title">
-        🔐 Admin Password Reset
-      </div>
-
-      <div
-        class="info-box"
-        style="margin-bottom:12px;"
-      >
-        Enter your current password and choose a new password.
-      </div>
-
-
-      <div class="input-group">
-
-        <label>
-          Current Password
-        </label>
-
-        <input
-          id="resetCurrentPassword"
-          class="input"
-          type="password"
-          autocomplete="current-password"
-          placeholder="Current password"
-        >
-
-      </div>
-
-
-      <div class="input-group">
-
-        <label>
-          New Password
-        </label>
-
-        <input
-          id="resetNewPassword"
-          class="input"
-          type="password"
-          autocomplete="new-password"
-          placeholder="New password"
-        >
-
-      </div>
-
-
-      <div class="input-group">
-
-        <label>
-          Confirm New Password
-        </label>
-
-        <input
-          id="resetConfirmPassword"
-          class="input"
-          type="password"
-          autocomplete="new-password"
-          placeholder="Confirm password"
-        >
-
-      </div>
-
-
-      <button
-        id="adminResetBtn"
-        class="primary"
-        onclick="adminResetPassword()"
-      >
-        Reset Password
-      </button>
-
-
-      <button
-        class="secondary"
-        onclick="backToAccount()"
-      >
-        ← Back
-      </button>
-
-    </div>
-
-
-    <!-- USER RESET -->
-
-    <div
-      id="userResetForm"
-      class="form"
-    >
-
-      <div class="form-title">
-        👤 Reset User Password
-      </div>
-
-
-      <div class="input-group">
-
-        <label>
-          User ID
-        </label>
-
-        <input
-          id="resetUserId"
-          class="input"
-          type="number"
-          placeholder="Enter user ID"
-        >
-
-      </div>
-
-
-      <div class="input-group">
-
-        <label>
-          New Password
-        </label>
-
-        <input
-          id="resetUserPassword"
-          class="input"
-          type="password"
-          autocomplete="new-password"
-          placeholder="New password"
-        >
-
-      </div>
-
-
-      <div class="input-group">
-
-        <label>
-          Confirm New Password
-        </label>
-
-        <input
-          id="resetUserPasswordConfirm"
-          class="input"
-          type="password"
-          autocomplete="new-password"
-          placeholder="Confirm password"
-        >
-
-      </div>
-
-
-      <button
-        id="userResetBtn"
-        class="primary"
-        onclick="resetUserPassword()"
-      >
-        Reset User Password
-      </button>
-
-
-      <button
-        class="secondary"
-        onclick="backToAccount()"
-      >
-        ← Back
-      </button>
-
-    </div>
-
-
-    <!-- USERS -->
-
-    <div
-      id="usersForm"
-      class="form"
-    >
-
-      <div class="form-title">
-        👥 User Management
-      </div>
-
-      <div id="usersList">
-        Loading users...
-      </div>
-
-      <button
-        class="secondary"
-        style="margin-top:15px;"
-        onclick="backToAccount()"
-      >
-        ← Back
-      </button>
-
-    </div>
-
-
-    <!-- NOTIFICATIONS -->
-
-    <div
-      id="notificationsForm"
-      class="form"
-    >
-
-      <div class="form-title">
-        🔔 Notifications
-      </div>
-
-
-      <div class="filter-row">
-
-        <button
-          id="allNotificationBtn"
-          class="filter-btn active"
-          onclick="setNotificationFilter('all')"
-        >
-          All
-        </button>
-
-        <button
-          id="unreadNotificationBtn"
-          class="filter-btn"
-          onclick="setNotificationFilter('unread')"
-        >
-          Unread
-        </button>
-
-      </div>
-
-
-      <div id="notificationsList">
-        Loading notifications...
-      </div>
-
-
-      <button
-        class="secondary"
-        style="margin-top:15px;"
-        onclick="backToAccount()"
-      >
-        ← Back
-      </button>
-
-    </div>
+    </section>
 
 
     <!-- PROFILE REQUESTS -->
 
-    <div
-      id="profileRequestsForm"
-      class="form"
-    >
+    <section id="profileRequestsPage" class="page">
 
-      <div class="form-title">
-        📝 Profile Update Requests
-      </div>
-
-
-      <div class="filter-row">
-
-        <button
-          id="allRequestBtn"
-          class="filter-btn active"
-          onclick="setRequestFilter('all')"
-        >
-          All
-        </button>
-
-        <button
-          id="pendingRequestBtn"
-          class="filter-btn"
-          onclick="setRequestFilter('pending')"
-        >
-          Pending
-        </button>
-
-        <button
-          id="approvedRequestBtn"
-          class="filter-btn"
-          onclick="setRequestFilter('approved')"
-        >
-          Approved
-        </button>
-
-        <button
-          id="rejectedRequestBtn"
-          class="filter-btn"
-          onclick="setRequestFilter('rejected')"
-        >
-          Rejected
-        </button>
-
-      </div>
-
-
-      <div id="requestList">
-        Loading requests...
-      </div>
-
-
-      <button
-        class="secondary"
-        style="margin-top:15px;"
-        onclick="backToAccount()"
-      >
+      <button class="back-btn" onclick="goHome()">
         ← Back
       </button>
 
-    </div>
+      <div class="section-title">
+        <h3>Profile Update Requests</h3>
+        <span id="requestCountText"></span>
+      </div>
 
-  </div>
+      <div id="profileRequestsList"></div>
+
+    </section>
+
+
+    <!-- ALERTS -->
+
+    <section id="alertsPage" class="page">
+
+      <button class="back-btn" onclick="goHome()">
+        ← Back
+      </button>
+
+      <div class="section-title">
+        <h3>Notifications</h3>
+        <span>Admin alerts</span>
+      </div>
+
+      <div id="alertsList"></div>
+
+    </section>
+
+
+    <!-- USERS -->
+
+    <section id="usersPage" class="page">
+
+      <button class="back-btn" onclick="goHome()">
+        ← Back
+      </button>
+
+      <div class="section-title">
+        <h3>User Management</h3>
+        <span id="userCountText"></span>
+      </div>
+
+      <div id="usersList"></div>
+
+    </section>
+
+
+    <!-- ACCOUNT -->
+
+    <section id="accountPage" class="page">
+
+      <button class="back-btn" onclick="goHome()">
+        ← Back
+      </button>
+
+      <div class="section-title">
+        <h3>Admin Account</h3>
+        <span>Administrator</span>
+      </div>
+
+      <div id="accountBox" class="account-box">
+        Loading...
+      </div>
+
+      <div style="margin-top:15px;">
+        <button
+          class="btn"
+          style="background:#dc2626;color:white;width:100%;"
+          onclick="logout()"
+        >
+          Logout
+        </button>
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- BOTTOM NAV -->
+
+  <nav class="bottom-nav">
+
+    <button id="navHome"
+            class="nav-btn active"
+            onclick="goHome()">
+      <span class="nav-icon">⌂</span>
+      Home
+    </button>
+
+
+    <button id="navUsers"
+            class="nav-btn"
+            onclick="openUsers()">
+      <span class="nav-icon">👥</span>
+      Users
+    </button>
+
+
+    <button id="navRequests"
+            class="nav-btn"
+            onclick="openProfileRequests()">
+      <span class="nav-icon">📋</span>
+      Requests
+
+      <span id="navRequestBadge"
+            class="nav-badge">
+        0
+      </span>
+    </button>
+
+
+    <button id="navAlerts"
+            class="nav-btn"
+            onclick="openAlerts()">
+      <span class="nav-icon">🔔</span>
+      Alerts
+
+      <span id="navAlertBadge"
+            class="nav-badge">
+        0
+      </span>
+    </button>
+
+
+    <button id="navAccount"
+            class="nav-btn"
+            onclick="openAccount()">
+      <span class="nav-icon">⚙️</span>
+      Account
+    </button>
+
+  </nav>
 
 </div>
 
 
-<div
-  id="toast"
-  class="toast"
-></div>
-
-
-<!-- =========================================
-     BOTTOM NAV
-========================================= -->
-
-<nav class="bottom">
-
-  <button
-    class="nav active"
-    onclick="goHome()"
-  >
-    <span>⌂</span>
-    Home
-  </button>
-
-
-  <button
-    class="nav"
-    onclick="openUserManagement()"
-  >
-    <span>👥</span>
-    Users
-  </button>
-
-
-  <button
-    class="nav"
-    onclick="openProfileRequests()"
-  >
-
-    <span>📋</span>
-
-    Requests
-
-    <span
-      id="bottomRequestBadge"
-      class="nav-badge"
-    >
-      0
-    </span>
-
-  </button>
-
-
-  <button
-    class="nav"
-    onclick="openNotifications()"
-  >
-
-    <span>🔔</span>
-
-    Alerts
-
-    <span
-      id="bottomAlertBadge"
-      class="nav-badge"
-    >
-      0
-    </span>
-
-  </button>
-
-
-  <button
-    class="nav"
-    onclick="openAdmin()"
-  >
-    <span>⚙️</span>
-    Account
-  </button>
-
-</nav>
+<div id="toast" class="toast"></div>
 
 
 <script>
 
-/* =========================================================
-   API
-========================================================= */
+  /* =========================
+     CONFIG
+  ========================= */
 
-const API_BASE =
-  "https://mlm-platform-production.up.railway.app";
-
-
-/* =========================================================
-   AUTH
-========================================================= */
-
-function getToken(){
-
-  /*
-    Admin login must store the JWT as adminToken.
-  */
-
-  return (
-    localStorage.getItem("adminToken") ||
-    ""
-  );
-
-}
+  const API_URL =
+    "https://mlm-platform-production.up.railway.app";
 
 
-function requireAdminToken(){
+  /* =========================
+     AUTH
+  ========================= */
 
-  const token =
-    getToken();
-
-  if(!token){
-
-    alert(
-      "Admin session পাওয়া যায়নি। আবার Admin Login করুন।"
-    );
-
-    window.location.href =
-      "login.html";
-
-    return false;
-
-  }
-
-  return true;
-
-}
-
-
-/* =========================================================
-   API REQUEST
-========================================================= */
-
-async function apiRequest(
-  url,
-  options = {}
-){
-
-  const token =
-    getToken();
-
-
-  if(!token){
-
-    window.location.href =
-      "login.html";
-
-    throw new Error(
-      "Admin login session পাওয়া যায়নি।"
-    );
-
+  function getAdminToken() {
+    return localStorage.getItem("adminToken");
   }
 
 
-  const headers = {
+  function checkAuth() {
 
-    "Content-Type":
-      "application/json",
+    const token = getAdminToken();
 
-    "Accept":
-      "application/json",
+    if (!token) {
+      window.location.href = "login.html";
+      return false;
+    }
 
-    ...(options.headers || {}),
-
-    "Authorization":
-      "Bearer " + token
-
-  };
+    return true;
+  }
 
 
-  let response;
+  /* =========================
+     API REQUEST
+  ========================= */
+
+  async function apiRequest(endpoint, options = {}) {
+
+    const token = getAdminToken();
+
+    if (!token) {
+      throw new Error("Admin session expired. Please login again.");
+    }
+
+    const config = {
+      ...options,
+      headers: {
+        ...(options.headers || {}),
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    };
+
+    const response = await fetch(
+      `${API_URL}${endpoint}`,
+      config
+    );
+
+    let data;
+
+    try {
+      data = await response.json();
+    } catch (e) {
+      throw new Error(
+        `Server returned invalid response (${response.status})`
+      );
+    }
+
+    if (!response.ok) {
+
+      if (response.status === 401) {
+        localStorage.removeItem("adminToken");
+        localStorage.removeItem("adminUser");
+
+        window.location.href = "login.html";
+
+        throw new Error("Admin session expired.");
+      }
+
+      if (response.status === 403) {
+        throw new Error(
+          data.message || "Admin access denied."
+        );
+      }
+
+      throw new Error(
+        data.message ||
+        `Request failed (${response.status})`
+      );
+    }
+
+    return data;
+  }
 
 
-  try{
+  /* =========================
+     HTML ESCAPE
+  ========================= */
 
-    response =
-      await fetch(
-        API_BASE + url,
+  function escapeHtml(value) {
+
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+
+  /* =========================
+     TOAST
+  ========================= */
+
+  let toastTimer;
+
+  function showToast(message) {
+
+    const toast =
+      document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer = setTimeout(() => {
+      toast.classList.remove("show");
+    }, 2500);
+  }
+
+
+  /* =========================
+     PAGE CONTROL
+  ========================= */
+
+  function hidePages() {
+
+    document
+      .querySelectorAll(".page")
+      .forEach(page => {
+        page.classList.remove("active");
+      });
+
+    document
+      .querySelectorAll(".nav-btn")
+      .forEach(btn => {
+        btn.classList.remove("active");
+      });
+  }
+
+
+  function goHome() {
+
+    hidePages();
+
+    document
+      .getElementById("homePage")
+      .classList.add("active");
+
+    document
+      .getElementById("navHome")
+      .classList.add("active");
+
+    loadDashboardStats();
+  }
+
+
+  /* =========================
+     PROFILE REQUESTS
+  ========================= */
+
+  async function openProfileRequests() {
+
+    hidePages();
+
+    document
+      .getElementById("profileRequestsPage")
+      .classList.add("active");
+
+    document
+      .getElementById("navRequests")
+      .classList.add("active");
+
+    await loadProfileRequests();
+  }
+
+
+  async function loadProfileRequests() {
+
+    const container =
+      document.getElementById("profileRequestsList");
+
+    container.innerHTML = `
+      <div class="empty">
+        Loading profile requests...
+      </div>
+    `;
+
+    try {
+
+      const data =
+        await apiRequest(
+          "/api/admin/profile-requests"
+        );
+
+      console.log(
+        "Profile Requests API:",
+        data
+      );
+
+      const requests =
+        data.requests ||
+        data.data ||
+        [];
+
+      const pending =
+        requests.filter(
+          r =>
+            String(r.status || "")
+              .toLowerCase() === "pending"
+        );
+
+      document.getElementById(
+        "requestCountText"
+      ).textContent =
+        `${pending.length} pending`;
+
+      updateRequestBadges(
+        pending.length
+      );
+
+
+      if (!requests.length) {
+
+        container.innerHTML = `
+          <div class="empty">
+            No profile update requests found.
+          </div>
+        `;
+
+        return;
+      }
+
+
+      /*
+        Pending first.
+      */
+
+      requests.sort((a, b) => {
+
+        const aPending =
+          String(a.status).toLowerCase() === "pending";
+
+        const bPending =
+          String(b.status).toLowerCase() === "pending";
+
+        if (aPending && !bPending) return -1;
+        if (!aPending && bPending) return 1;
+
+        return new Date(b.created_at || 0)
+          - new Date(a.created_at || 0);
+      });
+
+
+      container.innerHTML =
+        requests
+          .map(renderProfileRequest)
+          .join("");
+
+    } catch (error) {
+
+      console.error(
+        "loadProfileRequests:",
+        error
+      );
+
+      container.innerHTML = `
+        <div class="error">
+
+          <strong>Failed to load requests</strong>
+
+          <div style="margin-top:7px;">
+            ${escapeHtml(error.message)}
+          </div>
+
+          <button
+            class="retry"
+            onclick="loadProfileRequests()"
+          >
+            Retry
+          </button>
+
+        </div>
+      `;
+    }
+  }
+
+
+  function renderProfileRequest(req) {
+
+    let oldData = {};
+    let newData = {};
+
+    try {
+
+      oldData =
+        typeof req.old_data === "string"
+          ? JSON.parse(req.old_data)
+          : (req.old_data || {});
+
+      newData =
+        typeof req.requested_data === "string"
+          ? JSON.parse(req.requested_data)
+          : (req.requested_data || {});
+
+    } catch (error) {
+
+      console.error(
+        "Request JSON parse error:",
+        error
+      );
+    }
+
+
+    const fields = [
+
+      ["name", "Name"],
+      ["father_name", "Father's Name"],
+      ["phone", "Phone"],
+      ["email", "Email"],
+      ["nid", "NID"],
+      ["address", "Address"],
+      ["nominee_name", "Nominee Name"],
+      ["nominee_number", "Nominee Number"],
+      ["nominee_nid", "Nominee NID"]
+
+    ];
+
+
+    const changes =
+      fields
+        .map(([key, label]) => {
+
+          const oldValue =
+            oldData[key] ?? "";
+
+          const newValue =
+            newData[key] ?? "";
+
+
+          if (
+            String(oldValue) ===
+            String(newValue)
+          ) {
+            return "";
+          }
+
+
+          return `
+            <div class="change">
+
+              <div class="field-name">
+                ${escapeHtml(label)}
+              </div>
+
+              <div class="old">
+                <strong>OLD:</strong>
+                ${escapeHtml(
+                  oldValue || "Not provided"
+                )}
+              </div>
+
+              <div class="new">
+                <strong>NEW:</strong>
+                ${escapeHtml(
+                  newValue || "Not provided"
+                )}
+              </div>
+
+            </div>
+          `;
+
+        })
+        .join("");
+
+
+    const status =
+      String(
+        req.status || "pending"
+      ).toLowerCase();
+
+
+    const createdAt =
+      req.created_at
+        ? new Date(req.created_at)
+            .toLocaleString()
+        : "Unknown";
+
+
+    const userName =
+      req.user_name ||
+      req.name ||
+      newData.name ||
+      "Unknown User";
+
+
+    const userEmail =
+      req.user_email ||
+      req.email ||
+      newData.email ||
+      "";
+
+
+    return `
+      <div class="request-card ${status === "pending" ? "pending" : ""}">
+
+        <div class="request-head">
+
+          <div>
+
+            <div class="request-user">
+              ${escapeHtml(userName)}
+            </div>
+
+            <div class="request-email">
+              ${escapeHtml(userEmail)}
+            </div>
+
+            <div class="request-id">
+              Request ID: ${escapeHtml(req.id)}
+            </div>
+
+            <div class="request-id">
+              Submitted: ${escapeHtml(createdAt)}
+            </div>
+
+          </div>
+
+
+          <span class="status ${status}">
+            ${escapeHtml(status.toUpperCase())}
+          </span>
+
+        </div>
+
+
+        ${
+          changes
+            ? `
+              <div class="change-box">
+                ${changes}
+              </div>
+            `
+            : `
+              <div class="decision-text">
+                No changed fields detected.
+              </div>
+            `
+        }
+
+
+        ${
+          status === "pending"
+            ? `
+              <div class="decision-text">
+                ⏳ <strong>PENDING</strong> —
+                Waiting for admin decision.
+              </div>
+
+              <div class="actions">
+
+                <button
+                  class="btn approve"
+                  onclick="handleProfileRequest(${Number(req.id)}, 'approve')"
+                >
+                  ✓ Approve
+                </button>
+
+                <button
+                  class="btn reject"
+                  onclick="handleProfileRequest(${Number(req.id)}, 'reject')"
+                >
+                  ✕ Reject
+                </button>
+
+              </div>
+            `
+            : `
+              <div class="decision-text">
+                This request has already been
+                ${escapeHtml(status)}.
+              </div>
+            `
+        }
+
+      </div>
+    `;
+  }
+
+
+  /* =========================
+     APPROVE / REJECT
+  ========================= */
+
+  async function handleProfileRequest(
+    id,
+    action
+  ) {
+
+    const actionText =
+      action === "approve"
+        ? "approve"
+        : "reject";
+
+
+    const confirmed =
+      confirm(
+        `Are you sure you want to ${actionText} this profile update request?`
+      );
+
+
+    if (!confirmed) {
+      return;
+    }
+
+
+    try {
+
+      const data =
+        await apiRequest(
+          `/api/admin/profile-requests/${id}`,
+          {
+            method: "PUT",
+
+            body: JSON.stringify({
+              action: action
+            })
+          }
+        );
+
+
+      showToast(
+        data.message ||
+        `Request ${actionText}d successfully.`
+      );
+
+
+      await loadProfileRequests();
+
+      await loadDashboardStats();
+
+      await loadUnreadAlerts();
+
+    } catch (error) {
+
+      console.error(
+        "handleProfileRequest:",
+        error
+      );
+
+      showToast(
+        error.message ||
+        "Failed to process request."
+      );
+    }
+  }
+
+
+  /* =========================
+     ALERTS
+  ========================= */
+
+  async function openAlerts() {
+
+    hidePages();
+
+    document
+      .getElementById("alertsPage")
+      .classList.add("active");
+
+    document
+      .getElementById("navAlerts")
+      .classList.add("active");
+
+    await loadAlerts();
+  }
+
+
+  async function loadAlerts() {
+
+    const container =
+      document.getElementById("alertsList");
+
+
+    container.innerHTML = `
+      <div class="empty">
+        Loading notifications...
+      </div>
+    `;
+
+
+    try {
+
+      const data =
+        await apiRequest(
+          "/api/admin/alerts"
+        );
+
+
+      const alerts =
+        data.alerts ||
+        data.data ||
+        [];
+
+
+      if (!alerts.length) {
+
+        container.innerHTML = `
+          <div class="empty">
+            🎉 No notifications found.
+          </div>
+        `;
+
+        return;
+      }
+
+
+      container.innerHTML =
+        alerts
+          .map(renderAlert)
+          .join("");
+
+
+    } catch (error) {
+
+      console.error(
+        "loadAlerts:",
+        error
+      );
+
+
+      container.innerHTML = `
+        <div class="error">
+
+          <strong>
+            Failed to load notifications
+          </strong>
+
+          <div style="margin-top:7px;">
+            ${escapeHtml(error.message)}
+          </div>
+
+          <button
+            class="retry"
+            onclick="loadAlerts()"
+          >
+            Retry
+          </button>
+
+        </div>
+      `;
+    }
+  }
+
+
+  function renderAlert(alert) {
+
+    const unread =
+      String(alert.status || "")
+        .toLowerCase() === "unread";
+
+
+    const createdAt =
+      alert.created_at
+        ? new Date(
+            alert.created_at
+          ).toLocaleString()
+        : "";
+
+
+    return `
+      <div class="alert-item ${unread ? "unread" : ""}">
+
+        <div class="alert-head">
+
+          <div class="alert-title">
+            ${escapeHtml(
+              alert.title ||
+              "Notification"
+            )}
+          </div>
+
+          <div class="alert-time">
+            ${escapeHtml(createdAt)}
+          </div>
+
+        </div>
+
+
+        <div class="alert-message">
+          ${escapeHtml(
+            alert.message ||
+            ""
+          )}
+        </div>
+
+
+        ${
+          alert.user_name
+            ? `
+              <div class="alert-user">
+                👤 ${escapeHtml(
+                  alert.user_name
+                )}
+                ${
+                  alert.user_email
+                    ? ` — ${escapeHtml(alert.user_email)}`
+                    : ""
+                }
+              </div>
+            `
+            : ""
+        }
+
+
+        <div class="alert-actions">
+
+          ${
+            alert.type ===
+              "profile_update_request"
+              ? `
+                <button
+                  class="small-btn"
+                  onclick="openProfileRequests()"
+                >
+                  Review Request
+                </button>
+              `
+              : ""
+          }
+
+
+          ${
+            unread
+              ? `
+                <button
+                  class="small-btn"
+                  onclick="markAlertRead(${Number(alert.id)})"
+                >
+                  Mark as Read
+                </button>
+              `
+              : `
+                <span style="
+                  color:#555;
+                  font-size:10px;
+                  padding:7px 0;
+                ">
+                  ✓ Read
+                </span>
+              `
+          }
+
+        </div>
+
+      </div>
+    `;
+  }
+
+
+  async function markAlertRead(id) {
+
+    try {
+
+      await apiRequest(
+        `/api/admin/alerts/${id}/read`,
         {
-          ...options,
-          headers
+          method: "PUT"
         }
       );
 
-  }catch(error){
 
-    throw new Error(
-      "Railway server-এর সাথে connection হচ্ছে না।"
-    );
+      await loadAlerts();
 
-  }
+      await loadUnreadAlerts();
 
+      await loadDashboardStats();
 
-  let data = {};
+    } catch (error) {
 
-
-  try{
-
-    data =
-      await response.json();
-
-  }catch(error){
-
-    data = {};
-
-  }
-
-
-  if(!response.ok){
-
-    if(
-      response.status === 401
-    ){
-
-      localStorage.removeItem(
-        "adminToken"
+      console.error(
+        "markAlertRead:",
+        error
       );
 
-      localStorage.removeItem(
-        "adminUser"
+      showToast(
+        error.message ||
+        "Failed to mark notification as read."
       );
-
-      throw new Error(
-        "Admin session invalid বা expired হয়েছে। আবার Admin Login করুন।"
-      );
-
     }
-
-
-    if(
-      response.status === 403
-    ){
-
-      throw new Error(
-        "এই account-এর Admin permission নেই।"
-      );
-
-    }
-
-
-    throw new Error(
-      data.message ||
-      data.error ||
-      "Server request failed."
-    );
-
   }
 
 
-  return data;
+  /* =========================
+     UNREAD ALERT COUNT
+  ========================= */
 
-}
+  async function loadUnreadAlerts() {
 
+    try {
 
-/* =========================================================
-   PAGE AUTH
-========================================================= */
-
-(function(){
-
-  const token =
-    localStorage.getItem(
-      "adminToken"
-    );
-
-
-  if(!token){
-
-    window.location.href =
-      "login.html";
-
-  }
-
-})();
-
-
-/* =========================================================
-   MODAL
-========================================================= */
-
-function openModal(
-  title,
-  subtitle,
-  icon
-){
-
-  document.getElementById(
-    "modalHeading"
-  ).textContent = title;
-
-
-  document.getElementById(
-    "modalSubheading"
-  ).textContent = subtitle;
-
-
-  document.getElementById(
-    "modalIcon"
-  ).textContent = icon;
-
-
-  document.getElementById(
-    "adminOverlay"
-  ).classList.add("show");
-
-}
-
-
-function closeAdmin(){
-
-  document.getElementById(
-    "adminOverlay"
-  ).classList.remove("show");
-
-  hideForms();
-
-}
-
-
-function closeOutside(event){
-
-  if(
-    event.target.id ===
-    "adminOverlay"
-  ){
-
-    closeAdmin();
-
-  }
-
-}
-
-
-document.addEventListener(
-  "keydown",
-  function(event){
-
-    if(
-      event.key === "Escape"
-    ){
-
-      closeAdmin();
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   FORM MANAGEMENT
-========================================================= */
-
-function hideForms(){
-
-  [
-    "profileForm",
-    "changePasswordForm",
-    "adminResetForm",
-    "userResetForm",
-    "usersForm",
-    "notificationsForm",
-    "profileRequestsForm"
-  ].forEach(
-    function(id){
-
-      const el =
-        document.getElementById(id);
-
-      if(el){
-
-        el.classList.remove(
-          "show"
+      const data =
+        await apiRequest(
+          "/api/admin/alerts/unread-count"
         );
 
-      }
 
-    }
-  );
-
-
-  document.getElementById(
-    "accountMenu"
-  ).style.display =
-    "block";
-
-}
-
-
-function hideFormsOnly(){
-
-  [
-    "profileForm",
-    "changePasswordForm",
-    "adminResetForm",
-    "userResetForm",
-    "usersForm",
-    "notificationsForm",
-    "profileRequestsForm"
-  ].forEach(
-    function(id){
-
-      const el =
-        document.getElementById(id);
-
-      if(el){
-
-        el.classList.remove(
-          "show"
+      const count =
+        Number(
+          data.count ??
+          data.unread_count ??
+          0
         );
 
-      }
 
+      updateAlertBadges(count);
+
+    } catch (error) {
+
+      console.error(
+        "loadUnreadAlerts:",
+        error
+      );
     }
-  );
-
-}
+  }
 
 
-function showForm(
-  id,
-  title,
-  subtitle,
-  icon
-){
+  function updateAlertBadges(count) {
 
-  document.getElementById(
-    "accountMenu"
-  ).style.display =
-    "none";
+    const badge =
+      document.getElementById(
+        "notificationBadge"
+      );
 
+    const cardBadge =
+      document.getElementById(
+        "notificationCardBadge"
+      );
 
-  hideFormsOnly();
-
-
-  document.getElementById(
-    id
-  ).classList.add("show");
-
-
-  document.getElementById(
-    "modalHeading"
-  ).textContent =
-    title;
-
-
-  document.getElementById(
-    "modalSubheading"
-  ).textContent =
-    subtitle;
-
-
-  document.getElementById(
-    "modalIcon"
-  ).textContent =
-    icon;
-
-}
-
-
-function backToAccount(){
-
-  hideForms();
-
-
-  document.getElementById(
-    "modalHeading"
-  ).textContent =
-    "Admin Account";
-
-
-  document.getElementById(
-    "modalSubheading"
-  ).textContent =
-    "Account and security settings";
-
-
-  document.getElementById(
-    "modalIcon"
-  ).textContent =
-    "🔐";
-
-}
-
-
-/* =========================================================
-   ADMIN PROFILE
-========================================================= */
-
-async function loadAdminProfile(){
-
-  showForm(
-    "profileForm",
-    "Admin Profile",
-    "Account information",
-    "👤"
-  );
-
-
-  const box =
-    document.getElementById(
-      "profileInfo"
-    );
-
-
-  box.innerHTML =
-    "Loading admin profile...";
-
-
-  try{
-
-    const data =
-      await apiRequest(
-        "/api/auth/me"
+    const navBadge =
+      document.getElementById(
+        "navAlertBadge"
       );
 
 
-    const user =
-      data.user || {};
+    const value =
+      count > 99
+        ? "99+"
+        : String(count);
 
 
-    box.innerHTML = `
+    if (count > 0) {
 
-      <div>
+      badge.textContent = value;
+      badge.style.display = "flex";
 
-        <div class="info-label">
-          Name
-        </div>
+      cardBadge.textContent = value;
+      cardBadge.style.display = "flex";
 
-        <div class="info-value">
-          ${escapeHtml(
-            user.name || "—"
-          )}
-        </div>
+      navBadge.textContent = value;
+      navBadge.style.display = "flex";
 
-      </div>
+    } else {
 
-
-      <div>
-
-        <div class="info-label">
-          Email
-        </div>
-
-        <div class="info-value">
-          ${escapeHtml(
-            user.email || "—"
-          )}
-        </div>
-
-      </div>
+      badge.style.display = "none";
+      cardBadge.style.display = "none";
+      navBadge.style.display = "none";
+    }
 
 
-      <div>
-
-        <div class="info-label">
-          Phone
-        </div>
-
-        <div class="info-value">
-          ${escapeHtml(
-            user.phone || "—"
-          )}
-        </div>
-
-      </div>
-
-
-      <div>
-
-        <div class="info-label">
-          Role
-        </div>
-
-        <div class="info-value">
-          ${escapeHtml(
-            user.role || "admin"
-          )}
-        </div>
-
-      </div>
-
-
-      <div>
-
-        <div class="info-label">
-          User ID
-        </div>
-
-        <div class="info-value">
-          ${escapeHtml(
-            String(
-              user.id || "—"
-            )
-          )}
-        </div>
-
-      </div>
-
-    `;
-
-  }catch(error){
-
-    box.innerHTML = `
-
-      <div class="error-box">
-        ❌ ${escapeHtml(
-          error.message
-        )}
-      </div>
-
-    `;
-
-  }
-
-}
-
-
-/* =========================================================
-   PASSWORD
-========================================================= */
-
-function openChangePassword(){
-
-  showForm(
-    "changePasswordForm",
-    "Change Password",
-    "Update admin password",
-    "🔑"
-  );
-
-}
-
-
-function openAdminReset(){
-
-  showForm(
-    "adminResetForm",
-    "Admin Password Reset",
-    "Reset administrator password",
-    "🔐"
-  );
-
-}
-
-
-function openUserReset(){
-
-  showForm(
-    "userResetForm",
-    "Reset User Password",
-    "Change password for a user",
-    "👤"
-  );
-
-}
-
-
-async function changePassword(){
-
-  const current =
     document.getElementById(
-      "currentPassword"
-    ).value;
-
-
-  const newPass =
-    document.getElementById(
-      "newPassword"
-    ).value;
-
-
-  const confirm =
-    document.getElementById(
-      "confirmPassword"
-    ).value;
-
-
-  if(
-    !current ||
-    !newPass ||
-    !confirm
-  ){
-
-    showToast(
-      "সব password field পূরণ করুন।",
-      "error"
-    );
-
-    return;
-
+      "unreadAlerts"
+    ).textContent = count;
   }
 
 
-  if(
-    newPass.length < 6
-  ){
-
-    showToast(
-      "New password কমপক্ষে 6 characters হতে হবে।",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  if(
-    newPass !== confirm
-  ){
-
-    showToast(
-      "New password দুটো একই নয়।",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  const button =
-    document.getElementById(
-      "changePasswordBtn"
-    );
-
-
-  button.disabled =
-    true;
-
-  button.textContent =
-    "Changing...";
-
-
-  try{
-
-    await apiRequest(
-      "/api/admin/account/password",
-      {
-        method:"PUT",
-
-        body:JSON.stringify({
-          currentPassword:
-            current,
-
-          newPassword:
-            newPass
-        })
-      }
-    );
-
-
-    showToast(
-      "Password successfully changed.",
-      "success"
-    );
-
-
-    document.getElementById(
-      "currentPassword"
-    ).value = "";
-
-
-    document.getElementById(
-      "newPassword"
-    ).value = "";
-
-
-    document.getElementById(
-      "confirmPassword"
-    ).value = "";
-
-
-    setTimeout(
-      backToAccount,
-      1000
-    );
-
-  }catch(error){
-
-    showToast(
-      error.message,
-      "error"
-    );
-
-  }finally{
-
-    button.disabled =
-      false;
-
-    button.textContent =
-      "Change Password";
-
-  }
-
-}
-
-
-async function adminResetPassword(){
-
-  const current =
-    document.getElementById(
-      "resetCurrentPassword"
-    ).value;
-
-
-  const newPass =
-    document.getElementById(
-      "resetNewPassword"
-    ).value;
-
-
-  const confirm =
-    document.getElementById(
-      "resetConfirmPassword"
-    ).value;
-
-
-  if(
-    !current ||
-    !newPass ||
-    !confirm
-  ){
-
-    showToast(
-      "সব field পূরণ করুন।",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  if(
-    newPass.length < 6
-  ){
-
-    showToast(
-      "New password কমপক্ষে 6 characters হতে হবে।",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  if(
-    newPass !== confirm
-  ){
-
-    showToast(
-      "Password দুটো একই নয়।",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  const button =
-    document.getElementById(
-      "adminResetBtn"
-    );
-
-
-  button.disabled =
-    true;
-
-  button.textContent =
-    "Resetting...";
-
-
-  try{
-
-    await apiRequest(
-      "/api/admin/account/password",
-      {
-        method:"PUT",
-
-        body:JSON.stringify({
-          currentPassword:
-            current,
-
-          newPassword:
-            newPass
-        })
-      }
-    );
-
-
-    showToast(
-      "Admin password reset successful.",
-      "success"
-    );
-
-
-    document.getElementById(
-      "resetCurrentPassword"
-    ).value = "";
-
-
-    document.getElementById(
-      "resetNewPassword"
-    ).value = "";
-
-
-    document.getElementById(
-      "resetConfirmPassword"
-    ).value = "";
-
-
-    setTimeout(
-      backToAccount,
-      1000
-    );
-
-  }catch(error){
-
-    showToast(
-      error.message,
-      "error"
-    );
-
-  }finally{
-
-    button.disabled =
-      false;
-
-    button.textContent =
-      "Reset Password";
-
-  }
-
-}
-
-
-/* =========================================================
-   USER PASSWORD RESET
-========================================================= */
-
-async function resetUserPassword(){
-
-  const userId =
-    document.getElementById(
-      "resetUserId"
-    ).value.trim();
-
-
-  const newPass =
-    document.getElementById(
-      "resetUserPassword"
-    ).value;
-
-
-  const confirm =
-    document.getElementById(
-      "resetUserPasswordConfirm"
-    ).value;
-
-
-  if(
-    !userId ||
-    !newPass ||
-    !confirm
-  ){
-
-    showToast(
-      "সব field পূরণ করুন।",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  if(
-    newPass.length < 6
-  ){
-
-    showToast(
-      "Password কমপক্ষে 6 characters হতে হবে।",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  if(
-    newPass !== confirm
-  ){
-
-    showToast(
-      "Password দুটো একই নয়।",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  const button =
-    document.getElementById(
-      "userResetBtn"
-    );
-
-
-  button.disabled =
-    true;
-
-  button.textContent =
-    "Resetting...";
-
-
-  try{
-
-    await apiRequest(
-      "/api/admin/users/" +
-      encodeURIComponent(
-        userId
-      ) +
-      "/password",
-      {
-        method:"PUT",
-
-        body:JSON.stringify({
-          newPassword:
-            newPass
-        })
-      }
-    );
-
-
-    showToast(
-      "User password reset successful.",
-      "success"
-    );
-
-
-    document.getElementById(
-      "resetUserId"
-    ).value = "";
-
-
-    document.getElementById(
-      "resetUserPassword"
-    ).value = "";
-
-
-    document.getElementById(
-      "resetUserPasswordConfirm"
-    ).value = "";
-
-  }catch(error){
-
-    showToast(
-      error.message,
-      "error"
-    );
-
-  }finally{
-
-    button.disabled =
-      false;
-
-    button.textContent =
-      "Reset User Password";
-
-  }
-
-}
-
-
-/* =========================================================
-   USER MANAGEMENT
-========================================================= */
-
-function openUserManagement(){
-
-  openModal(
-    "User Management",
-    "Registered users",
-    "👥"
-  );
-
-
-  showForm(
-    "usersForm",
-    "User Management",
-    "Registered users",
-    "👥"
-  );
-
-
-  loadUsersManagement();
-
-}
-
-
-async function loadUsersManagement(){
-
-  const container =
-    document.getElementById(
-      "usersList"
-    );
-
-
-  container.innerHTML =
-    "<div class='loading'>Loading users...</div>";
-
-
-  try{
-
-    const data =
-      await apiRequest(
-        "/api/admin/users"
+  /* =========================
+     REQUEST BADGES
+  ========================= */
+
+  function updateRequestBadges(count) {
+
+    const card =
+      document.getElementById(
+        "profileRequestBadge"
+      );
+
+    const nav =
+      document.getElementById(
+        "navRequestBadge"
       );
 
 
-    const users =
-      data.users || [];
+    if (count > 0) {
+
+      card.textContent =
+        count > 99 ? "99+" : count;
+
+      card.style.display =
+        "flex";
+
+
+      nav.textContent =
+        count > 99 ? "99+" : count;
+
+      nav.style.display =
+        "flex";
+
+    } else {
+
+      card.style.display =
+        "none";
+
+      nav.style.display =
+        "none";
+    }
 
 
     document.getElementById(
-      "totalUsers"
-    ).textContent =
-      users.length;
+      "pendingRequests"
+    ).textContent = count;
+  }
 
 
-    if(
-      users.length === 0
-    ){
+  /* =========================
+     USERS
+  ========================= */
+
+  async function openUsers() {
+
+    hidePages();
+
+    document
+      .getElementById("usersPage")
+      .classList.add("active");
+
+    document
+      .getElementById("navUsers")
+      .classList.add("active");
+
+    await loadUsers();
+  }
+
+
+  async function loadUsers() {
+
+    const container =
+      document.getElementById(
+        "usersList"
+      );
+
+
+    container.innerHTML = `
+      <div class="empty">
+        Loading users...
+      </div>
+    `;
+
+
+    try {
+
+      const data =
+        await apiRequest(
+          "/api/admin/users"
+        );
+
+
+      const users =
+        data.users ||
+        data.data ||
+        [];
+
+
+      document.getElementById(
+        "userCountText"
+      ).textContent =
+        `${users.length} users`;
+
+
+      document.getElementById(
+        "totalUsers"
+      ).textContent =
+        users.length;
+
+
+      if (!users.length) {
+
+        container.innerHTML = `
+          <div class="empty">
+            No users found.
+          </div>
+        `;
+
+        return;
+      }
+
 
       container.innerHTML =
-        "<div class='empty'>No users found.</div>";
-
-      return;
-
-    }
-
-
-    container.innerHTML =
-      users.map(
-        function(u){
+        users.map(user => {
 
           return `
-
             <div class="user-item">
 
-              <div class="user-head">
+              <div class="user-row">
 
                 <div>
 
                   <div class="user-name">
                     ${escapeHtml(
-                      u.name || "Unknown"
+                      user.name ||
+                      "Unnamed User"
                     )}
                   </div>
 
-                  <div class="user-email">
+                  <div class="user-info">
                     ${escapeHtml(
-                      u.email || "—"
+                      user.email ||
+                      "No email"
+                    )}
+                  </div>
+
+                  <div class="user-info">
+                    ${escapeHtml(
+                      user.phone ||
+                      "No phone"
                     )}
                   </div>
 
                 </div>
 
-                <div
-                  class="status ${u.role === "admin" ? "approved" : "pending"}"
-                >
-                  ${escapeHtml(
-                    u.role || "user"
-                  )}
+
+                <div style="
+                  text-align:right;
+                ">
+
+                  <div style="
+                    font-size:11px;
+                    color:#4ade80;
+                  ">
+                    ৳ ${escapeHtml(
+                      user.wallet_balance ??
+                      "0"
+                    )}
+                  </div>
+
+                  <div style="
+                    font-size:9px;
+                    color:#555;
+                    margin-top:5px;
+                  ">
+                    ID: ${escapeHtml(user.id)}
+                  </div>
+
                 </div>
-
-              </div>
-
-
-              <div class="user-meta">
-
-                ID:
-                ${escapeHtml(
-                  u.id
-                )}
-
-                <br>
-
-                Phone:
-                ${escapeHtml(
-                  u.phone || "N/A"
-                )}
-
-                <br>
-
-                Balance:
-                ৳${escapeHtml(
-                  u.wallet_balance || "0.00"
-                )}
-
-                <br>
-
-                Referral:
-                ${escapeHtml(
-                  u.referral_code || "N/A"
-                )}
 
               </div>
 
             </div>
-
           `;
 
-        }
-      ).join("");
+        }).join("");
 
 
-  }catch(error){
-
-    container.innerHTML = `
-
-      <div class="error-box">
-        ❌ ${escapeHtml(
-          error.message
-        )}
-      </div>
-
-    `;
-
-  }
-
-}
-
-
-/* =========================================================
-   PROFILE REQUEST FILTER
-========================================================= */
-
-let profileRequests =
-  [];
-
-let requestFilter =
-  "all";
-
-
-function setRequestFilter(
-  filter
-){
-
-  requestFilter =
-    filter;
-
-
-  [
-    "allRequestBtn",
-    "pendingRequestBtn",
-    "approvedRequestBtn",
-    "rejectedRequestBtn"
-  ].forEach(
-    function(id){
-
-      document.getElementById(
-        id
-      ).classList.remove(
-        "active"
-      );
-
-    }
-  );
-
-
-  const map = {
-
-    all:
-      "allRequestBtn",
-
-    pending:
-      "pendingRequestBtn",
-
-    approved:
-      "approvedRequestBtn",
-
-    rejected:
-      "rejectedRequestBtn"
-
-  };
-
-
-  document.getElementById(
-    map[filter]
-  ).classList.add(
-    "active"
-  );
-
-
-  renderProfileRequests();
-
-}
-
-
-/* =========================================================
-   OPEN PROFILE REQUESTS
-========================================================= */
-
-function openProfileRequests(){
-
-  openModal(
-    "Profile Update Requests",
-    "Review old and new profile information",
-    "📝"
-  );
-
-
-  showForm(
-    "profileRequestsForm",
-    "Profile Update Requests",
-    "Review old and new profile information",
-    "📝"
-  );
-
-
-  loadProfileRequests();
-
-}
-
-
-/* =========================================================
-   LOAD PROFILE REQUESTS
-========================================================= */
-
-async function loadProfileRequests(){
-
-  const list =
-    document.getElementById(
-      "requestList"
-    );
-
-
-  list.innerHTML =
-    "<div class='loading'>Loading profile requests...</div>";
-
-
-  try{
-
-    const data =
-      await apiRequest(
-        "/api/admin/profile-requests"
-      );
-
-
-    profileRequests =
-      data.requests || [];
-
-
-    updatePendingCount();
-
-
-    renderProfileRequests();
-
-
-  }catch(error){
-
-    list.innerHTML = `
-
-      <div class="error-box">
-
-        ❌ ${escapeHtml(
-          error.message
-        )}
-
-      </div>
-
-    `;
-
-  }
-
-}
-
-
-/* =========================================================
-   UPDATE PENDING COUNT
-========================================================= */
-
-function updatePendingCount(){
-
-  const pending =
-    profileRequests.filter(
-      function(r){
-
-        return (
-          r.status ===
-          "pending"
-        );
-
-      }
-    ).length;
-
-
-  document.getElementById(
-    "pendingRequests"
-  ).textContent =
-    pending;
-
-
-  const badge =
-    document.getElementById(
-      "profileRequestBadge"
-    );
-
-
-  if(pending > 0){
-
-    badge.style.display =
-      "flex";
-
-    badge.textContent =
-      pending;
-
-  }else{
-
-    badge.style.display =
-      "none";
-
-  }
-
-
-  const bottomBadge =
-    document.getElementById(
-      "bottomRequestBadge"
-    );
-
-
-  if(pending > 0){
-
-    bottomBadge.classList.add(
-      "show"
-    );
-
-    bottomBadge.textContent =
-      pending;
-
-  }else{
-
-    bottomBadge.classList.remove(
-      "show"
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   RENDER PROFILE REQUESTS
-========================================================= */
-
-function renderProfileRequests(){
-
-  const list =
-    document.getElementById(
-      "requestList"
-    );
-
-
-  let filtered =
-    profileRequests;
-
-
-  if(
-    requestFilter !==
-    "all"
-  ){
-
-    filtered =
-      profileRequests.filter(
-        function(r){
-
-          return (
-            r.status ===
-            requestFilter
-          );
-
-        }
-      );
-
-  }
-
-
-  if(
-    filtered.length === 0
-  ){
-
-    list.innerHTML = `
-
-      <div class="empty">
-
-        ${
-          requestFilter === "pending"
-          ? "No pending profile update requests."
-          : "No requests found."
-        }
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  list.innerHTML =
-    filtered.map(
-      function(req){
-
-        return renderSingleRequest(
-          req
-        );
-
-      }
-    ).join("");
-
-}
-
-
-/* =========================================================
-   RENDER SINGLE REQUEST
-========================================================= */
-
-function renderSingleRequest(
-  req
-){
-
-  const oldData =
-    parseJson(
-      req.old_data
-    );
-
-
-  const newData =
-    parseJson(
-      req.requested_data
-    );
-
-
-  const fields = [
-
-    {
-      key:"name",
-      label:"Name"
-    },
-
-    {
-      key:"father_name",
-      label:"Father's Name"
-    },
-
-    {
-      key:"phone",
-      label:"Phone"
-    },
-
-    {
-      key:"email",
-      label:"Email"
-    },
-
-    {
-      key:"nid",
-      label:"NID"
-    },
-
-    {
-      key:"address",
-      label:"Address"
-    },
-
-    {
-      key:"nominee_name",
-      label:"Nominee Name"
-    },
-
-    {
-      key:"nominee_number",
-      label:"Nominee Number"
-    },
-
-    {
-      key:"nominee_nid",
-      label:"Nominee NID"
-    }
-
-  ];
-
-
-  let changedCount =
-    0;
-
-
-  let rows =
-    "";
-
-
-  fields.forEach(
-    function(field){
-
-      const oldValue =
-        normalizeValue(
-          oldData[field.key]
-        );
-
-
-      const newValue =
-        normalizeValue(
-          newData[field.key]
-        );
-
-
-      const changed =
-        oldValue !==
-        newValue;
-
-
-      if(changed){
-
-        changedCount++;
-
-      }
-
-
-      rows += `
-
-        <tr>
-
-          <td>
-            ${escapeHtml(
-              field.label
-            )}
-          </td>
-
-
-          <td
-            class="${
-              changed
-              ? "old-data"
-              : "same-data"
-            }"
-          >
-
-            ${escapeHtml(
-              oldValue
-            )}
-
-          </td>
-
-
-          <td
-            class="change-arrow"
-          >
-            →
-          </td>
-
-
-          <td
-            class="${
-              changed
-              ? "new-data"
-              : "same-data"
-            }"
-          >
-
-            ${escapeHtml(
-              newValue
-            )}
-
-          </td>
-
-        </tr>
-
-      `;
-
-    }
-  );
-
-
-  const isPending =
-    req.status ===
-    "pending";
-
-
-  const statusClass =
-    req.status ===
-    "approved"
-      ? "approved"
-      : req.status ===
-        "rejected"
-        ? "rejected"
-        : "pending";
-
-
-  return `
-
-    <div
-      class="request-card ${
-        isPending
-        ? "pending"
-        : ""
-      }"
-    >
-
-      <div class="request-header">
-
-        <div>
-
-          <div class="request-user">
-
-            👤
-            ${escapeHtml(
-              req.current_name ||
-              "Unknown User"
-            )}
-
-            <span
-              style="
-                color:#64748b;
-                font-size:9px;
-              "
-            >
-              #${escapeHtml(
-                req.user_id
-              )}
-            </span>
-
-          </div>
-
-
-          <div class="request-email">
-
-            ${escapeHtml(
-              req.current_phone ||
-              ""
-            )}
-
-          </div>
-
-        </div>
-
-
-        <div
-          class="status ${statusClass}"
-        >
-          ${escapeHtml(
-            String(
-              req.status ||
-              "pending"
-            ).toUpperCase()
-          )}
-        </div>
-
-      </div>
-
-
-      <div class="request-time">
-
-        🕐
-        ${formatDate(
-          req.created_at
-        )}
-
-      </div>
-
-
-      <div class="compare-title">
-
-        OLD DATA
-        <span
-          style="
-            color:#64748b;
-            margin:0 4px;
-          "
-        >
-          →
-        </span>
-        NEW DATA
-
-        <span
-          style="
-            float:right;
-            color:${
-              changedCount > 0
-              ? "#facc15"
-              : "#64748b"
-            };
-          "
-        >
-
-          ${changedCount}
-          field(s) changed
-
-        </span>
-
-      </div>
-
-
-      <div
-        style="
-          overflow-x:auto;
-        "
-      >
-
-        <table class="compare-table">
-
-          <thead>
-
-            <tr>
-
-              <th>
-                Field
-              </th>
-
-              <th>
-                Old
-              </th>
-
-              <th>
-              </th>
-
-              <th>
-                New
-              </th>
-
-            </tr>
-
-          </thead>
-
-
-          <tbody>
-
-            ${rows}
-
-          </tbody>
-
-        </table>
-
-      </div>
-
-
-      ${
-        isPending
-        ? `
-
-          <div class="request-actions">
-
-            <button
-              id="approve-${Number(req.id)}"
-              class="approve"
-              onclick="
-                handleProfileReq(
-                  ${Number(req.id)},
-                  'approve'
-                )
-              "
-            >
-              ✓ Approve
-            </button>
-
-
-            <button
-              id="reject-${Number(req.id)}"
-              class="reject"
-              onclick="
-                handleProfileReq(
-                  ${Number(req.id)},
-                  'reject'
-                )
-              "
-            >
-              ✕ Reject
-            </button>
-
-          </div>
-
-        `
-        : ""
-      }
-
-    </div>
-
-  `;
-
-}
-
-
-/* =========================================================
-   APPROVE / REJECT
-========================================================= */
-
-async function handleProfileReq(
-  id,
-  action
-){
-
-  const actionText =
-    action === "approve"
-      ? "APPROVE"
-      : "REJECT";
-
-
-  const confirmed =
-    confirm(
-      `Are you sure you want to ${actionText} this profile update request?`
-    );
-
-
-  if(!confirmed){
-
-    return;
-
-  }
-
-
-  const approveButton =
-    document.getElementById(
-      "approve-" + id
-    );
-
-
-  const rejectButton =
-    document.getElementById(
-      "reject-" + id
-    );
-
-
-  if(approveButton){
-
-    approveButton.disabled =
-      true;
-
-  }
-
-
-  if(rejectButton){
-
-    rejectButton.disabled =
-      true;
-
-  }
-
-
-  try{
-
-    const data =
-      await apiRequest(
-        "/api/admin/profile-requests/" +
-        encodeURIComponent(id),
-        {
-          method:"PUT",
-
-          body:JSON.stringify({
-            action:action
-          })
-        }
-      );
-
-
-    showToast(
-      data.message ||
-      (
-        action === "approve"
-        ? "Profile approved successfully."
-        : "Profile request rejected."
-      ),
-      "success"
-    );
-
-
-    await loadProfileRequests();
-
-    await loadNotifications();
-
-  }catch(error){
-
-    showToast(
-      error.message,
-      "error"
-    );
-
-
-    if(approveButton){
-
-      approveButton.disabled =
-        false;
-
-    }
-
-
-    if(rejectButton){
-
-      rejectButton.disabled =
-        false;
-
-    }
-
-  }
-
-}
-
-
-/* =========================================================
-   NOTIFICATIONS
-========================================================= */
-
-let notifications =
-  [];
-
-let notificationFilter =
-  "all";
-
-
-function setNotificationFilter(
-  filter
-){
-
-  notificationFilter =
-    filter;
-
-
-  document.getElementById(
-    "allNotificationBtn"
-  ).classList.remove(
-    "active"
-  );
-
-
-  document.getElementById(
-    "unreadNotificationBtn"
-  ).classList.remove(
-    "active"
-  );
-
-
-  if(
-    filter === "unread"
-  ){
-
-    document.getElementById(
-      "unreadNotificationBtn"
-    ).classList.add(
-      "active"
-    );
-
-  }else{
-
-    document.getElementById(
-      "allNotificationBtn"
-    ).classList.add(
-      "active"
-    );
-
-  }
-
-
-  renderNotifications();
-
-}
-
-
-function openNotifications(){
-
-  showForm(
-    "notificationsForm",
-    "Notifications",
-    "System alerts and profile updates",
-    "🔔"
-  );
-
-
-  document.getElementById(
-    "adminOverlay"
-  ).classList.add(
-    "show"
-  );
-
-
-  loadNotifications();
-
-}
-
-
-async function loadNotifications(){
-
-  const list =
-    document.getElementById(
-      "notificationsList"
-    );
-
-
-  list.innerHTML =
-    "<div class='loading'>Loading notifications...</div>";
-
-
-  try{
-
-    const data =
-      await apiRequest(
-        "/api/admin/alerts"
-      );
-
-
-    notifications =
-      data.alerts || [];
-
-
-    renderNotifications();
-
-
-    updateAlertCounts();
-
-
-  }catch(error){
-
-    list.innerHTML = `
-
-      <div class="error-box">
-
-        ❌ ${escapeHtml(
-          error.message
-        )}
-
-      </div>
-
-    `;
-
-  }
-
-}
-
-
-/* =========================================================
-   RENDER NOTIFICATIONS
-========================================================= */
-
-function renderNotifications(){
-
-  const list =
-    document.getElementById(
-      "notificationsList"
-    );
-
-
-  let filtered =
-    notifications;
-
-
-  if(
-    notificationFilter ===
-    "unread"
-  ){
-
-    filtered =
-      notifications.filter(
-        function(n){
-
-          return (
-            n.status ===
-            "unread"
-          );
-
-        }
-      );
-
-  }
-
-
-  if(
-    filtered.length === 0
-  ){
-
-    list.innerHTML = `
-
-      <div class="empty">
-
-        ${
-          notificationFilter === "unread"
-          ? "No unread notifications."
-          : "No notifications yet."
-        }
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  list.innerHTML =
-    filtered.map(
-      function(n){
-
-        const unread =
-          n.status ===
-          "unread";
-
-
-        return `
-
-          <div
-            class="
-              notification-item
-              ${unread ? "unread" : ""}
-            "
-            onclick="
-              openNotification(
-                ${Number(n.id)}
-              )
-            "
-          >
-
-            <div
-              class="notification-top"
-            >
-
-              <div>
-
-                <div
-                  class="notification-title"
-                >
-
-                  ${escapeHtml(
-                    n.title ||
-                    "Notification"
-                  )}
-
-                </div>
-
-
-                <div
-                  class="notification-message"
-                >
-
-                  ${escapeHtml(
-                    n.message ||
-                    ""
-                  )}
-
-                </div>
-
-              </div>
-
-
-              ${
-                unread
-                ? `
-                  <span
-                    class="unread-dot"
-                  ></span>
-                `
-                : `
-                  <span
-                    class="read-label"
-                  >
-                    READ
-                  </span>
-                `
-              }
-
-            </div>
-
-
-            <div
-              class="notification-time"
-            >
-
-              🕐
-              ${formatDate(
-                n.created_at
-              )}
-
-            </div>
-
-          </div>
-
-        `;
-
-      }
-    ).join("");
-
-}
-
-
-/* =========================================================
-   OPEN NOTIFICATION
-========================================================= */
-
-async function openNotification(
-  id
-){
-
-  const notification =
-    notifications.find(
-      function(n){
-
-        return Number(n.id) ===
-          Number(id);
-
-      }
-    );
-
-
-  if(!notification){
-
-    return;
-
-  }
-
-
-  if(
-    notification.status ===
-    "unread"
-  ){
-
-    try{
-
-      await apiRequest(
-        "/api/admin/alerts/" +
-        encodeURIComponent(id) +
-        "/read",
-        {
-          method:"PUT"
-        }
-      );
-
-
-      notification.status =
-        "read";
-
-
-      updateAlertCounts();
-
-
-    }catch(error){
+    } catch (error) {
 
       console.error(
-        "Read notification error:",
+        "loadUsers:",
         error
       );
 
+
+      container.innerHTML = `
+        <div class="error">
+
+          <strong>
+            Failed to load users
+          </strong>
+
+          <div style="margin-top:7px;">
+            ${escapeHtml(error.message)}
+          </div>
+
+          <button
+            class="retry"
+            onclick="loadUsers()"
+          >
+            Retry
+          </button>
+
+        </div>
+      `;
     }
-
   }
 
 
-  if(
-    notification.type ===
-    "profile_photo_update" ||
-    notification.type ===
-    "profile_update"
-  ){
+  /* =========================
+     ACCOUNT
+  ========================= */
 
-    openProfileRequests();
+  async function openAccount() {
 
-    return;
+    hidePages();
 
+    document
+      .getElementById("accountPage")
+      .classList.add("active");
+
+    document
+      .getElementById("navAccount")
+      .classList.add("active");
+
+    await loadAdminAccount();
   }
 
 
-  if(
-    notification.type ===
-    "profile_approved"
-  ){
+  async function loadAdminAccount() {
 
-    openProfileRequests();
+    const box =
+      document.getElementById(
+        "accountBox"
+      );
 
-    return;
 
+    box.innerHTML =
+      "Loading administrator information...";
+
+
+    try {
+
+      let data;
+
+
+      try {
+
+        data =
+          await apiRequest(
+            "/api/admin/account"
+          );
+
+      } catch (error) {
+
+        /*
+          Current backend may not have
+          /api/admin/account.
+
+          Fallback to /api/auth/me.
+        */
+
+        data =
+          await apiRequest(
+            "/api/auth/me"
+          );
+      }
+
+
+      const user =
+        data.user ||
+        data.data ||
+        data;
+
+
+      box.innerHTML = `
+
+        <div class="account-line">
+          <span>Name</span>
+          <span>
+            ${escapeHtml(
+              user.name ||
+              "Admin"
+            )}
+          </span>
+        </div>
+
+        <div class="account-line">
+          <span>Email</span>
+          <span>
+            ${escapeHtml(
+              user.email ||
+              "—"
+            )}
+          </span>
+        </div>
+
+        <div class="account-line">
+          <span>Phone</span>
+          <span>
+            ${escapeHtml(
+              user.phone ||
+              "—"
+            )}
+          </span>
+        </div>
+
+        <div class="account-line">
+          <span>Role</span>
+          <span>
+            ${escapeHtml(
+              user.role ||
+              "admin"
+            )}
+          </span>
+        </div>
+
+        <div class="account-line">
+          <span>User ID</span>
+          <span>
+            ${escapeHtml(
+              user.id ||
+              "—"
+            )}
+          </span>
+        </div>
+
+      `;
+
+
+    } catch (error) {
+
+      console.error(
+        "loadAdminAccount:",
+        error
+      );
+
+
+      box.innerHTML = `
+        <div class="error">
+
+          Failed to load admin account.
+
+          <div style="margin-top:7px;">
+            ${escapeHtml(
+              error.message
+            )}
+          </div>
+
+        </div>
+      `;
+    }
   }
 
 
-  showToast(
-    notification.message ||
-    "Notification opened."
-  );
+  /* =========================
+     DASHBOARD STATS
+  ========================= */
 
+  async function loadDashboardStats() {
 
-  renderNotifications();
+    try {
 
-}
+      /*
+        Users
+      */
 
-
-/* =========================================================
-   ALERT COUNTS
-========================================================= */
-
-function updateAlertCounts(){
-
-  const unread =
-    notifications.filter(
-      function(n){
-
-        return (
-          n.status ===
-          "unread"
+      const usersData =
+        await apiRequest(
+          "/api/admin/users"
         );
 
-      }
-    ).length;
 
+      const users =
+        usersData.users ||
+        usersData.data ||
+        [];
 
-  document.getElementById(
-    "unreadAlerts"
-  ).textContent =
-    unread;
 
+      document.getElementById(
+        "totalUsers"
+      ).textContent =
+        users.length;
 
-  const headerBadge =
-    document.getElementById(
-      "headerNotificationBadge"
-    );
 
-
-  if(unread > 0){
-
-    headerBadge.classList.add(
-      "show"
-    );
-
-    headerBadge.textContent =
-      unread > 99
-        ? "99+"
-        : unread;
-
-  }else{
-
-    headerBadge.classList.remove(
-      "show"
-    );
-
-  }
-
-
-  const bottomBadge =
-    document.getElementById(
-      "bottomAlertBadge"
-    );
-
-
-  if(unread > 0){
-
-    bottomBadge.classList.add(
-      "show"
-    );
-
-    bottomBadge.textContent =
-      unread > 99
-        ? "99+"
-        : unread;
-
-  }else{
-
-    bottomBadge.classList.remove(
-      "show"
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   DATE
-========================================================= */
-
-function formatDate(
-  value
-){
-
-  if(!value){
-
-    return "Unknown time";
-
-  }
-
-
-  const date =
-    new Date(value);
-
-
-  if(
-    Number.isNaN(
-      date.getTime()
-    )
-  ){
-
-    return String(value);
-
-  }
-
-
-  return date.toLocaleString(
-    "en-BD",
-    {
-      year:"numeric",
-      month:"short",
-      day:"numeric",
-      hour:"2-digit",
-      minute:"2-digit"
-    }
-  );
-
-}
-
-
-/* =========================================================
-   JSON
-========================================================= */
-
-function parseJson(
-  value
-){
-
-  if(!value){
-
-    return {};
-
-  }
-
-
-  if(
-    typeof value ===
-    "object"
-  ){
-
-    return value;
-
-  }
-
-
-  try{
-
-    return JSON.parse(
-      value
-    );
-
-  }catch(error){
-
-    return {};
-
-  }
-
-}
-
-
-/* =========================================================
-   NORMALIZE
-========================================================= */
-
-function normalizeValue(
-  value
-){
-
-  if(
-    value === null ||
-    value === undefined ||
-    value === ""
-  ){
-
-    return "Not provided";
-
-  }
-
-
-  if(
-    typeof value ===
-    "object"
-  ){
-
-    return JSON.stringify(
-      value
-    );
-
-  }
-
-
-  return String(value);
-
-}
-
-
-/* =========================================================
-   HTML ESCAPE
-========================================================= */
-
-function escapeHtml(
-  value
-){
-
-  return String(value)
-
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-
-    .replace(
-      /</g,
-      "&lt;"
-    )
-
-    .replace(
-      />/g,
-      "&gt;"
-    )
-
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-
-    .replace(
-      /'/g,
-      "&#039;"
-    );
-
-}
-
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-function showToast(
-  message,
-  type
-){
-
-  const toast =
-    document.getElementById(
-      "toast"
-    );
-
-
-  toast.textContent =
-    message;
-
-
-  toast.className =
-    "toast show " +
-    (
-      type ||
-      ""
-    );
-
-
-  setTimeout(
-    function(){
-
-      toast.className =
-        "toast";
-
-    },
-    2600
-  );
-
-}
-
-
-/* =========================================================
-   COMING SOON
-========================================================= */
-
-function showComing(
-  name
-){
-
-  showToast(
-    name +
-    " module will be connected next."
-  );
-
-}
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-function logout(){
-
-  const confirmed =
-    confirm(
-      "আপনি কি Admin Logout করতে চান?"
-    );
-
-
-  if(!confirmed){
-
-    return;
-
-  }
-
-
-  localStorage.removeItem(
-    "token"
-  );
-
-  localStorage.removeItem(
-    "adminToken"
-  );
-
-  localStorage.removeItem(
-    "user"
-  );
-
-  localStorage.removeItem(
-    "adminUser"
-  );
-
-
-  window.location.href =
-    "login.html";
-
-}
-
-
-/* =========================================================
-   HOME
-========================================================= */
-
-function goHome(){
-
-  closeAdmin();
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
-}
-
-
-/* =========================================================
-   INITIAL DATA
-========================================================= */
-
-async function loadDashboardCounts(){
-
-  try{
-
-    const usersData =
-      await apiRequest(
-        "/api/admin/users"
-      );
-
-
-    const users =
-      usersData.users ||
-      [];
-
-
-    document.getElementById(
-      "totalUsers"
-    ).textContent =
-      users.length;
-
-
-  }catch(error){
-
-    console.error(
-      "Users count error:",
-      error
-    );
-
-  }
-
-
-  try{
-
-    const requestData =
-      await apiRequest(
-        "/api/admin/profile-requests"
-      );
-
-
-    profileRequests =
-      requestData.requests ||
-      [];
-
-
-    updatePendingCount();
-
-  }catch(error){
-
-    console.error(
-      "Profile request count error:",
-      error
-    );
-
-  }
-
-
-  try{
-
-    const alertData =
-      await apiRequest(
-        "/api/admin/alerts"
-      );
-
-
-    notifications =
-      alertData.alerts ||
-      [];
-
-
-    updateAlertCounts();
-
-  }catch(error){
-
-    console.error(
-      "Alert count error:",
-      error
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   AUTO REFRESH
-========================================================= */
-
-loadDashboardCounts();
-
-
-/*
-  Refresh notification and pending
-  counts every 20 seconds.
-*/
-
-setInterval(
-  async function(){
-
-    try{
+      /*
+        Profile requests
+      */
 
       const requestData =
         await apiRequest(
@@ -4665,52 +2262,123 @@ setInterval(
         );
 
 
-      profileRequests =
+      const requests =
         requestData.requests ||
+        requestData.data ||
         [];
 
 
-      updatePendingCount();
+      const pending =
+        requests.filter(
+          r =>
+            String(r.status || "")
+              .toLowerCase() === "pending"
+        ).length;
 
 
-    }catch(error){
+      updateRequestBadges(
+        pending
+      );
+
+
+      /*
+        Alerts
+      */
+
+      await loadUnreadAlerts();
+
+
+    } catch (error) {
 
       console.error(
-        "Auto request refresh:",
+        "Dashboard stats:",
         error
       );
 
+      /*
+        Don't redirect here.
+        Individual API errors should
+        not break the dashboard.
+      */
+    }
+  }
+
+
+  /* =========================
+     COMING SOON
+  ========================= */
+
+  function showComing(name) {
+
+    showToast(
+      `${name} is coming soon.`
+    );
+  }
+
+
+  /* =========================
+     LOGOUT
+  ========================= */
+
+  function logout() {
+
+    localStorage.removeItem(
+      "adminToken"
+    );
+
+    localStorage.removeItem(
+      "adminUser"
+    );
+
+    /*
+      Keep normal user token untouched
+      unless your login system uses the
+      same token.
+    */
+
+    window.location.href =
+      "login.html";
+  }
+
+
+  /* =========================
+     INITIALIZE
+  ========================= */
+
+  async function init() {
+
+    if (!checkAuth()) {
+      return;
     }
 
 
-    try{
-
-      const alertData =
-        await apiRequest(
-          "/api/admin/alerts"
-        );
+    await loadDashboardStats();
 
 
-      notifications =
-        alertData.alerts ||
-        [];
+    /*
+      Refresh notification count
+      every 20 seconds.
+    */
+
+    setInterval(
+      loadUnreadAlerts,
+      20000
+    );
 
 
-      updateAlertCounts();
+    /*
+      Refresh dashboard counts
+      every 30 seconds.
+    */
+
+    setInterval(
+      loadDashboardStats,
+      30000
+    );
+  }
 
 
-    }catch(error){
-
-      console.error(
-        "Auto alert refresh:",
-        error
-      );
-
-    }
-
-  },
-  20000
-);
+  init();
 
 </script>
 
