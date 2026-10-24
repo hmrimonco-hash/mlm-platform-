@@ -22,7 +22,7 @@
       overflow-x: hidden;
     }
 
-    /* 🔥 CSS WATERMARK (Ebar Sposto Dekha Jabe) 🔥 */
+    /* 🔥 CSS WATERMARK 🔥 */
     body::before {
       content: "PROYOJON LTD";
       position: fixed; 
@@ -31,11 +31,10 @@
       transform: translate(-50%, -50%) rotate(-25deg);
       font-size: 16vw;
       font-weight: 900;
-      /* Opacity bariye 0.08 kora hoyeche jate bojha jay */
       color: rgba(255, 255, 255, 0.08); 
       white-space: nowrap;
       pointer-events: none; 
-      z-index: 1; /* Z-index ektu upore ana hoyeche */
+      z-index: 1;
     }
 
     /* Navbar */
@@ -64,7 +63,12 @@
       border-radius: 12px;
       object-fit: cover;
       border: 2px solid rgba(255, 255, 255, 0.2);
-      background-color: #070b14;
+      background: linear-gradient(135deg, #3157d5, #673ab7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      font-weight: bold;
     }
     
     .brand-text h1 { 
@@ -171,8 +175,8 @@
   <div class="navbar">
     <div class="brand">
       
-      <!-- LOGO FIX: Cache clear korar jonno '?v=2' lagano hoyeche -->
-      <img src="logo.jpg?v=2" alt="Logo" class="brand-logo">
+      <!-- LOGO FIX: '?v=2' bad deya hoyeche -->
+      <img src="logo.jpg" alt="Logo" class="brand-logo" onerror="this.onerror=null; this.outerHTML='<div class=\'brand-logo\'>P</div>';">
       
       <div class="brand-text">
         <h1>Proyojon Marketing LTD</h1>
