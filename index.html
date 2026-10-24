@@ -8,10 +8,13 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
     
     body {
-      background: 
+      /* Scroll korle color nill-theke-kalo hoye jabar problem fix */
+      background-color: #070b14;
+      background-image: 
         radial-gradient(circle at top left, #243b7a 0%, transparent 45%),
-        radial-gradient(circle at bottom right, #182848 0%, transparent 45%),
-        #070b14;
+        radial-gradient(circle at bottom right, #182848 0%, transparent 45%);
+      background-attachment: fixed; /* Eta background ke scroll er sathe fatiye dibe na */
+      background-size: cover;
       color: #ffffff;
       min-height: 100vh;
       display: flex;
@@ -20,18 +23,18 @@
       overflow-x: hidden;
     }
 
-    /* 🔥 CSS WATERMARK (No image file needed) 🔥 */
+    /* CSS WATERMARK */
     body::before {
       content: "PROYOJON LTD";
-      position: absolute;
+      position: fixed; /* Eta fixed korechi jate scroll korleo majhkhan-ei thake */
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%) rotate(-20deg);
       font-size: 15vw;
       font-weight: 900;
-      color: rgba(255, 255, 255, 0.03); /* Ekdom abcha opacity */
+      color: rgba(255, 255, 255, 0.03); 
       white-space: nowrap;
-      pointer-events: none; /* Jate etar opor click kora jay */
+      pointer-events: none; 
       z-index: 0;
     }
 
@@ -54,7 +57,7 @@
       gap: 12px; 
     }
     
-    /* Logo Design */
+    /* Logo Design Fix */
     .brand-logo {
       width: 45px; 
       height: 45px; 
@@ -110,7 +113,7 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 40px 20px;
+      padding: 60px 20px; /* Ektu padding bariyechi scroll test er jonno */
       position: relative;
       z-index: 5;
     }
@@ -150,11 +153,12 @@
       background: rgba(7, 11, 20, 0.8);
       z-index: 10;
       position: relative;
+      margin-top: auto; /* Eta footer ke ekdom niche rakhbe */
     }
 
     /* Mobile Responsive */
     @media (max-width: 650px) {
-      body::before { font-size: 22vw; } /* Mobile e watermark er size */
+      body::before { font-size: 22vw; }
       .navbar { flex-direction: column; gap: 15px; padding: 25px 5%; }
       .brand-text h1 { font-size: 18px; }
       .hero h2 { font-size: 32px; }
@@ -172,8 +176,8 @@
   <div class="navbar">
     <div class="brand">
       
-      <!-- LOGO: Apnar asol logo.jpg na pawa gele auto 'P' dekhabe -->
-      <img src="logo.jpg" alt="P" class="brand-logo" onerror="this.onerror=null; this.outerHTML='<div class=\'brand-logo\'>P</div>';">
+      <!-- LOGO: ./ diye add korechi jate current folder thik moto detect kore -->
+      <img src="./logo.jpg" alt="P" class="brand-logo" onerror="this.onerror=null; this.outerHTML='<div class=\'brand-logo\'>P</div>';">
       
       <div class="brand-text">
         <h1>Proyojon Marketing LTD</h1>
