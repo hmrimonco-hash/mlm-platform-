@@ -3883,6 +3883,68 @@ async function startServer() {
     process.exit(1);
   }
 }
+const express = require('express');
+const router = express.Router(); // যদি আলাদা রাউট ফাইল ব্যবহার করেন, নতুবা app.post দিন
+
+// সাময়িকভাবে মেমোরিতে OTP স্টোর করার জন্য
+const otpStorage = {};
+
+// ১. Send OTP Route (ফ্রন্টএন্ডের প্রথম রিকোয়েস্ট)
+router.post('/api/auth/send-otp', (req, res) => {
+    const { phone, email } = req.body;
+    
+    if (!phone) {
+        return res.status(400).json({ success: false, message: "Phone number is required" });
+    }
+
+    // ৬ ডিজিটের ডামি OTP তৈরি
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    
+    // ফোন নাম্বারের এগেইনস্টে OTP সেভ রাখা হলো
+    otpStorage[phone] = otp;
+
+    // টেস্টিংয়ের জন্য Railway কনসোলে প্রিন্ট
+    console.log(`[PROYOJON OTP] Phone: ${phone} | OTP: ${otp}`);
+
+    return res.status(200).json({ 
+        success: true, 
+        message: "OTP sent successfully" 
+    });
+});
+
+// ২. Register Route (ফ্রন্টএন্ডের দ্বিতীয় রিকোয়েস্ট - OTP ভেরিফাই ও ইউজার সেভ)
+router.post('/api/auth/register', async (req, res) => {
+    const { name, email, phone, referral_code, password, otp } = req.body;
+
+    // OTP চেক করা হচ্ছে
+    if (otpStorage[phone] && otpStorage[phone].toString() === otp.toString()) {
+        // OTP মিলে গেছে, তাই সিকিউরিটির জন্য মেমোরি থেকে মুছে দিন
+        delete otpStorage[phone];
+
+        try {
+            // ⚠️ এখানে আপনার ডাটাবেসে (MongoDB/MySQL) ইউজার সেভ করার কোড বসবে
+            // const newUser = new User({ name, email, phone, referral_code, password });
+            // await newUser.save();
+
+            console.log(`New user registered: ${name}`);
+
+            return res.status(200).json({ 
+                success: true, 
+                message: "Account Verified & Created successfully!" 
+            });
+        } catch (error) {
+            return res.status(500).json({ success: false, message: "Database Error!" });
+        }
+    } else {
+        // OTP না মিললে
+        return res.status(400).json({ 
+            success: false, 
+            message: "Invalid OTP! Please try again." 
+        });
+    }
+});
+
+module.exports = router; 
 
 
 startServer();
