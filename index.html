@@ -8,9 +8,15 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
     
     body {
-      background: radial-gradient(circle at top left, #243b7a 0%, transparent 40%),
-                  radial-gradient(circle at bottom right, #182848 0%, transparent 40%),
-                  #070b14;
+      /* Dynamic Backgound with Gradient and subtle repeating watermark graphic */
+      /* Ekhane url('watermark.jpg') custom watermark pattern hisebe use korte parben */
+      background: 
+        radial-gradient(circle at top left, rgba(36, 59, 122, 0.9) 0%, transparent 45%),
+        radial-gradient(circle at bottom right, rgba(24, 40, 72, 0.9) 0%, transparent 45%),
+        linear-gradient(rgba(7, 11, 20, 0.95), rgba(7, 11, 20, 0.95)),
+        url('watermark.jpg') repeat; /* JGD dynamic watermark repeating background */
+      background-blend-mode: normal, normal, overlay, multiply;
+      background-size: cover, cover, auto, 500px; /* Watermark pattern scale tiny/large standard size 500px */
       color: #ffffff;
       min-height: 100vh;
       display: flex;
@@ -23,19 +29,44 @@
       justify-content: space-between;
       align-items: center;
       padding: 20px 5%;
-      background: rgba(10, 15, 24, 0.8);
+      background: rgba(10, 15, 24, 0.85);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      z-index: 10;
     }
-    .brand { display: flex; align-items: center; gap: 10px; }
-    .brand-icon {
-      width: 40px; height: 40px; border-radius: 12px;
+    
+    .brand { 
+      display: flex; 
+      align-items: center; 
+      gap: 12px; 
+    }
+    
+    /* Logo JPG Design integration */
+    .brand-logo {
+      width: 45px; 
+      height: 45px; 
+      border-radius: 12px;
+      object-fit: cover;
       background: linear-gradient(135deg, #3157d5, #673ab7);
-      display: flex; justify-content: center; align-items: center;
-      font-weight: bold; font-size: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
     }
-    .brand-text h1 { font-size: 18px; }
-    .brand-text p { font-size: 11px; color: #aeb8d0; }
+    
+    .brand-text h1 { 
+      font-size: 19px; 
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .brand-text p { 
+      font-size: 11px; 
+      color: #aeb8d0; 
+    }
+    
+    /* Buttons Container */
+    .nav-buttons {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
     
     .nav-buttons a {
       text-decoration: none;
@@ -45,7 +76,7 @@
       font-weight: bold;
       transition: 0.3s;
     }
-    .login-btn { color: #dbe2f4; margin-right: 10px; }
+    .login-btn { color: #dbe2f4; }
     .login-btn:hover { color: #ffffff; }
     .register-btn {
       background: linear-gradient(135deg, #3157d5, #673ab7);
@@ -63,6 +94,8 @@
       align-items: center;
       text-align: center;
       padding: 40px 20px;
+      position: relative;
+      z-index: 5;
     }
     .hero-badge {
       background: rgba(49, 87, 213, 0.15);
@@ -74,7 +107,7 @@
       margin-bottom: 20px;
       border: 1px solid rgba(49, 87, 213, 0.3);
     }
-    .hero h2 { font-size: 42px; margin-bottom: 15px; font-weight: 800; max-width: 700px; line-height: 1.2; }
+    .hero h2 { font-size: 42px; margin-bottom: 15px; font-weight: 800; max-width: 700px; line-height: 1.25; }
     .hero p { font-size: 16px; color: #8995b2; max-width: 500px; margin-bottom: 30px; line-height: 1.6; }
     
     .cta-btn {
@@ -97,13 +130,25 @@
       color: #65708a;
       font-size: 12px;
       border-top: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(7, 11, 20, 0.8);
+      z-index: 10;
     }
 
     /* Mobile Responsive */
-    @media (max-width: 600px) {
+    @media (max-width: 650px) {
+      .navbar { 
+        flex-direction: column; 
+        gap: 15px; 
+        padding: 25px 5%;
+      }
+      .brand-text h1 { font-size: 18px; }
       .hero h2 { font-size: 32px; }
-      .navbar { padding: 15px 5%; }
-      .nav-buttons a { padding: 8px 12px; font-size: 12px; }
+      .nav-buttons a { padding: 10px 16px; font-size: 13px; }
+    }
+    @media (max-width: 380px) {
+      .brand-text h1 { font-size: 15px; }
+      .brand-text p { font-size: 9px; }
+      .brand-logo { width: 38px; height: 38px; }
     }
   </style>
 </head>
@@ -112,12 +157,16 @@
   <!-- Navigation -->
   <div class="navbar">
     <div class="brand">
-      <div class="brand-icon">P</div>
+      
+      <!-- jpg files customization for custom JPG visual asset -->
+      <img src="logo.jpg" alt="Logo" class="brand-logo" onerror="this.src='https://ui-avatars.com/api/?name=P&background=3157d5&color=fff&size=100'">
+      
       <div class="brand-text">
         <h1>Proyojon Marketing LTD</h1>
         <p>আপনার প্রয়োজন আমাদের আয়োজন</p>
       </div>
     </div>
+    
     <div class="nav-buttons">
       <a href="login.html" class="login-btn">Login</a>
       <a href="register.html" class="register-btn">Register</a>
