@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - Proyojon Marketing LTD</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+    
+    body {
+      background: radial-gradient(circle at top left, #243b7a 0%, transparent 40%),
+                  radial-gradient(circle at bottom right, #182848 0%, transparent 40%),
+                  #070b14;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 5%;
+      background: rgba(10, 15, 24, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: linear-gradient(135deg, #3157d5, #673ab7);
+      display: flex; justify-content: center; align-items: center;
+      font-weight: bold; font-size: 20px;
+    }
+    .brand-text h1 { font-size: 18px; }
+    .brand-text p { font-size: 11px; color: #aeb8d0; }
+    
+    .nav-buttons a {
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    .login-btn { color: #dbe2f4; margin-right: 10px; }
+    .login-btn:hover { color: #ffffff; }
+    .register-btn {
+      background: linear-gradient(135deg, #3157d5, #673ab7);
+      color: white;
+      box-shadow: 0 4px 15px rgba(49, 87, 213, 0.3);
+    }
+    .register-btn:hover { transform: translateY(-2px); }
+
+    /* Hero Section */
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .hero-badge {
+      background: rgba(49, 87, 213, 0.15);
+      color: #8299e9;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      border: 1px solid rgba(49, 87, 213, 0.3);
+    }
+    .hero h2 { font-size: 42px; margin-bottom: 15px; font-weight: 800; max-width: 700px; line-height: 1.2; }
+    .hero p { font-size: 16px; color: #8995b2; max-width: 500px; margin-bottom: 30px; line-height: 1.6; }
+    
+    .cta-btn {
+      text-decoration: none;
+      padding: 15px 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #3157d5, #673ab7);
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      box-shadow: 0 10px 25px rgba(49, 87, 213, 0.4);
+      transition: 0.3s;
+    }
+    .cta-btn:hover { transform: scale(1.05); }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: #65708a;
+      font-size: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 600px) {
+      .hero h2 { font-size: 32px; }
+      .navbar { padding: 15px 5%; }
+      .nav-buttons a { padding: 8px 12px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <div class="navbar">
+    <div class="brand">
+      <div class="brand-icon">P</div>
+      <div class="brand-text">
+        <h1>Proyojon Marketing LTD</h1>
+        <p>আপনার প্রয়োজন আমাদের আয়োজন</p>
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <a href="login.html" class="login-btn">Login</a>
+      <a href="register.html" class="register-btn">Register</a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="hero">
+    <div class="hero-badge">🚀 Welcome to the Future of Networking</div>
+    <h2>Build Your Network & Grow Your Future</h2>
+    <p>We provide the best platform to manage your packages, team, and daily transactions all in one secure place.</p>
+    <a href="register.html" class="cta-btn">Join Us Today</a>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    © 2026 Proyojon Marketing LTD. All rights reserved.
+  </div>
+
+</body>
+</html>
