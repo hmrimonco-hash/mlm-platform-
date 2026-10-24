@@ -8,12 +8,11 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
     
     body {
-      /* Scroll korle color nill-theke-kalo hoye jabar problem fix */
       background-color: #070b14;
       background-image: 
         radial-gradient(circle at top left, #243b7a 0%, transparent 45%),
         radial-gradient(circle at bottom right, #182848 0%, transparent 45%);
-      background-attachment: fixed; /* Eta background ke scroll er sathe fatiye dibe na */
+      background-attachment: fixed;
       background-size: cover;
       color: #ffffff;
       min-height: 100vh;
@@ -23,19 +22,20 @@
       overflow-x: hidden;
     }
 
-    /* CSS WATERMARK */
+    /* 🔥 CSS WATERMARK (Ebar Sposto Dekha Jabe) 🔥 */
     body::before {
       content: "PROYOJON LTD";
-      position: fixed; /* Eta fixed korechi jate scroll korleo majhkhan-ei thake */
+      position: fixed; 
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%) rotate(-20deg);
-      font-size: 15vw;
+      transform: translate(-50%, -50%) rotate(-25deg);
+      font-size: 16vw;
       font-weight: 900;
-      color: rgba(255, 255, 255, 0.03); 
+      /* Opacity bariye 0.08 kora hoyeche jate bojha jay */
+      color: rgba(255, 255, 255, 0.08); 
       white-space: nowrap;
       pointer-events: none; 
-      z-index: 0;
+      z-index: 1; /* Z-index ektu upore ana hoyeche */
     }
 
     /* Navbar */
@@ -57,19 +57,14 @@
       gap: 12px; 
     }
     
-    /* Logo Design Fix */
+    /* Logo Box */
     .brand-logo {
       width: 45px; 
       height: 45px; 
       border-radius: 12px;
       object-fit: cover;
-      background: linear-gradient(135deg, #3157d5, #673ab7);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 24px;
-      font-weight: bold;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      background-color: #070b14;
     }
     
     .brand-text h1 { 
@@ -113,7 +108,7 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 60px 20px; /* Ektu padding bariyechi scroll test er jonno */
+      padding: 60px 20px;
       position: relative;
       z-index: 5;
     }
@@ -153,7 +148,7 @@
       background: rgba(7, 11, 20, 0.8);
       z-index: 10;
       position: relative;
-      margin-top: auto; /* Eta footer ke ekdom niche rakhbe */
+      margin-top: auto;
     }
 
     /* Mobile Responsive */
@@ -176,8 +171,8 @@
   <div class="navbar">
     <div class="brand">
       
-      <!-- LOGO: ./ diye add korechi jate current folder thik moto detect kore -->
-      <img src="./logo.jpg" alt="P" class="brand-logo" onerror="this.onerror=null; this.outerHTML='<div class=\'brand-logo\'>P</div>';">
+      <!-- LOGO FIX: Cache clear korar jonno '?v=2' lagano hoyeche -->
+      <img src="logo.jpg?v=2" alt="Logo" class="brand-logo">
       
       <div class="brand-text">
         <h1>Proyojon Marketing LTD</h1>
