@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - Proyojon Marketing LTD</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+    
+    body {
+      background-color: #070b14;
+      background-image: 
+        radial-gradient(circle at top left, #243b7a 0%, transparent 45%),
+        radial-gradient(circle at bottom right, #182848 0%, transparent 45%);
+      background-attachment: fixed;
+      background-size: cover;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* 🔥 CSS WATERMARK 🔥 */
+    body::before {
+      content: "PROYOJON LTD";
+      position: fixed; 
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-25deg);
+      font-size: 16vw;
+      font-weight: 900;
+      color: rgba(255, 255, 255, 0.08); 
+      white-space: nowrap;
+      pointer-events: none; 
+      z-index: 1;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 5%;
+      background: rgba(10, 15, 24, 0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      z-index: 10;
+      position: relative;
+    }
+    
+    .brand { 
+      display: flex; 
+      align-items: center; 
+      gap: 12px; 
+    }
+    
+    /* Logo Box */
+    .brand-logo {
+      width: 45px; 
+      height: 45px; 
+      border-radius: 12px;
+      object-fit: cover;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      background: linear-gradient(135deg, #3157d5, #673ab7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    
+    .brand-text h1 { 
+      font-size: 19px; 
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .brand-text p { 
+      font-size: 11px; 
+      color: #aeb8d0; 
+    }
+    
+    .nav-buttons {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .nav-buttons a {
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    .login-btn { color: #dbe2f4; }
+    .login-btn:hover { color: #ffffff; }
+    .register-btn {
+      background: linear-gradient(135deg, #3157d5, #673ab7);
+      color: white;
+      box-shadow: 0 4px 15px rgba(49, 87, 213, 0.3);
+    }
+    .register-btn:hover { transform: translateY(-2px); }
+
+    /* Hero Section */
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 60px 20px;
+      position: relative;
+      z-index: 5;
+    }
+    .hero-badge {
+      background: rgba(49, 87, 213, 0.15);
+      color: #8299e9;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      border: 1px solid rgba(49, 87, 213, 0.3);
+    }
+    .hero h2 { font-size: 42px; margin-bottom: 15px; font-weight: 800; max-width: 700px; line-height: 1.25; }
+    .hero p { font-size: 16px; color: #8995b2; max-width: 500px; margin-bottom: 30px; line-height: 1.6; }
+    
+    .cta-btn {
+      text-decoration: none;
+      padding: 15px 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #3157d5, #673ab7);
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      box-shadow: 0 10px 25px rgba(49, 87, 213, 0.4);
+      transition: 0.3s;
+    }
+    .cta-btn:hover { transform: scale(1.05); }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: #65708a;
+      font-size: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(7, 11, 20, 0.8);
+      z-index: 10;
+      position: relative;
+      margin-top: auto;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 650px) {
+      body::before { font-size: 22vw; }
+      .navbar { flex-direction: column; gap: 15px; padding: 25px 5%; }
+      .brand-text h1 { font-size: 18px; }
+      .hero h2 { font-size: 32px; }
+      .nav-buttons a { padding: 10px 16px; font-size: 13px; }
+    }
+    @media (max-width: 380px) {
+      .brand-text h1 { font-size: 15px; }
+      .brand-text p { font-size: 9px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <div class="navbar">
+    <div class="brand">
+      
+      <!-- LOGO FIX: '?v=2' bad deya hoyeche -->
+      <img src="logo.jpg" alt="Logo" class="brand-logo" onerror="this.onerror=null; this.outerHTML='<div class=\'brand-logo\'>P</div>';">
+      
+      <div class="brand-text">
+        <h1>Proyojon Marketing LTD</h1>
+        <p>আপনার প্রয়োজন আমাদের আয়োজন</p>
+      </div>
+    </div>
+    
+    <div class="nav-buttons">
+      <a href="login.html" class="login-btn">Login</a>
+      <a href="register.html" class="register-btn">Register</a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="hero">
+    <div class="hero-badge">🚀 Welcome to the Future of Networking</div>
+    <h2>Build Your Network & Grow Your Future</h2>
+    <p>We provide the best platform to manage your packages, team, and daily transactions all in one secure place.</p>
+    <a href="register.html" class="cta-btn">Join Us Today</a>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    © 2026 Proyojon Marketing LTD. All rights reserved.
+  </div>
+
+</body>
+</html>
